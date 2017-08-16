@@ -1,0 +1,13 @@
+\section{Internal Attack Model}
+\label{sec:Attack}
+
+Here I briefly describe how the internal attack's works.
+Assume the attacker with budget $x$  is capable of joining the overlay as early as possible and thus, assign a fraction $Hx$, where $H\in [0,1]$ of its resources as headnodes.
+The remaining malicious peers $MN=x-Hx$ are assigned as neighbors to the $Hx$ malicious headnodes. 
+
+Once a malicious peer $m\in M$ receives a video-chunk from the source or even through another malicious headnode, $m$ drops the packet. Simultaneously, $m$ keeps on sending fake buffer-maps $BM$ to other benign peers $b \in B$. 
+This is the current status of the attack. Other adversarial behaviors are also possible to be included.
+%TODO: malicious peers also terminates nominations from benign peers.
+We assume malicious peers do NOT churn out.	
+
+

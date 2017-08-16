@@ -1,0 +1,38 @@
+\begin{abstract}
+% Version 1
+% % Super-P2P networks are widely used in large-scale P2P applications hosting millions of users in order to compensate for the lack of organization in unstructured overlays.
+% Given the decentralized and practicality of P2P networks, large-scale P2P applications such as video streaming, online gaming and VoIP are currently hosting millions of users.
+%As most of these applications are unstructured-based overlays, a super-P2P is overlay is topped in such enormously large networks.
+
+% % Due to the criticality of super peers in such topologies, super peers are continuously targeted by attackers due to the drastic impact on network's performance when super peers' service supervision is compromised.
+% % We propose a novel monitoring and malicious eviction analytical scheme based on a two-fold proactive and reactive mechanisms via forcing in-going and out-going connection bounds of the neighboring super peers.
+% Through a quorum based mechanism, malicious super peers are efficiently expelled from the overlay while providing a detailed analysis of the quorum's decisions accuracy.
+% % Our results show throughput enhancement of x\% with detection accuracy of y\% while keeping the mechanism's overhead impact minimized to z\%.
+
+% Version 2
+% Large-scale P2P applications (e.g., social networking, online gaming, video streaming) that host millions of users increasingly rely upon the super-P2P system in order to handle the inherent lack of organization in unstructured P2P overlays.
+% Given the critical role of super peers for the seamless functioning of the application, attackers specifically target super peers.
+% 
+% In this paper, we consider Outgoing Eclipse Attack (OEA): an attacker aims to block communication by controlling all the outgoing connections of honest super peers. Our simulation study indicates that these attacks drastically impact the service provision up to the degree that about 90\% of all service requests fail. 
+% Subsequently, we propose a novel monitoring and malicious peer eviction scheme based on a composite proactive and reactive mechanism.
+% Our proactive mechanism enforces an upper bound on the number of connections an attacker can establish, whereas our reactive mechanism expels malicious peers from the overlay using a distributed consensus protocol. 
+% We proof that  our composite protection mechanism is highly effective at a low probability for false positives.
+% Our extensive simulation study validates the analytical results for a large range of parameters. We observed detection accuracies of 99\% and throughput enhancements of up to 100\% while only requiring an additional overhead of 6\%.
+
+
+% Version 3
+%Large-scale P2P applications (e.g., social networking, online gaming, video streaming) that host millions of users increasingly rely upon the partial "structuring" super-P2P systems provide to address the by-design lack of structure in classical P2P overlays.
+Large-scale P2P applications (e.g., social networking, online gaming, video streaming) that host millions of users increasingly rely upon semi-structured super-P2P systems to provide efficient service in dynamic environments. 
+Given the critical role of `super peers' in such topologies, attackers specifically target super peers due to the resultant high damage on P2P services.
+
+In this paper, we consider the class of Outgoing Eclipse Attacks (OEA): an attacker aims to block the communication by controlling all the outgoing connections of honest super peers.
+Our focus on OEA stems from the fact that our simulation study reveals that OEAs can cause up to 90\% of all service requests to fail. 
+ 
+
+Our attack mitigation relies upon a novel (a) monitoring and (b) malicious peer eviction scheme based on a composite proactive and reactive mechanism. 
+Our proactive mechanism enforces an upper bound on the number of connections an attacker can establish, whereas our reactive mechanism expels malicious peers from the overlay using a distributed consensus protocol.
+We show that our protection mechanism is highly effective and exhibits a low false-positive rate. 
+Our extensive simulation study validates the analytical results over a large range of parameters with observed detection accuracies of 99\% and throughput enhancements of up to 100\% while entailing an overhead of less than 5\%.
+
+%throughput enhancements of up to 100\% while only entailing a small 5\% overhead.  
+\end{abstract}

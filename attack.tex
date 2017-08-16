@@ -1,0 +1,22 @@
+\section{Internal Attack Model}
+\label{sec:Attack}
+
+Here I briefly describe how the internal attack's works.
+Assume an attacker with budget $x$ is capable of joining the overlay as early as possible and thus, assigns a fraction $Hx$, where $H\in [0,1]$, of its resources as headnodes.
+The remaining malicious peers $MN=x-Hx$ are assigned as neighbors to the $Hx$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes. 
+
+Once a malicious peer $m\in M$ receives a video-chunk from the source or even through another benign peer $b \in B$, $m$ drops the packet. 
+Simultaneously, $m$ keeps on sending fake buffer-maps $BM$ to other benign peers claiming that it has those video chunks already. 
+This is the current status of the attack. Other adversarial behaviors are also possible to be included, if needed.
+
+For the proposed attack, malicious peers are also characterized by the following:
+\begin{enumerate}
+ \item Malicious peers maintain another list (other than the normal neighbor list) containing information about all other malicious peers and their status (active, suspected or evicted).
+ \item They are aware of the SWAP process. 
+ Hence, they fully collude in the sense that they inform each other about what and when to nominate each other to another benign peers or even to the source (if needed).
+ \item Concerning SWAP, they are capable of dropping or even manipulating the number of hops in the nomination requests. Accordingly, they can prevent the source from getting benign nominations.
+ \item They do NOT churn out, i.e., malicious peers can exploit the source/ benign peers' neighbor list for the whole simulation.
+\end{enumerate}
+
+
+

@@ -1,0 +1,35 @@
+\section{Detection \& Eviction}
+\label{sec:detection}
+
+Based on the proposed internal attack along with the evaluation of the attack's impact, some basic ideas for the detection and eviction scheme can be highlighted.
+In this section, the aim is to discuss the essential requirements that the detection and eviction mechanisms should adopt.
+
+\subsection{Detection Mechanism}
+Given the source's upload bandwidth, it is feasible by even low budget attacker to fully occupy its headnodes. 
+Hence, cutting out the source can be achieved.
+Accordingly, the detection mechanism should:
+\begin{enumerate}
+ \item Include a feedback scheme so that peers, especially the source, can be informed about the other peers satisfaction level of the stream. 
+ Most importantly, the challenger peer $u$ must be able to have a wider view of the network, i.e., be informed about the existence of other peers in the mesh.
+ 
+ \item For every peer, it should maintain a satisfaction list to suspect peers not delivering chunks available in their buffer maps. 
+ This way, malicious peers that do NOT consistently refuse to deliver the right chunks to other peers can be eventually suspected.
+ 
+ \item Allow the source to get this feedback from peers that exist behind its surrounding headnodes, i.e., peers with $hops>1$ away from the source.
+ 
+ \item Implement a possible signing criteria for the feedback messages so that malicious peers can not manipulate these messages.
+ 
+ \item Suspect malicious peers whenever they: (i) alter the messages,(ii) just refuse to deliver it to $u$ or (iii) they acquire a very low satisfaction level.
+  
+ 
+\end{enumerate}
+
+\subsection{Eviction Mechanism}
+Once the detection mechanism announces a peer as malicious, the eviction mechanism should adopt the following strategy:
+
+\begin{enumerate}
+ \item Allows the source to reach to those $hops>1$ peers once the source detects that it is surrounded with malicious headnodes, i.e., rapid changing of the source's headnodes.
+ \item Forces each peer to collect evidence (the responder $v$ replies) about the event of declaring another as malicious and thus, allow for counter detection in case a malicious peer wants to evict a benign one.
+ \item Maliciously claimed peers should be added in a global blacklist, or even locally dropped from the challenger's neighbor list?
+\end{enumerate}
+

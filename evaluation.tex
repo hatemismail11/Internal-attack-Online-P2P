@@ -1,0 +1,128 @@
+\section{Evaluation}
+\label{sec:eval}
+
+The aim of this section is to highlight the attack's impact on both the DONet network as well as when SWAP is also functioning. 
+To that end, first I introduce the main parameters used for the simulation and then discuss the results.
+
+\subsection{Simulation parameters}
+First, the main simulation parameters are provided in Table \ref{tab:SM-Parameters}. Note that two runs were executed for each simulation configuration. 
+For discussing the results, only one simulation run results is used out of the two runs as they showed almost typical behavior.
+% Hatem
+
+\begin{table} [!htbp]
+\centering
+\caption{Simulation parameters}
+\begin{tabular}{|l|l|}
+\hline
+\bf{Parameter} & \bf{Value} \\\hline\hline
+Maximum number of neighbors & 10\\
+\hline
+Malicious headnodes $Hx$ & ${2,5,8,10}$ \\
+ \hline
+Malicious neighbors $MN=x-Hx$ & ${1,3,5}$ \\
+ \hline
+ Overlay size $n$ & 500 \\
+ \hline
+Simulation time & 1000s\\
+\hline
+Nomination number of Hops (SWAP) $hops$ & ${1,2,3}$\\
+\hline
+\end{tabular}
+
+\label{tab:SM-Parameters}
+ 
+\end{table}
+
+\subsection{Case studies}
+For every simulation configuration, the results for both networks (DONet w/o SWAP) are provided. 
+The metric used in comparing all the results is \emph{Instant Loss (IL)}: the ratio of missed chunks to the total number of chunks emitted from the source averaged.
+
+The attack's impact are discussed through the following two case studies:
+\begin{enumerate}
+ \item \emph{Impact of $Hx$} through varying $Hx={2,5,8,10}$ while fixing $MN=5$ and $hops=1$.
+ \item \emph{Impact of $MN$} through varying $MN={1,3,5}$ while fixing $Hx=8$ and $hops=1$.
+ 
+\end{enumerate}
+
+
+\subsection{Results}
+
+The results along with a discussion for each of the two aforementioned case studies are detailed next.
+
+\subsubsection{Impact of $Hx$}
+Given that the maximum number of neighbors that the source or any other peer can have is $\alpha =10$, it's interesting to see the impact of occupying a certain fraction of the source's neighbor list.
+Figure~\ref{fig:DONet} and Figure~\ref{fig:swap} depict the impact of increasing the fraction of malicious headnodes while keeping the number of malicious neighbors to those malicious headnodes constant.
+
+For DONet, as long as the source's neighbor list size $\alpha$ is not fully saturated with malicious peers, benign peers $b$ eventually get a stable flow of the video chunks, as depicted in Figure~\ref{subfig:Donet-hx2} through Figure~\ref{subfig:Donet-hx8}.
+Nevertheless, due to the time constraints of such overlay, the fraction of lost chunks is remarkably high once the source starts to generate chunks as the average $IL$ ranges between 49\%-80\% at times 50s-150s. 
+This denotes that once the source starts sending video chunks, benign peers are almost unable to receive those chunks for an intolerant period of time, which is commonly unacceptable for P2P streaming applications' users.
+
+Figure~\ref{subfig:Donet-hx10} shows the impact of fully exploiting the source's neighbor list neighbors by malicious peers, where in this case $\alpha = Hx$.
+In this case, the average $IL$ is almost 100\%, which denotes benign peers being totally unable to receive video chunks as malicious peers fully acquire all chunks from the source.
+
+For the attack's impact when SWAP is functioning, which is illustrated in Figure~\ref{fig:swap}, the attack's impact is even worse compared to DONet.
+This is due to that malicious headnodes $Hx$ constantly nominate malicious neighbors $MN$ to the source.
+Eventually, the source acquires $\alpha$ malicious peers in its neighbor list, which in turn causes the $IL$ to reach to ~100\%.
+Indeed, higher values of $Hx$ results in earlier total block of video chunks as shown in Figure~\ref{subfig:swap-hx2} through Figure~\ref{subfig:swap-hx10}.
+Next, the impact of having different values of $MN$ is discussed.
+
+\begin{figure}[t!]
+\centering
+
+  \mbox{\subfloat[DONet-$Hx=2$]{\label{subfig:Donet-hx2}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx2.eps}}}
+  \mbox{\subfloat[DONet-$Hx=5$]{\label{subfig:Donet-hx5}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx5.eps}}}
+  \mbox{\subfloat[DONet-$Hx=8$]{\label{subfig:Donet-hx8}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx8.eps}}}
+  \mbox{\subfloat[DONet-$Hx=10$]{\label{subfig:Donet-hx10}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx10.eps}}}
+   
+  \caption{DONet performance}
+
+  \label{fig:DONet}
+  \end{figure}
+  
+\begin{figure}[t!]
+\centering
+
+  \mbox{\subfloat[SWAP-$Hx=2$]{\label{subfig:swap-hx2}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx2.eps}}}
+  \mbox{\subfloat[SWAP-$Hx=5$]{\label{subfig:swap-hx5}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx5.eps}}}
+  \mbox{\subfloat[SWAP-$Hx=8$]{\label{subfig:swap-hx8}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei5-hops1.eps}}}
+  \mbox{\subfloat[SWAP-$Hx=10$]{\label{subfig:swap-hx10}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx10.eps}}}
+
+  
+  \caption{SWAP performance}
+
+  \label{fig:swap}
+  \end{figure}
+    
+\subsubsection{Impact of $MN$}
+
+In this case study, $xH=8$ is selected instead of $Hx=10$ to avoid hindering the impact of varying $MN$ when the source's neighbor list is already saturated with malicious peers, i.e., when $\alpha=x=10$.
+Figures~\ref{subfig:swap-MN1} through \ref{subfig:swap-MN5} show that for $MN=1$, $IL$ reaches ~100\% at time $t=250s$. 
+For $MN=5$, $IL$ is already at 80\% at $t=50s$.
+
+As expected, when $MN$ increases, the source's neighbor list gets saturated with malicious peers earlier as the number of nominated malicious peers increases.
+Note that the source does not accept a connection with a peer who was previously connected to it.
+
+Moreover, as mentioned in Section~\ref{sec:Attack}, malicious peers can drop or manipulate the number of hops in the nomination requests from benign peers.
+Thus, assessing the attack's impact over different number of hops would yield the same results.
+
+\begin{figure}[t!]
+\centering
+
+  \mbox{\subfloat[SWAP-$MN=1$]{\label{subfig:swap-MN1}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei1-hops1.eps}}}
+  \mbox{\subfloat[SWAP-$MN=3$]{\label{subfig:swap-MN3}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei3-hops1.eps}}}
+  \mbox{\subfloat[SWAP-$MN=5$]{\label{subfig:swap-MN5}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei5-hops1.eps}}}
+  
+  \caption{SWAP performance when varying $MN$}
+
+  \label{fig:varyingMN}
+  \end{figure}
+  
+\subsubsection{Summary of the results}
+
+As a summary, for DONet, when the source's neighbor list is fully saturated with malicious peers, $IL$ is at ~100\%.
+Nevertheless, for smaller values of $Hx$, the attack's impact is still significantly high for a long period of time given the intolerability of such networks to such high delays.
+In fact, having only $Hx=\alpha$ without using $MN$ is sufficient for the attacker to completely isolate and thus, prevent the source from delivering any stream chunks.
+
+For the SWAP case study, it is noticed that even with low values of $Hx$, after a certain swapping period, malicious peers manage to fully occupy the source's list and hence, $IL$ eventually reaches to ~100\%.
+This denotes that, the number of neighbors $MN$ is a major factor in the case of SWAP.
+Moreover, through an efficient distribution of the attacker's budget $x$, i.e., $Hx$ and $MN$, the attacker can decide whether to cause higher damage to the stream at the initialization time and then allow the network to eventually recover later on, or to allow the stream to reach to benign peers at earlier time phase till totally cutting the flow once $Hx=\alpha$ at some point.

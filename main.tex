@@ -1,0 +1,141 @@
+% \documentclass[12pt]{article}
+% 
+% \renewcommand{\thesection}{\Roman{section}} 
+% 
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+% %\usepackage{lingmacros}
+% %\usepackage{tree-dvips}
+% \usepackage{epsfig}
+% \usepackage[caption=false,font=footnotesize]{subfig}
+% \usepackage{graphicx}
+% \usepackage{enumerate}
+% \usepackage{booktabs}
+% \usepackage{cite}
+% \usepackage{amsmath}
+% \usepackage{hyperref}
+% \graphicspath{ {images/} }
+% 
+% 
+% 
+% \begin{document}
+% 
+% 
+%  \newcommand{\HRule}{\rule{\linewidth}{0.1mm}} % Defines a new command for the horizontal lines, change thickness here
+% 
+% 
+% 
+% {\huge Attack results: project updates}\\ % Title of your document
+% \HRule \\[0.2cm]
+% 
+%  
+% \input{attack-results}
+% % \input{CNS2016}
+% % \input{DivPASS-journal}
+% % \input{Outgoing-Eclipse}
+% % \input{Battle-Fields}
+% % \input{CSUR2016}
+% 
+% \end{document}
+
+\documentclass[conference]{IEEEtran}
+\makeatletter
+\def\ps@headings{%
+\def\@oddhead{\mbox{}\scriptsize\rightmark \hfil \thepage}%
+\def\@evenhead{\scriptsize\thepage \hfil \leftmark\mbox{}}%
+\def\@oddfoot{}%
+\def\@evenfoot{}}
+\makeatother
+\pagestyle{headings}
+
+\IEEEoverridecommandlockouts
+
+% \usepackage{array}
+% \usepackage{algorithm2e}
+% \usepackage{algorithmicx}
+% \usepackage{algorithm}% http://ctan.org/pkg/algorithms
+% \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{cite}
+
+\newtheorem{mydef}{Definition}
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  \usepackage[pdftex]{graphicx}
+\else
+  \usepackage[dvips]{graphicx}
+\fi
+
+
+\usepackage{float}
+
+% *** MATH PACKAGES ***
+%
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\usepackage{xfrac}
+\usepackage{xfrac}
+\usepackage{color}
+\usepackage[normalem]{ulem} 
+\newcommand{\schange}[2]{ \sout{#1} {\color{green} #2 }}
+\newcommand{\question}[1]{ {\color{red} #1 }}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{url}
+% \usepackage{hyperref}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\newcommand*{\PROB}{\mathbf{P}}
+
+%%versions
+% \usepackage{versions}
+% \includeversion{conf}
+% \excludeversion{extended}
+
+%  \includeversion{extended}
+%  \excludeversion{conf}
+
+
+\begin{document}
+\title{Detection and Eviction Mechanisms for Internal Attacks on Pull-based P2P Video Streaming Systems}
+
+% \author{\IEEEauthorblockN{Hatem Ismail}
+% \IEEEauthorblockA{DEEDS Group, TU Darmstadt\\
+% % Darmstadt, Germany\\
+% hayman@deeds.informatik.tu-darmstadt.de}
+% \and
+% \IEEEauthorblockN{Stefanie Roos}
+% \IEEEauthorblockA{University of Waterloo \\
+% % Waterloo, Canada\\
+% stefanie.roos@uwaterloo.ca}
+% \and
+% \IEEEauthorblockN{Neeraj Suri}
+% \IEEEauthorblockA{DEEDS Group, TU Darmstadt\\
+% % Darmstadt, Germany\\
+% suri@cs.tu-darmstadt.de}
+% }
+
+
+% make the title area
+\maketitle
+
+\input{abstract} 
+\input{introduction}
+\input{system}
+\input{attack}
+\input{evaluation}
+\input{detection}
+\input{analysis}
+\input{related}
+\input{conclusion}
+
+% \bibliographystyle{unsrt}
+% \bibliography{internal-attacks-online}
+
+\IEEEpeerreviewmaketitle
+
+
+\end{document}
+	
