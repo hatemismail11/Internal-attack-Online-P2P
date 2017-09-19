@@ -9,17 +9,17 @@ Given the source's upload bandwidth, it is feasible by even low budget attacker 
 Hence, cutting out the source can be achieved.
 Accordingly, the detection mechanism should:
 \begin{enumerate}
- \item Include a feedback scheme so that peers, especially the source, can be informed about the other peers satisfaction level of the stream. 
- Most importantly, the challenger peer $u$ must be able to have a wider view of the network, i.e., be informed about the existence of other peers in the mesh.
+ \item Include a feedback scheme so that peers, especially the source, can be informed about other peers' satisfaction level of the stream. 
+ Most importantly, the challenger peer $u$ must be able to have a wider view of the network, i.e., be informed about other peers' satisfaction level in the mesh.
  
- \item For every peer, it should maintain a satisfaction list to suspect peers not delivering chunks available in their buffer maps. 
- This way, malicious peers that do NOT consistently refuse to deliver the right chunks to other peers can be eventually suspected.
+ \item Each peer should maintain a satisfaction list to suspect peers not delivering chunks available in their buffer maps. 
+ This way, even malicious peers that do NOT consistently refuse to deliver the right chunks to other peers can be eventually suspected according to a specific system threshold parameter $\alpha$.
  
- \item Allow the source to get this feedback from peers that exist behind its surrounding headnodes, i.e., peers with $hops>1$ away from the source.
+ \item Allow the source to collect the feedback from peers that exist behind its surrounding headnodes, i.e., peers with $hops>1$ away from the source.
  
- \item Implement a possible signing criteria for the feedback messages so that malicious peers can not manipulate these messages.
+ \item Develop/use a signing mechanism for the feedback messages so that malicious peers can not manipulate these messages, or get suspected otherwise.
  
- \item Suspect malicious peers whenever they: (i) alter the messages,(ii) just refuse to deliver it to $u$ or (iii) they acquire a very low satisfaction level.
+ \item Suspect malicious peers whenever they: (i) alter the messages,(ii) just refuse to deliver it to $u$ or (iii) they acquire a satisfaction level below $\alpha$.
   
  
 \end{enumerate}
@@ -29,7 +29,7 @@ Once the detection mechanism announces a peer as malicious, the eviction mechani
 
 \begin{enumerate}
  \item Allows the source to reach to those $hops>1$ peers once the source detects that it is surrounded with malicious headnodes, i.e., rapid changing of the source's headnodes.
- \item Forces each peer to collect evidence (the responder $v$ replies) about the event of declaring another as malicious and thus, allow for counter detection in case a malicious peer wants to evict a benign one.
- \item Maliciously claimed peers should be added in a global blacklist, or even locally dropped from the challenger's neighbor list?
+ \item Forces each peer to collect evidence (the responder $v$ replies) about the event of declaring another as malicious and thus, trigger a counter detection in case a malicious peer wants to evict a benign one.
+ \item Maliciously claimed peers should be added to a global blacklist, or even locally dropped from the challenger's neighbor list?
 \end{enumerate}
 
