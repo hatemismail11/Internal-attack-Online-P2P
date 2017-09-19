@@ -1,5 +1,0 @@
-\section{Detection \& Eviction}
-\label{sec:detection}
-
-Based on the proposed internal attack a long with the evaluation of the attack's impact, some basic ideas for the detection and eviction scheme can be highlighted.
-
