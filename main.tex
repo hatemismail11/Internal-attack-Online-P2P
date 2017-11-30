@@ -1,43 +1,3 @@
-% \documentclass[12pt]{article}
-% 
-% \renewcommand{\thesection}{\Roman{section}} 
-% 
-% \usepackage[utf8]{inputenc}
-% \usepackage[T1]{fontenc}
-% %\usepackage{lingmacros}
-% %\usepackage{tree-dvips}
-% \usepackage{epsfig}
-% \usepackage[caption=false,font=footnotesize]{subfig}
-% \usepackage{graphicx}
-% \usepackage{enumerate}
-% \usepackage{booktabs}
-% \usepackage{cite}
-% \usepackage{amsmath}
-% \usepackage{hyperref}
-% \graphicspath{ {images/} }
-% 
-% 
-% 
-% \begin{document}
-% 
-% 
-%  \newcommand{\HRule}{\rule{\linewidth}{0.1mm}} % Defines a new command for the horizontal lines, change thickness here
-% 
-% 
-% 
-% {\huge Attack results: project updates}\\ % Title of your document
-% \HRule \\[0.2cm]
-% 
-%  
-% \input{attack-results}
-% % \input{CNS2016}
-% % \input{DivPASS-journal}
-% % \input{Outgoing-Eclipse}
-% % \input{Battle-Fields}
-% % \input{CSUR2016}
-% 
-% \end{document}
-
 \documentclass[conference]{IEEEtran}
 \makeatletter
 \def\ps@headings{%
@@ -49,8 +9,7 @@
 \pagestyle{headings}
 
 \IEEEoverridecommandlockouts
-
-% \usepackage{array}
+ \usepackage{array}
 % \usepackage{algorithm2e}
 % \usepackage{algorithmicx}
 % \usepackage{algorithm}% http://ctan.org/pkg/algorithms
@@ -72,6 +31,16 @@
 
 % *** MATH PACKAGES ***
 %
+
+\usepackage{xfrac}
+%\usepackage{algorithmicx}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+
+
+
+
+
 \usepackage[cmex10]{amsmath}
 \usepackage{amssymb}
 \usepackage{xfrac}
@@ -99,7 +68,7 @@
 
 
 \begin{document}
-\title{Detection and Eviction Mechanisms for Internal Attacks on Pull-based P2P Video Streaming Systems}
+\title{Detection Mechanism for Internal Attacks on Pull-based P2P Video Streaming Systems}
 
 % \author{\IEEEauthorblockN{Hatem Ismail}
 % \IEEEauthorblockA{DEEDS Group, TU Darmstadt\\
@@ -110,6 +79,11 @@
 % \IEEEauthorblockA{University of Waterloo \\
 % % Waterloo, Canada\\
 % stefanie.roos@uwaterloo.ca}
+% \and
+% \IEEEauthorblockN{Giang Nguyen}
+% \IEEEauthorblockA{TU Dresden\\
+% % Darmstadt, Germany\\
+% giang.nguyen@tu-dresden.de}
 % \and
 % \IEEEauthorblockN{Neeraj Suri}
 % \IEEEauthorblockA{DEEDS Group, TU Darmstadt\\
@@ -131,8 +105,8 @@
 \input{related}
 \input{conclusion}
 
-% \bibliographystyle{unsrt}
-% \bibliography{internal-attacks-online}
+ \bibliographystyle{unsrt}
+ \bibliography{ref}
 
 \IEEEpeerreviewmaketitle
 

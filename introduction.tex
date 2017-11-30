@@ -1,5 +1,44 @@
 \section{Introduction}
 \label{sec:intro}
 
+Over the last few years, the attraction, and thus reliance, on streaming P2P systems is continuously growing. 
+Accordingly, a remarkable number of P2P streaming applications are available in the market with a very close competition to gain users trust.
+As users are mainly oriented about safety and QoS when selecting an application, a lot of research has been conducted that focuses on these particular issues.
+
+In this context, several data dissemination techniques that target optimizing the user's experience in terms of the utilizing the upload and download bandwidth.
+With outperforming other dissemination techniques, \textit{pull-based} is the most popular/convenient approach used in most of the existing applications [ref1,ref2].
+In a pull-based streaming system, peers actively advertise and request video chunks through a periodic exchange of their buffer-maps in a mesh overlay.
+
+In fact, authenticating, tracking or monitoring operations in a pull-based system is very challenging due to the tight constraints of a distributed online stream, where peers posses limited bandwidth, resources and in-tolerable delay constraints [ref3, ref4, ref5].
+Moreover, in [ref6, SWAP, RBCS], the authors pointed out to the possibility of inferring the overlay structure and thus, sabotaging the system by externally attacking the headnodes, i.e., the attacker is only capable of remotely shutdown the headnodes (closest peers to the source).
+In ref[SWAP], the authors propose a lightweight swapping system that allows the source to periodically swap it's neighbors which remarkably enhanced the system's resiliency towards external inference attacks.
+However, to the best of our knowledge, the impact of an internal attack is never considered in the literature, which is the gap we aim to fill in this work.
+
+In this work, we show that internal inference attacks are more severe and more importantly, resilient to the aforementioned countermeasures.
+In an internal inference attack, malicious peers are capable of locating as headnodes.
+We also consider the case where the attacker are aware of the source's joining time/ stream start and accordingly, can join the overlay soon enough to place the malicious peers as the system's headnodes.
+% Once malicious head-node intercepts a video chunk from the source, it 
+Note that given the (usual) small number of neighbors (headnodes) [ref7], it is indeed very feasible to fully surround the source with malicious peers.
+Hence, the source is completely isolated and thus, the user's experience is drastically impacted.
+
+To that end, our contribution in this paper is two-fold. 
+First, we show the severity/ feasibility of conducting internal inference attacks through simulation study-cases.
+Second, we propose a detection mechanism as a countermeasure against various adversarial behaviors deployed by malicious peers in an internal attack.
+
+Our mechanism aims at detection malicious behaviors in a fast, low overhead approach while considering the case where the attacker can fully occupy the source's neighbor list with malicious headnodes.
+In details, peers are able to trigger a request to their neighbors once (a) a peer is, with evidence, performing maliciously, or (b) generally, the stream satisfaction (the user's experience) of a peer drops below a given application threshold.
+Once proven malicious, a peer fires a complain, on behalf of all other participants in the detection process, to the source to remove the detected peer from it's neighbor list,
+or to generally decide about peers that might be affecting the satisfaction level of non-headnodes.
+
+Through a theoretical and simulation studies, we show that our detection mechanism can fully restore users satisfaction/ experience up to ~100\%.
+Simultaneously, the proposed mechanism can correctly detect malicious peers with up to ~92\% while providing low overhead of less than 5\% in severe attack conditions.
+
+\subsection*{Paper Structure}
+The rest of the paper is organized as follows: Section~\ref{sec:related} discusses the related work and the background.
+Section~\ref{sec:system-model} provides the system model. In Section~\ref{sec:Attack}, the concepts underlying the attacker model internal attack and the conducted adversarial behaviors are defined.
+The detection mechanism is fully discussed in Section~\ref{sec:detection}, with the theoretical analysis is discussed in Section~\ref{sec:analysis}.
+The internal attack's impact, along with the detection mechanism performance and efficiency, are evaluated in Section~\ref{sec:evaluation}. Finally, we conclude our work and discuss the future work in Section~\ref{sec:conclusion}
+
+ 
 
 
