@@ -1,11 +1,14 @@
 \section{Detection \& Eviction}
 \label{sec:detection}
 
-In this section, we describe the main building blocks that constitutes proposed detection mechanism that targets detecting malicious peers in order to restore benign peers satisfaction.
-We start by highlighting the general overview on how the detection mechanism flows.
-Then, we describe the main differences between detecting a dropping attack behavior and detecting a manipulation/outdated chunks attack behavior, referred to as \textit{drop} attack, \textit{manp} attack for simplicity.
-Afterwards, each detection sub-block, as illustrated in Figure~\ref{detection-blocks}, is presented.
-The list of variables used throughout the paper is provided in Table \ref{tab:acronyms}.
+In this section, we describe the main building blocks constituting the proposed detection mechanism that target detecting malicious peers and restoring benign peers satisfaction.
+We start by highlighting the general overview on how the detection mechanism flows, as shown in Figure~\ref{detection-blocks}.
+
+Then, the main differences between detecting a dropping attack behavior and detecting a manipulation/outdated chunks attack behavior, and thus, how the detection mechanism behaves, are highlighted.
+We refer to those behaviors as \textit{drop} attack, \textit{manp} attack for simplicity. 
+Note that the detection mechanism behaves similarly in a manipulation and outdated attack scenarios.
+Afterwards, each procedure involved in the detection mechanism is detailed. 
+The list of variables used throughout this section is provided in Table \ref{tab:acronyms}.
 
 \begin{table}[ht]
 \center
@@ -19,94 +22,105 @@ $MN$ & malicious neighbors & $\sigma$ & satisfaction threshold\\\hline
 $H_n$ & list of headnodes & $P_n$ & potential candidates list \\\hline
 $\alpha$ & manipulation threshold& $F$ & familiarity of suspect \\\hline
 $G$ & suspect guilt value & $\kappa$ & dropping det. allowed\\\hline
-$NL$ & neighbor list & $BM$ & buffer map\\\hline
+$sat$ & peer satisfaction level& $BM$ & buffer map\\\hline
 \end{tabular}
 \label{tab:acronyms}
 \end{table}
 
 \subsection{Mechanism Overview}
-Here we describe an overall view for the flow of the detection mechanism before every process is detailed through the rest of the section.
-Once a detection condition is triggered by a peer $b$, it sends a detection request to all peers that exist in its neighbor list.
-Afterwards, for each peer who receives a request, prepares a reply according to the request ID, i.e., a \textit{drop} or a \textit{manp} request.
-Once $b$ collects all the replies, it decides according to the proposed detection from the  in the replies to whether to fire a complaint to the source or not.
-$b$ sends the complaint on behalf of the participating peers in the detection request. 
-Finally, if $b$ sends a complaint to the source, the source decides about its content and replies back to $b$. In turn, $b$ forwards the source reply to the other participants in the complaint.
+Here we describe the overall view of the detection mechanism's flow presented in Figure~\ref{detection-blocks}.
+Once a detection condition is triggered by peer $b$, it sends a detection request to all peers in its neighbor list.
+Afterwards, whenever a peer receives a detection request, it prepares a reply according to the request type, i.e., a \textit{drop} or a \textit{manp} request, 
+
+Then, after $b$ collects all the replies, it decides according to a certain scheme, as detailed in ~\ref{Firing_a_ComplainSection}, whether to fire a complaint to the source or not.
+If a decision is taken, $b$ sends a complaint on behalf of the participating peers in the detection request. 
+The source verifies the complaint and accordingly, replies back to $b$ with the corresponding steps to follow. 
+Finally, $b$ forwards the source's reply to the other participants in the complaint.
 
 \subsection{Drop vs. Manp Detection}
 
-On one hand, when $m$ conducts a drop attack on $b$, $b$ is not capable of detecting any malicious behavior.
-Specifically, in a drop attack, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has.
+On one hand, when $s$ conducts a drop attack on $b$, $b$ is not capable of detecting any malicious behavior.
+Specifically, in a drop attack, $s$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $s$ is only requesting chunks it already has.
+Thus, detecting a violation in this case is not feasible.
 
-On the other hand, in a manipulation or outdated chunks behavior, $m$ is eventually suspected as malicious since $b$ already expects the requested chunk from $m$.
+On the other hand, in a manipulation or outdated chunks scenario, $s$ is eventually suspected as $b$ already expects the requested chunk from $s$.
 Note that a peer might be overloaded due to a tight upload bandwidth or serving a lot of peers and thus, not able to serve all the requests.
 Accordingly, the detection mechanism should differentiate between a malicious manipulating peer and an overloaded peer, which is discussed in Section~\ref{Detection-Trigger}.
-To that end, through the rest of the section, we describe how the detection mechanism handles both cases: Drop and Manp detection.
+To that end, through the rest of the section, we describe how the detection mechanism handles both cases: \textit{Drop} and \textit{Manp} detection.
 
 \begin{figure}
  \centering
- \includegraphics[width=8cm,height=3cm]{./Figures/detection-blocks.eps}
-  \caption{Detection mechanism main blocks}
+ \includegraphics[width=5.5cm,height=6cm]{./Figures/detection.pdf}
+  \caption{Detection mechanism process. The same process is applied for \textit{Drop} and \textit{Manp} trigger scenarios. $S$ represents the source peer. The grey entry represents a \textit{Manp} scenario. In this case, this peer does not receive a detection request.}
 \label{detection-blocks} 
 \end{figure}
 
 \subsection{Detection Trigger}
 \label{Detection-Trigger}
-Here we describe how a peer decides on sending a detection request for both attack behaviors.
-In both cases, once $b$ decides on sending a detection request, it only send it to peers in its own neighbor list $NL$ to check if those neighbors agree with it or not, disregarding the source if $b$ is a headnode.
+ Now we discuss how a peer decides on sending a detection request for both attack behaviors.
+% In both behaviors, once $b$ decides on sending a detection request, it only sends to peers in its own neighbor list to check if those neighbors agree with it or not, disregarding the source if $b$ is a headnode.
+% 
+% Afterwards, as detailed in Section~\ref{Firing_a_Complain}, once $b$ receives its neighbors replies to the detection request, $b$ decides whether or not to fire a complaint to the source.
 
-Afterwards, as detailed in Section~\ref{Firing_a_Complain}, once $b$ receives its neighbors replies to the detection request, $b$ decides whether or not to fire a complaint to the source.
-We assume that the source's address is publicly known and any peer can send a complaint to the source directly whether the source is already a neighbor to this peer or not.
 \subsubsection*{Drop trigger}
-In this, as there is no evidence of a manipulation from any neighbor to $b$, the only factor that $b$ is concerned about is the satisfaction threshold $\sigma$.
+As there is no evidence of manipulation from any neighbor to $b$, the only factor that $b$ is concerned about in this attack behavior is the satisfaction threshold $\sigma$.
 The satisfaction of a peer is defined as the fraction of missed chunks, i.e., the continuity of the stream according to the $Hit/Hit+miss$ chunk ratio.
 In details, $b$ decides to trigger a detection request only if:
 \begin{enumerate}
- \item $b$'s instant $satisfaction level < \sigma$.
+ \item $b$'s current satisfaction level is less than the predefined threshold such that $sat_b < \sigma$.
  \item Number of drop detections sent by $b$ in the last $1000s$ is $< \kappa$.
+ \item $b$ is not currently participating in another \textit{drop} detection process.
 \end{enumerate}
-The latter condition guarantees that any peer can not trigger multiple detection requests in parallel so that: (a) to avoid exhausting the source's bandwidth, and (b) the source is most likely processing another peer's dropping request that might eventually positively impact $b$'s satisfaction level.
-Note that in a drop attack, the detection request sent to $b$'s neighbors does not contain a certain suspect, hence, peers receiving a suspect-less request are aware that indeed it is a drop attack request.
+The latter condition guarantees that any peer can not trigger or participate in multiple detection requests in parallel as: (a) frequently sending complaints will eventually overload the source,
+and (b) the source is most likely processing another peer's dropping request that is most likely to enhance $b$'s satisfaction level as we discuss in Section~\ref{complaint_source}.
+Note that in a \textit{drop} attack, the detection request sent to $b$'s neighbors does not contain a certain suspect, hence, peers receiving a an empty suspect field request are aware that indeed it is a \textit{drop} request.
 
 \subsubsection*{Manp trigger}
-$b$ decides to send a detection request if it was manipulated $\alpha$ times by $m$.
-This condition essentially guarantees that any peer is not suspected instantly if it did not deliver the requested chunk, i.e., a benign peer might not deliver a chunk to the requester if it is already loaded serving other peers.
+For every time $b$ detects a manipulation event from $s$, $b$ stores the incident in its \textit{suspicious list}.
+$b$ decides to send a detection request if it was manipulated $\alpha$ times by $s$, i.e., the event counts for $s$ in $b$'s list equals $\alpha$.
+This condition essentially guarantees that any peer is not suspected instantly if it did not deliver the requested chunk, i.e., a benign peer might not deliver a chunk to the requester if it is already loaded due to serving other peers.
 Obviously, $b$ attaches the suspect ID in the detection request to its neighbors.
 
-In order to avoid malicious peers from abusing the manipulation detection mechanism, $b$ informs $m$ when $\alpha_m = \alpha -1$.
-Accordingly, $m$ should give highest priority to $b$ and send the requested chunk signed and waits for a signed \textit{Ack} from $b$ as an evidence for not manipulating.
-This evidence is later needed for the source to decide about $m$, as discussed in Section~\ref{Firing_a_Complain}.
+In order to hinder malicious peers from abusing the manipulation detection mechanism, $b$ informs $s$ when $\alpha_s = \alpha -1$.
+Accordingly, $s$ should assign highest priority to serve $b$'s request. Note that the $s$ signs the chunk and waits for a signed \textit{Ack} from $b$ as an evidence for not manipulating.
+To that end, $s$ sends a detection request suspecting $b$ in case it did not receive an \textit{Ack} from $b$.
+This evidence is later needed for the source to decide about $s$, as discussed in Section~\ref{Firing_a_Complain}.
 
 \subsection{Processing Detection Request}
-Here we describe how a peer $s \in S_b$, where $S_b$ is the set of peers who received a detection request from $b$ prepares a detection reply.
-Note that as malicious peers the replies differ according to whether $s$ is malicious or benign, thus, we distinguish those two cases below. We refer to a malicious recipient as $s_m$ and a benign one as $s_b$.
+Here we describe how a peer $d \in D$, where $D$ is the set of peers who received a detection request from $b$, prepares a detection reply.
+As malicious peers collude with each other, they reply differently according to whether $s$ is malicious or benign.
+Hence, we distinguish those two cases below. We refer to a malicious participant as $d_m$ and a benign one as $d_b$.
 
 \subsubsection*{Benign recipient}
-Once $s_b$ receives a \textit{drop} request, it replies with its current satisfaction level as there is no exact suspect to give a detailed opinion about.
-In case the request is a \textit{manp}, $s_b$ generates a reply the following three factors:
+Once $d_b$ receives a \textit{drop} request, it replies only with its current satisfaction level $sat$.
+Nevertheless, in case of a \textit{Manp} request, $d_b$ generates a reply using the following three factors:
 \begin{enumerate}
- \item \textit{familiarity $F$}: if $s_b$ is familiar with the suspect or not, i.e., is the suspect a current or a former neighbor of $s_b$ or not.
- \item \textit{Guilt $G$}: number of manipulation evidences $s_b$ has against the suspect. Note that this number is always $<\alpha$, otherwise, $s_b$ triggers a detection request on its own.
- \item \textit{Satisfaction}: the current satisfaction level of $s_b$.
+ \item \textit{familiarity $F$}: where $F=1$ is $d_b$ is familiar with the suspect, $F=0$ otherwise, i.e., a boolean that states if the suspect is a current or a former neighbor of $s_b$ or not.
+ \item \textit{Guilt $G$}: the number of manipulation evidences $d_b$ has against the suspect.
+ Note that this number is always $<\alpha$, otherwise, $d_b$ triggers a detection request on its own.
+ \item \textit{Satisfaction}: similar to \textit{drop} request, $d_b$ attaches its current satisfaction level $sat$.
 \end{enumerate}
 
 
 \subsubsection*{Malicious recipient}
-Clearly, a malicious peer colludes with other malicious peers in the overlay. 
-This means that $m$ always aim at providing the highest values that decreases the probability that $b$ reaches a decision to fire a complaint to the source, as detailed in Section~\ref{Firing_a_Complain}.
-Hence, $s_m$ constantly tries to convince the detection initiator $b$ that it is fully satisfied in a \textit{drop} request, i.e., $satisfaction =1$.
-In a \textit{manp} request, $s_b$ replies with $F=true, G=0, satisfaction=1$ in case the suspect is a colluding malicious peer.
+
+Intuitively, $d_m$ always aim at providing the highest values that decrease the probability of $b$ reaching a decision to fire a complaint to the source, as detailed in Section~\ref{Firing_a_Complain}.
+Hence, in a \textit{Drop} request, $d_m$ constantly replies with $sat=1$.
+In a \textit{Manp} request, $d_m$ replies with $F=1, G=0, sat=1$ in case the $s$ is a colluding malicious peer.
+Note that $d_m$ is not capable of providing fake $G$ values in its replies in case $s$ is benign as $s$ due to the missing evidence of signing chunk sent from $s$ to $d_m$ at the $\alpha-1$ manipulation event. 
 Next, we describe how $b$ processes the values provided in the detection replies in order to reach a decision about firing a complaint to the source.
 
 \subsection{Firing a Complaint}
 \label{Firing_a_Complain}
-Here we discuss the procedure applied by $b$ once it receives all detection replies for a certain request, or a waiting time-out $t_d$ occurs.
+Here we discuss the procedure applied by $b$ once it receives all detection replies for a certain request, or a waiting time-out $t_{replies}$ occurs.
+We assume that the source's address is publicly known and $b$ can send a complaint to the source directly whether the source is already a neighbor to $b$ or not.
 \subsubsection*{Drop request}
-As discussed earlier, the only factor that $b$ can consider is $satisfaction$.
+As discussed earlier, the only factor that $b$ can consider is $sat$.
 Thus, $b$ uses the following formula in order to decide about generating a complaint to the source:
 
 \begin{align}
 \label{eq:drop_satis_equation}
-\sum_{i=0}^{z} satisfaction_i/z < \sigma
+\sum_{i=0}^{z} sat_i/z < \sigma
 \end{align}
 where $z$ is the total number of the received replies. 
 In other words, $b$ sends a complaint only if the average satisfaction level of its neighbors is below than the predefined satisfaction threshold $\sigma$.
@@ -114,36 +128,34 @@ In other words, $b$ sends a complaint only if the average satisfaction level of 
 To prevent malicious peers from abusing the drop detection mechanism and cause an illusion at the source that a general dissatisfaction is detected, the following conditions are applied:
 \begin{enumerate}
  \item Each peer can at most generate or participate in maximum $\kappa$ drop complaints to the source per $1000s$.
- \item No simultaneous generation or participation in more than one complaint is allowed to any peer, i.e., once a node is engaged in a detection process, it should wait till the final decision is reached.
+ \item No simultaneous generation or participation in more than one complaint is allowed to any peer, i.e., once $d$ is engaged in a detection process, it should wait till the final decision is reached.
 \end{enumerate}
-Those conditions guarantee that malicious peers indeed can not abuse the drop detection mechanism, however, benign peers as well have the same constraints which might reside in a benign peer not able to eventually complain to the source.
-For those reasons, as we further elaborate on Section~\ref{complaint_source}, once a drop detection complaint reaches the source, the fraction of headnodes replaced is large in order to maximize the likelihood of affecting a large fraction of peers, specially for peers who might not be able to complain to the source at the moment.
+Although those conditions guarantee that malicious peers can not abuse the drop detection mechanism,
+however, benign peers also have the same constraints which might reside in a benign peer not able to eventually complain to the source.
+For those reasons, as we further elaborate on Section~\ref{complaint_source}, once a drop detection complaint reaches the source, the fraction of headnodes replaced is large in order to maximize the likelihood of affecting a large fraction of the overlay, specially for peers who might not be able to complain to the source at the moment.
 
 \subsubsection*{Manp request}
-In this simpler case where a certain suspect already exists, $b$ decides to fire a complaint if the following conditions hold:
+In this simpler case where a certain suspect exists, $b$ decides to fire a complaint if the following conditions hold:
 
 \begin{align}
 \label{eq:drop_familiarity_equation}
 \sum_{i=0}^{z} F_i > z/2
 \end{align}
-The condition in \ref{eq:drop_familiarity_equation} guarantees that at least more than half of the participant peers have information about the suspect, i.e., the suspect is an entry in their neighbor list.
-Note that for any peer, $F_i = 0 | 1$.
-
-Next, for peers who are \textit{familiar} with the suspect, the total average \textit{Guilt} must be greater than the maximum amount of \textit{Guilt} that can be reported by familiar peers, as stated in ~\ref{eq:drop_guilt_equation}.
+The condition in \ref{eq:drop_familiarity_equation} assures that at least more than half of the participant peers have information about the suspect, i.e., the suspect is an entry in their neighbor list.
+Next, for \textit{familiar} peers with the suspect, the aggregated \textit{Guilt} reported value must be greater than the maximum calculated value that can be reported by familiar peers, as stated in ~\ref{eq:drop_guilt_equation}.
 
 \begin{align}
 \label{eq:drop_guilt_equation}
 \sum_{i=0}^{z} G_i > \sum_{i=0}^{z} F_i*(\alpha-1)/2
 \end{align}
-Nevertheless, the same condition for dropping attack in \ref{eq:drop_guilt_equation} is also considered in a \textit{Manp}.
-Thus, we assure that the participating peers are currently unsatisfied, i.e., peers might have $m$ in their suspect list $G$ but still they are satisfied through other peers and no gain for them from firing a complaint.
-
+Nevertheless, the same condition for \textit{Drop} detection in \ref{eq:drop_guilt_equation} is also considered in a \textit{Manp} type.
+The reason for considering the satisfaction factor is to assure that the participating peers are currently unsatisfied, i.e., $d_b$ might have manipulation event for $s$ in their \textit{suspicious list} , however, $d_b$ is satisfied through other peers and no gain for it from firing a complaint and overload the source.
 
 \subsubsection*{Firing a complaint to the source}
 
-Once $b$ decides on firing a complaint according to the aforementioned criterion, $b$ generates a complaint message to the source.
-In a \textit{Manp} scenario, $b$ attaches the following information to the complaint message: (a) IDs of \textit{familiar} peers, (b) evidences of manipulation gathered from the replies, (c) per reply values of $G,satisfaction$ and (d) suspect ID.
-While in a \textit{Drop} scenario: (a) IDs of all participating peers, and (b) $satisfaction$ value in each reply.
+Once $b$ decides on firing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source.
+In a \textit{Manp} scenario, $b$ attaches the following information to the complaint message: (a) IDs of \textit{familiar} peers, (b) evidences of manipulation gathered from the replies, (c) per reply values of $G,sat$ and (d) suspect's $s$ ID.
+While in a \textit{Drop} scenario $b$ attaches: (a) IDs of all participating peers, and (b) $sat$ value in each reply.
 
 \subsection{Processing a Complaint at the Source}
 \label{complaint_source}
@@ -151,34 +163,37 @@ At this point the source receives a complaint from $b$, the source decides on th
 Note that the source can identify the request's type based on the suspect field, i.e., in case of no suspect attached, it is indeed a \textit{Drop} complaint.
 
 \subsubsection*{Manp request}
-We start with the simpler case of receiving a \textit{Manp} request, where the source executes the following steps:
+We start with the simpler case of receiving a \textit{Manp} request. 
+The source executes the following steps:
 \begin{enumerate}
- \item Checks the validity of all manipulation attached, as discussed in Section~\ref{Detection-Trigger}.
- \item If the above checked is passed, the source removes the suspect from its neighbor list.
- \item Saves the free entry in its list after removing the suspect for $b$ to connect and be a headnode. Hence, all peers participating in the complaint will be directly connected to a headnode which remarkably enhance their satisfaction level.
- \item The suspect is added to a blacklist, i.e., the suspect is not allowed to be a headnode again.
- \item Generating a \textit{Complaint Reply} to $b$ confirming blacklisting $m$.
+ \item Checks the validity of all manipulation evidences attached, as discussed in Section~\ref{Detection-Trigger}.
+ \item If the above check is passed, the source removes the suspect $s$ from its neighbor list.
+ \item Saves the free entry in its list (after removing $s$) for $b$ to connect and be a headnode.
+ Accordingly, all the peers participating in the complaint will have a direct headnode ($b$) which remarkably enhances their satisfaction level.
+ \item $s$ is added to a blacklist, i.e., $s$ is not allowed to be a headnode again.
+ \item Generates a \textit{Complaint Reply} to $b$ confirming blacklisting $s$.
 \end{enumerate}
 
 \subsubsection*{Drop request}
 Now we consider the \textit{Drop} complaint. The source conducts the following procedure:
 \begin{enumerate}
- \item Divides the set of participating peers into two sets $H_n$ and $P_n$.
- $H_n$ contains peers in the complaint that are already headnodes.
+ \item Divides the set of participating peers into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes.
  \item Removes all peers in $H_n$ from its neighbor set.
- \item Randomly connects to other peers. The reason behind not connecting to a fraction of the participating peers in the complaint is to avoid the probability that malicious peers are abusing the detection mechanism in order to get connected as headnodes.
- \item Adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = neighborList\setminus H_n$.
+ \item Randomly connects to another $|H_n|$ peers. 
+ The reason for not connecting to a fraction of the participating peers in the complaint is to avoid the probability that malicious peers are abusing the detection mechanism in order to get promoted to headnodes.
+ \item Adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list).
  \item Sends a \textit{Complaint Reply} to $b$ containing $H_n$ and $P_n$.
 \end{enumerate}
 
 \subsection{Processing a Complaint Reply \& Forwarding}
 
-As the last procedure, when $b$ receives the \textit{complaint Reply} from the source, $b$ performs the following procedure, which again differs based on the complaint type (\textit{Drop} or \textit{Manp}).
+Finally, when $b$ receives the \textit{complaint Reply} from the source, $b$ performs the following procedure,
+which again differs based on the complaint type (\textit{Drop} or \textit{Manp}).
 In a \textit{Manp} scenario, $b$ executes the following procedure:
 \begin{enumerate}
  \item Disconnects and blacklist the suspect.
- \item Connects to the source, if for abnormal reasons the connection is not possible, $b$ connects to a random peer.
- \item Forwards the \textit{Complaint Reply} to all peers who agree about $m$ being malicious, i.e., familiar peers with $G > 0$.
+ \item Connects to the source, if, due to any other reason, the connection is not possible, $b$ connects to another random peer (excluding peers in $b$'s blacklist).
+ \item Forwards the \textit{Complaint Reply} to all peers who agree about $s$ being malicious, i.e., familiar peers with $G > 0$.
 \end{enumerate}
 Finally, the participating peers performs step 1 and 2 once they receive the forwarded reply.
 
@@ -187,18 +202,17 @@ For a \textit{Drop} scenario, $b$ follows the next procedure:
  \item Disconnects from all peers in $H_n$. Note that peers in $H_n$ are not expelled from $b$'s neighbor list due to the fact that those peers are not proven malicious.
  \item Connects to $|H_n|$ peers from $P_n$, in case $|H_n|>|P_n|$, peers connect to $|P_n|+(|H_n|-|P_n|)random peers$.
 \end{enumerate}
-Similarly, $b$ forwards the complaint to the other participants who in turn executes steps 1 and 2.
+Similarly, $b$ forwards the complaint to the other participants, who in turn execute steps 1 and 2.
 
 \subsection{General Notes}
 The detection mechanism does not aim at expelling peers from the system.
 The reason behind that is the \textit{Drop} adversarial behavior, where basically benign peers are equally probable to be removed from the source's neighbor list as malicious ones.
-Thus, the impact on such peers is minimized, i.e., they are not entirely expelled from the system or even from the peers participating in the complaint neighbor list.
-In general, the main target of the detection mechanism in a \textit{Drop} case is to enhance the peers satisfaction level while minimizing: (a) peers replacements, (b) detection overhead, and (c) malicious peers chances to abuse the detection mechanism.
+Thus, by keeping those peers in the system, the impact on such peers is minimized, i.e., they are neither entirely expelled from the system nor even blacklisted at the peers participating in the complaint neighbor list.
+In general, the main target of the detection mechanism in a \textit{Drop} case is to enhance the peers satisfaction level while minimizing: (a) peers replacements (through minimizing the number of detection requests initiated), (b) detection overhead, and (c) malicious peers chances to abuse the detection mechanism.
 
-Unlike in a \textit{Drop} detection complaint, peers proved malicious through out the detection process are placed at relatively distant positions from the source.
-Hence, such peers impact on delivering chunks to other peers is less critical than peers at headnodes or neighboring headnodes.
-In the following section, we evaluate our mechanism's performance and accuracy, along with demonstrating the attack's severity.
-
+Unlike in a \textit{Drop} detection complaint, in a \textit{Manp} complaint, peers proved malicious through out the detection process are eventually located at distant positions from the source (due to the removals occue once those peers are detected)..
+Hence, the reliance on those peers to deliver chunks to other peers is significantly minimized compared to headnodes peers or even headnodes neighbors (which positively impacts the overlay's satisfaction in case those peers are indeed malicious or due to low bandwidth, CPU resources or even an unreliable network connection).
+In the following section, we evaluate our mechanism's performance and accuracy, along with highlighting the attack's severity.
 
 
 
