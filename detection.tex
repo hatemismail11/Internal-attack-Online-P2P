@@ -1,11 +1,11 @@
-\section{Detection \& Eviction}
+\section{Detection Mechanism}
 \label{sec:detection}
 
 In this section, we describe the main building blocks constituting the proposed detection mechanism that target detecting malicious peers and restoring benign peers satisfaction.
 We start by highlighting the general overview on how the detection mechanism flows, as shown in Figure~\ref{detection-blocks}.
 
-Then, the main differences between detecting a dropping attack behavior and detecting a manipulation/outdated chunks attack behavior, and thus, how the detection mechanism behaves, are highlighted.
-We refer to those behaviors as \textit{drop} attack, \textit{manp} attack for simplicity. 
+Then, we highlight the main differences between detecting a dropping attack behavior and detecting a manipulation/outdated chunks attack behavior, and thus, how the detection mechanism behaves.
+We refer to those behaviors as \textit{Drop} attack, \textit{Manp} attack for simplicity. 
 Note that the detection mechanism behaves similarly in a manipulation and outdated attack scenarios.
 Afterwards, each procedure involved in the detection mechanism is detailed. 
 The list of variables used throughout this section is provided in Table \ref{tab:acronyms}.
@@ -30,9 +30,9 @@ $sat$ & peer satisfaction level& $BM$ & buffer map\\\hline
 \subsection{Mechanism Overview}
 Here we describe the overall view of the detection mechanism's flow presented in Figure~\ref{detection-blocks}.
 Once a detection condition is triggered by peer $b$, it sends a detection request to all peers in its neighbor list.
-Afterwards, whenever a peer receives a detection request, it prepares a reply according to the request type, i.e., a \textit{drop} or a \textit{manp} request, 
+Afterwards, whenever a peer receives a detection request, it prepares a reply according to the request type, i.e., a \textit{Drop} or a \textit{Manp} request, 
 
-Then, after $b$ collects all the replies, it decides according to a certain scheme, as detailed in ~\ref{Firing_a_ComplainSection}, whether to fire a complaint to the source or not.
+Then, after $b$ collects all the replies, it decides according to a certain scheme, as detailed in Section~\ref{Firing_a_Complain}, whether to fire a complaint to the source or not.
 If a decision is taken, $b$ sends a complaint on behalf of the participating peers in the detection request. 
 The source verifies the complaint and accordingly, replies back to $b$ with the corresponding steps to follow. 
 Finally, $b$ forwards the source's reply to the other participants in the complaint.
@@ -76,15 +76,19 @@ and (b) the source is most likely processing another peer's dropping request tha
 Note that in a \textit{drop} attack, the detection request sent to $b$'s neighbors does not contain a certain suspect, hence, peers receiving a an empty suspect field request are aware that indeed it is a \textit{drop} request.
 
 \subsubsection*{Manp trigger}
-For every time $b$ detects a manipulation event from $s$, $b$ stores the incident in its \textit{suspicious list}.
+For each time $b$ detects a manipulation event from $s$, $b$ stores the incident in its \textit{suspicious list}.
 $b$ decides to send a detection request if it was manipulated $\alpha$ times by $s$, i.e., the event counts for $s$ in $b$'s list equals $\alpha$.
-This condition essentially guarantees that any peer is not suspected instantly if it did not deliver the requested chunk, i.e., a benign peer might not deliver a chunk to the requester if it is already loaded due to serving other peers.
-Obviously, $b$ attaches the suspect ID in the detection request to its neighbors.
+Clearly, $b$ attaches the suspect ID in the detection request to its neighbors.
 
-In order to hinder malicious peers from abusing the manipulation detection mechanism, $b$ informs $s$ when $\alpha_s = \alpha -1$.
-Accordingly, $s$ should assign highest priority to serve $b$'s request. Note that the $s$ signs the chunk and waits for a signed \textit{Ack} from $b$ as an evidence for not manipulating.
-To that end, $s$ sends a detection request suspecting $b$ in case it did not receive an \textit{Ack} from $b$.
-This evidence is later needed for the source to decide about $s$, as discussed in Section~\ref{Firing_a_Complain}.
+This condition essentially guarantees that any peer is not suspected instantly if it did not deliver the requested chunk, i.e., a benign peer might not deliver a chunk to the requester if it is already loaded due to serving other peers.
+Thus, when a benign peer is incapable of serving a request of another peer, it is already aware that the event was recorded and eventually, the serving peer might be under suspicious if it did not serve the upcoming requests from the same peer.
+In turn, the serving peer can assign higher priorities to serve requests for certain peers that have already manipulation logs about it.
+
+In order to decrease the likelihood of malicious peers abusing the manipulation detection mechanism, participating peers in a \textit{Manp} request are requested to provide evidence of having the suspected peer in their neighbor list.
+To obtain such evidence, whenever peer $p_1$ is adding $p_2$ to its neighboring list, $p_2$ is requested to sign its entry in $p_1$'s neighbor list.
+Moreover, peers periodically request a fresh signatures from all other peers in their neighbor list.
+Accordingly, only peers with such fresh signatures from $s$ are allowed to participate in the complaint, i.e, as in fact, outdated signatures might indicates connections already removed from $s$'s neighboring list.
+This evidence is later needed for the source to decide about $s$, as detailed in Section~\ref{Firing_a_Complain}.
 
 \subsection{Processing Detection Request}
 Here we describe how a peer $d \in D$, where $D$ is the set of peers who received a detection request from $b$, prepares a detection reply.
@@ -107,7 +111,7 @@ Nevertheless, in case of a \textit{Manp} request, $d_b$ generates a reply using 
 Intuitively, $d_m$ always aim at providing the highest values that decrease the probability of $b$ reaching a decision to fire a complaint to the source, as detailed in Section~\ref{Firing_a_Complain}.
 Hence, in a \textit{Drop} request, $d_m$ constantly replies with $sat=1$.
 In a \textit{Manp} request, $d_m$ replies with $F=1, G=0, sat=1$ in case the $s$ is a colluding malicious peer.
-Note that $d_m$ is not capable of providing fake $G$ values in its replies in case $s$ is benign as $s$ due to the missing evidence of signing chunk sent from $s$ to $d_m$ at the $\alpha-1$ manipulation event. 
+Note that $d_m$ is incapable of providing fake $F$ values in its replies in case $s$ is benign due to the obligation of sending the signed proof that $s$ is indeed a neighbor of $d_m$. 
 Next, we describe how $b$ processes the values provided in the detection replies in order to reach a decision about firing a complaint to the source.
 
 \subsection{Firing a Complaint}
@@ -166,7 +170,7 @@ Note that the source can identify the request's type based on the suspect field,
 We start with the simpler case of receiving a \textit{Manp} request. 
 The source executes the following steps:
 \begin{enumerate}
- \item Checks the validity of all manipulation evidences attached, as discussed in Section~\ref{Detection-Trigger}.
+ \item Requests the neighboring list of $s$ to validate the familiarity of peers participating in the complaint, as discussed in Section~\ref{Detection-Trigger}.
  \item If the above check is passed, the source removes the suspect $s$ from its neighbor list.
  \item Saves the free entry in its list (after removing $s$) for $b$ to connect and be a headnode.
  Accordingly, all the peers participating in the complaint will have a direct headnode ($b$) which remarkably enhances their satisfaction level.

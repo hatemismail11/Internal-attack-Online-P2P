@@ -1,61 +1,48 @@
 \section{Evaluation}
 \label{sec:eval}
 
-The aim of this section is to highlight the attack's impact on both the DONet network as well as when SWAP is also functioning. 
-To that end, first I introduce the main parameters used for the simulation and then discuss the results.
+The aim of this section is two fold presentedi in the following two case studies.
+First, we show the severity of conducting an internal attack on the closest peers to the source.
+Second, we evaluate the proposed detection mechanism performance, accuracy and the overhead it induce on the whole system.
 
-% \subsection{Simulation parameters}
-% First, the main simulation parameters are provided in Table \ref{tab:SM-Parameters}. Note that two runs were executed for each simulation configuration. 
-% For discussing the results, only one simulation run results is used out of the two runs as they showed almost typical behavior.
-% % Hatem
-% 
-% \begin{table} [!htbp]
-% \centering
-% \caption{Simulation parameters}
-% \begin{tabular}{|l|l|}
-% \hline
-% \bf{Parameter} & \bf{Value} \\\hline\hline
-% Maximum number of neighbors & 10\\
-% \hline
-% Malicious headnodes $Hx$ & ${2,5,8,10}$ \\
-%  \hline
-% Malicious neighbors $MN=x-Hx$ & ${1,3,5}$ \\
-%  \hline
-%  Overlay size $n$ & 500 \\
-%  \hline
-% Simulation time & 1000s\\
-% \hline
-% New parameters for the results only& !!!!!!! \\
-% \hline
-% Nomination number of Hops (SWAP) $hops$ & ${1,2,3}$\\
-% \hline
-% $DetAl$ no. parallel drop requests & 2 \\
-% \hline
-% $ST$ satisfaction threshold & 0.9 \\
-% \hline
-% $MT$ Manipulation threshold & 4\\
-% \hline
-% $MB$ Malicious behavior & ${0,1,2}$\\ 
-% \hline
-% \end{tabular}
-% 
-% \label{tab:SM-Parameters}
-%  
-% \end{table}
-% 
-% \subsection{Case studies}
-% For every simulation configuration, the results for both networks (DONet w/o SWAP) are provided. 
-% The metric used in comparing all the results is \emph{Instant Loss (IL)}: the ratio of missed chunks to the total number of chunks emitted from the source averaged.
-% 
-% The attack's impact are discussed through the following two case studies:
-% \begin{enumerate}
-%  \item \emph{Impact of $Hx$} through varying $Hx={2,5,8,10}$ while fixing $MN=5$ and $hops=1$.
-%  \item \emph{Impact of $MN$} through varying $MN={1,3,5}$ while fixing $Hx=8$ and $hops=1$.
-%  
-% \end{enumerate}
-% 
-% 
-% \subsection{Results}
+\subsection{Simulation Framework and Parameters}
+%TODO: GIANG ?!
+Our simulation framework is based OSSim \cite{nguyen2013ossim}. 
+OSSim constitutes a packet level simulator for pull-based online video streaming overlays such as DONet \cite{zhang2005coolstreaming}, which fits our scope in this work.
+% DONet protocol suite was used in similar work \cite{nguyen2016swap} and showed high relevance to the state-of-art \cite{}
+
+
+The parameters used in both case studies are provided in Table \ref{tab:parameters}.
+
+\begin{table}[ht]
+\center
+\caption{Acronyms}
+\begin{tabular}{|c|c||c|c|}
+\hline
+
+\bf{Var.} & \bf{Description}  & \bf{Var.} & \bf{Description} \\\hline\hline
+Overlay size $n$ & 500 & Mal. headnodes $\eta$ & $\{5,8,10\}$\\\hline
+Mal. neighbors $MN$ & $\{1,3,5\}$ & Sat. threshold $\sigma$ & $\{0.7,0.8,0.95\}$\\\hline
+Manp threshold $\alpha$ & $\{2,3,4\}$& Drop det. allowed $\kappa$ & $\{1,2\}$ \\\hline
+
+\end{tabular}
+\label{tab:parameters}
+\end{table}
+
+\subsection{Metrics}
+
+Here we define the metrics used throughout the evaluation.
+\subsubsection*{Satisfaction} which represents the average peer satisfaction level through the whole simulation interval.
+\subsubsection*{Avg. Loss} that indicates the avg chunk loss per peer.
+\subsubsection*{Detection Overhead $DO$} used to evaluate the detection overhead induced on the system, i.e., the ratio of messages exchanged during due to the detection mechanism over all signaling messages in the system.
+\subsubsection*{Malicious Ratio per Neighbor List $MRNL$} which measures the ratio of malicious peers over all peers in benign peers neighbor list.
+
+\subsection{Case 1: Internal Attack Severity}
+
+
+
+\subsection{Case 2: Detection Mechanism Performance}
+
 % 
 % The results along with a discussion for each of the two aforementioned case studies are detailed next.
 % 
