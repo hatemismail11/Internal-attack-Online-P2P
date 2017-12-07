@@ -36,7 +36,7 @@
 %\usepackage{algorithmicx}
 \usepackage{algorithm}% http://ctan.org/pkg/algorithms
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
-
+\usepackage{xifthen}
 
 
 
@@ -65,6 +65,20 @@
 
 %  \includeversion{extended}
 %  \excludeversion{conf}
+
+\setlength{\marginparsep}{6pt}
+\setlength{\marginparwidth}{40pt}
+\setlength{\marginparpush}{5pt}
+\newcounter{mn}
+\setcounter{mn}{1}
+\newcommand{\superscript}[1]{\ensuremath{{}^{\textrm{\scriptsize #1}}}}
+\newcommand{\roughtext}[1]{\begin{color}{yellow}#1\end{color}}
+\newcommand{\mntext}[1]{\colorbox{yellow}{\begin{color}{black}#1\end{color}}}
+\newcommand{\mn}[2][]{{\tiny\superscript{\mntext{\arabic{mn}}}}\marginpar{\scriptsize{
+  \ifthenelse{\isempty{#1}}
+  {\mntext{\parbox{0.95\marginparwidth}{\superscript{\arabic{mn}} \raggedright{#2}}}}
+  {\mntext{\parbox{0.95\marginparwidth}{\superscript{\arabic{mn}}#1 says: \raggedright{#2}}}}
+}}\stepcounter{mn}}
 
 
 \begin{document}

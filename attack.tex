@@ -1,40 +1,43 @@
 \section{Internal Attack Model}
 \label{sec:Attack}
 
-In this section, we describe the concept of launching an internal attack on streaming P2P overlays that targets intercepting video chunks from the source. 
-% We consider an attack that is not specific to a certain streaming P2P data dissemination technique, i.e., hybrid, push or pull-based.
-First, the attack's target, budget and malicious peers placement are discussed.
-Afterwards, the various adversarial behaviors that can be applied by a malicious peer once a video chunk is intercepted are discussed.
+In this section, we introduce the concept of internal attacks in the context of streaming P2P overlays.
+Our focus are attacks on availability that aim to intercept video chunks from the source. 
+We start by introducing attack characteristics such as target, budget, and placement of malicious nodes. 
+Afterwards, our main discussion outlines the the various adversarial behaviors that can be applied by a malicious peer once a video chunk has been intercepted. 
 
 \subsection{Target, budget \& placement}
+\mn[Stef]{I find the the use of \& in titles strange...}
 
-The target of the internal attack is to severely degrade the user's satisfaction by cutting out the stream from the source before being available for dissemination between benign peers.
+The target of the internal attack is to severely degrade the user's satisfaction by 
+interrupting the video stream close to the source, thus preventing dissemination between benign peers.
 Accordingly, the attacker aims at placing malicious peers $m\in M$ in the source's neighbor list.
 Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
-
+\mn[Stef]{You have not introduced budget yet}
 
 Assume an attacker with budget $x$ is capable of assigning malicious peers as headnodes.
 In fact, it is feasible to do so, for example through (a) joining the overlay as early as possible in case of a pre-announced time for a streamline, (b) taking down the source's benign headnodes, or (c) Abusing peers' replacement mechanisms \cite{nguyen2016swap}.
 Hence, the attacker assigns a fraction $\eta x$, where $\eta\in [0,1]$, of its resources as headnodes.
+\mn[Stef]{is that a fixed fraction or can it change over time?}
 
-The rest of malicious peers $MN=x-\eta x$ are assigned as neighbors to the $\eta x$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes.
-In this manner, $MN$ is also used to counter swapping mechanisms, i.e., malicious peers keep on advertising $MN$ to the source for swapping, and thus, $MN$ are promoted as headnodes.
+The rest of malicious peers $MN=x-\eta x$ are assigned as neighbors to the $\eta x$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes. \mn[Stef]{is that the best strategy for the attacker?if so, why? if not, alternatives?}
+In this manner, $MN$ is also used to counter swapping mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious peers keep on advertising $MN$ to the source for swapping, and thus, $MN$ are promoted as headnodes.
 
-Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}.
+Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs} \mn[Stef]{not a complete sentence}.
 This means that inferring the existing headnodes for the attacker is applicable.
 Accordingly, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
 
 \subsection{Adversarial behaviors}
-Here we discuss three basic adversarial behaviors that are executed either with a certain probability or independently according to the attacker's target, budget and the susceptibility to being detected.
+Here we discuss three basic adversarial behaviors that are executed either with a certain probability or independently\mn[Stef]{what do you mean by independently here?} according to the attacker's target, budget and the susceptibility to being detected.
 In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of the different attack scenarios below.
 
 \subsubsection*{Dropping behavior}
-Once a malicious peer $m$ receives a video-chunk from the source or even through another head-node, $m$ drops the packet. 
+When a malicious peer $m$ receives a video-chunk from the source or even through another head-node\mn[Stef]{head-node or headnode?}, $m$ drops the packet. 
 Hence, $m$ never advertises for those chunks and instead, keeps on requesting the dropped chunks from other benign peers $b \in B$.
-This scenario guarantees that benign peers: (a) can not detect any manipulation from $m$, and (b) are incapable of inferring that $m$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer.
+This scenario guarantees that benign peers: (a) can not detect any manipulation from $m$\mn[Stef]{Seems contradictory to the fact that we have a detection mechanism}, and (b) are incapable of inferring that $m$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer.\mn[Stef]{The sentence sounds as if we assume that $m$ is a headnode?}
 
 \subsubsection*{Manipulating behavior}
-In a manipulating behavior, $m$ sends its updated buffer-map to $b$.
+When executing manipulating behavior, $m$ sends its updated buffer-map to $b$, i.e., it advertises received chunks. 
 Although having the actual video chunks $m$ advertised for, $m$ never sends the requested video chunks from $b$.
 In this scenario, malicious peers are more susceptible to being detected, however, a benign peer might be overloaded and can not serve all the requests it receive and might also appear manipulating to other benign peers.
 In Section~\ref{sec:detection}, we further discuss this case and propose a procedure that decreases the likelihood of suspecting a benign peer of being malicious.
