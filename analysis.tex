@@ -15,8 +15,13 @@ The exact results differs between \textit{Drop} and \textit{Manp}.
 Recall that a dropping request issued by a node $u$ succeeds in removing a headnode $h$ if the average satisfaction level of  $u$'s neighbors is below a threshold $\sigma$.  
 
 We start by considering the case that malicious nodes want to use the detection mechanism to remove a benign headnode. In that case, malicious peers will claim that their satisfaction level is 0 to maximize the chance of removal. 
-Afterwards, we consider the case that malicious nodes collude to retain a malicious headnode. In the second case, malicious nodes will participate 
- 
+Afterwards, we consider the case that malicious nodes collude to retain a malicious headnode. In the second case, malicious nodes will provide a satisfaction level of 1 to prevent the removal of a malicious node.
+
+As stated in Section~\ref{sec:detection}, \textit{Drop} requests do not contain a target as such but only state a low satisfaction level. As a consequence, there can be none or several headnodes affected by a  \textit{Drop} request, which seems contradictory to the attacker goals of removing benign or retaining malicious headnodes. Indeed, if several headnodes are members of the initiator's neighbor list, either all of them or none are removed. Malicious nodes will execute variations of the above strategies then. 
+
+First, malicious peers aiming to remove a benign headnode can figure out the identity of the headnodes due to the chunk distribution~\cite{nguyen2016swap}. If there are multiple benign headnodes in the neighborhood, they could try to remove them successively by applying the strategy proposed in Proposition~\ref{prop:dropping-removal} for each headnode. In contrast, a malicious node issuing a \textit{Drop} request would not include a malicious headnode in its supposed neighbor list to prevent causing the accidental removal of the headnode. 
+   
+Second, if a benign node initiates a \textit{Drop} request, the strategy of maximizing the satisfaction level of malicious peers will protect multiple malicious headnodes. However, the nature of the optimal strategy is less obvious if the benign node's request might also lead to the removal of an honest headnode. In general, malicious peers will prefer a strategy that protects their headnodes rather than aiming to remove the benign headnode as replacement headnodes are likely to be honest.  
 
 \begin{proposition}
 \label{prop:dropping-removal}
