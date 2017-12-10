@@ -1,6 +1,7 @@
 \section{Detection Mechanism}
 \label{sec:detection}
 
+ \mn[Stef]{Somehow the word manipulation seems wrong here, both approaches are dropping, one just also drops the chunk information, the other one only the chunks as such; manipulation makes it sound as if nodes produce false BMs}
 In this section, we describe the main building blocks constituting the proposed detection mechanism that target detecting malicious peers and restoring benign peers satisfaction.
 We start by highlighting the general overview on how the detection mechanism flows, as shown in Figure~\ref{detection-blocks}.
 
@@ -31,13 +32,14 @@ $sat$ & peer satisfaction level& $BM$ & buffer map\\\hline
 Here we describe the overall view of the detection mechanism's flow presented in Figure~\ref{detection-blocks}.
 Once a detection condition is triggered by peer $b$, it sends a detection request to all peers in its neighbor list.
 Afterwards, whenever a peer receives a detection request, it prepares a reply according to the request type, i.e., a \textit{Drop} or a \textit{Manp} request, 
+ \mn[Stef]{can we have \textit{Drop} and \textit{Manp} as a macro?}
 
 Then, after $b$ collects all the replies, it decides according to a certain scheme, as detailed in Section~\ref{Firing_a_Complain}, whether to fire a complaint to the source or not.
 If a decision is taken, $b$ sends a complaint on behalf of the participating peers in the detection request. 
 The source verifies the complaint and accordingly, replies back to $b$ with the corresponding steps to follow. 
 Finally, $b$ forwards the source's reply to the other participants in the complaint.
 
-\subsection{Drop vs. Manp Detection}
+\subsection{Drop vs.\ Manp Detection}
 
 On one hand, when $s$ conducts a drop attack on $b$, $b$ is not capable of detecting any malicious behavior.
 Specifically, in a drop attack, $s$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $s$ is only requesting chunks it already has.
@@ -92,6 +94,7 @@ This evidence is later needed for the source to decide about $s$, as detailed in
 
 \subsection{Processing Detection Request}
 Here we describe how a peer $d \in D$, where $D$ is the set of peers who received a detection request from $b$, prepares a detection reply.
+ \mn[Stef]{mention again that $D$ contains neighbors of $b$, nobody will remember that from the overview}
 As malicious peers collude with each other, they reply differently according to whether $s$ is malicious or benign.
 Hence, we distinguish those two cases below. We refer to a malicious participant as $d_m$ and a benign one as $d_b$.
 
@@ -108,6 +111,8 @@ Nevertheless, in case of a \textit{Manp} request, $d_b$ generates a reply using 
 
 \subsubsection*{Malicious recipient}
 
+ \mn[Stef]{I think we are mixing different content here, a description of the detection mechanism should first describe the detection complete mechanism, then you should talk about possible abuse}
+
 Intuitively, $d_m$ always aim at providing the highest values that decrease the probability of $b$ reaching a decision to fire a complaint to the source, as detailed in Section~\ref{Firing_a_Complain}.
 Hence, in a \textit{Drop} request, $d_m$ constantly replies with $sat=1$.
 In a \textit{Manp} request, $d_m$ replies with $F=1, G=0, sat=1$ in case the $s$ is a colluding malicious peer.
@@ -116,10 +121,12 @@ Next, we describe how $b$ processes the values provided in the detection replies
 
 \subsection{Firing a Complaint}
 \label{Firing_a_Complain}
+ \mn[Stef]{why `fire' and not file, which is the common word?}
 Here we discuss the procedure applied by $b$ once it receives all detection replies for a certain request, or a waiting time-out $t_{replies}$ occurs.
 We assume that the source's address is publicly known and $b$ can send a complaint to the source directly whether the source is already a neighbor to $b$ or not.
 \subsubsection*{Drop request}
 As discussed earlier, the only factor that $b$ can consider is $sat$.
+ \mn[Stef]{do we consider $b$'s own satisfaction or only the nodes in $D$?}
 Thus, $b$ uses the following formula in order to decide about generating a complaint to the source:
 
 \begin{align}
@@ -127,11 +134,14 @@ Thus, $b$ uses the following formula in order to decide about generating a compl
 \sum_{i=0}^{z} sat_i/z < \sigma
 \end{align}
 where $z$ is the total number of the received replies. 
+ \mn[Stef]{going from 0 to z implies $z+1$ elements}
 In other words, $b$ sends a complaint only if the average satisfaction level of its neighbors is below than the predefined satisfaction threshold $\sigma$.
+ \mn[Stef]{while it is ok to define variables in a formula after an equation for short equations, it is not good style}
 
 To prevent malicious peers from abusing the drop detection mechanism and cause an illusion at the source that a general dissatisfaction is detected, the following conditions are applied:
 \begin{enumerate}
  \item Each peer can at most generate or participate in maximum $\kappa$ drop complaints to the source per $1000s$.
+ \mn[Stef]{1000s seems arbitrary, introduce a parameter called for the length of the interval}
  \item No simultaneous generation or participation in more than one complaint is allowed to any peer, i.e., once $d$ is engaged in a detection process, it should wait till the final decision is reached.
 \end{enumerate}
 Although those conditions guarantee that malicious peers can not abuse the drop detection mechanism,
