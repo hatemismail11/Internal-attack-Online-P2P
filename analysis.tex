@@ -1,2 +1,60 @@
 \section{Analysis}
 \label{sec:analysis}
+
+
+
+%Due to the high flexibility of pull-based content distribution and the corresponding loose correlation between a node's position in the network and its satisfaction, 
+We focus on characterizing the behavior of malicious nodes aiming to subvert the detection mechanism to remove honest headnodes and retain malicious ones. 
+More precisely, we show that successfully accusing a honest headnode of manipulation requires that the malicious peer starting the complaint has have a neighborhood that is dominated by malicious peers. Similarly, preventing the removal of a malicious headnode requires that a high number of the complaint issuer's neighbors are malicious. 
+The exact results differs between \textit{Drop} and \textit{Manp}.
+
+
+
+\subsection{False Accusations in \textit{Drop}} 
+  
+Recall that a dropping request issued by a node $u$ succeeds in removing a headnode $h$ if the average satisfaction level of  $u$'s neighbors is below a threshold $\sigma$.  
+
+We start by considering the case that malicious nodes want to use the detection mechanism to remove a benign headnode. In that case, malicious peers will claim that their satisfaction level is 0 to maximize the chance of removal. 
+Afterwards, we consider the case that malicious nodes collude to retain a malicious headnode. In the second case, malicious nodes will participate 
+ 
+
+\begin{proposition}
+\label{prop:dropping-removal}
+Let $m$ be a malicious neighbor of a benign headnode $h$. Assume that $m$ has $x$ benign neighbors $v_1, \ldots , v_x$ sorted by their satisfaction levels $sat_1 \leq sat_2 \leq \ldots  \leq sat_x$. 
+Then $m$ has to involve at least $c$ malicious nodes in the set $D$ of queried nodes with 
+\begin{align}
+\label{eq:drop-rem}
+c = argmin_{c' in \mathbb{N}} \frac{1}{t}\sum_{i=1}^{t-c'}sat_i < \sigma
+\end{align}
+to achieve the removal of $h$. 
+\end{proposition}
+\mn[Stef]{Can't $m$ claim to only have one malicious neighbor, which would lead to the removal of $b$ and only keep two malicious nodes from filing future complaints; I think we need a minimal number $t$ of node that have to participate in a drop request}
+\begin{proof}
+To remove a headnode, there has to be a \textit{Drop} requests containing the responses of $n\geq t$ nodes with satisfaction levels $s_1, \ldots , s_n$ and 
+$\frac{1}{n}\sum_{i=1}^{n}s_i < \sigma$.
+The node $m$ aims to minimize the number of involved malicious nodes $c$ because each malicious node can only participate in one \textit{Drop} request per interval. At the same time, $m$ has to ensure that the average satisfaction level of the involved nodes is below $\sigma$ and that the request includes at least $t$ nodes in total.
+In other words, $m$ solves the optimization problem of finding a minimal $c$ and a set of integers $I \subset \{1, \ldots, x\}$ such that i) $c + |I| \geq t$, and ii) $\frac{c + |I|} \sum_{i \in I} sat_i < \sigma$. 
+Choosing the lowest satisfaction levels indeed solves the optimization problem. 
+\end{proof}
+
+Proposition~\ref{prop:dropping-removal} indicates that a high number of malicious peers have to participate in the removal of one honest headnode if the satisfaction levels are high. 
+For instance, if all benign peers have a satisfaction level of 1, then Eq.~\ref{eq:drop-rem} states that $\lfloor \sigma*t \rfloor +1$ are required to remove \emph{one} honest headnode. As the source chooses the replacement headnode  randomly, the new headnode is likely benign. Hence, under the assumption of a low attacker budget, the attacker might only be able to remove one or two headnodes per interval and does not manage to place its own nodes close to the source. 
+\mn[Stef]{However, if the benign neighbors of a malicious nodes are not satisfied, which seems likely, it is pretty easy to remove a honest headnode...}
+
+\begin{proposition}
+\label{prop:dropping-retain}
+Let $m$ be a malicious headnode and $b$ be an honest neighbor of $m$ that initiates a \textit{Drop request}.
+Assume that $b$ has $x$ benign neighbors $v_1, \ldots , v_x$ sorted by their satisfaction levels $sat_1, sat_2 ,\ldots  , sat_x$. In addition, $b$ has $y$ malicious neighbors and $x+y\geq t$.
+ Then the removal of $m$ fails if and only if 
+\begin{align}
+\label{eq:drop-retain}
+\frac{1}{x+y}\left(y+\sum_{i=1}^x sat_i\right) \geq \sigma.  
+\end{align} 
+\end{proposition}
+\begin{proof}
+The claim follows directly as malicious peers will set their satisfaction level to 1 and \textit{Drop} requests with an average satisfaction of at leas $\sigma$ are disregarded.  
+\end{proof}
+
+Proposition~\ref{prop:dropping-retain} that the removal of malicious nodes is successful unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
+If indeed satisfaction levels remain high, there is no real need to remove the malicious peer. In contrast, it is highly unlikely that an honest peer is surrounded by malicious peers if the attack budget is low. Even if one neighbor of the malicious headnode has primarily malicious neighbors, other benign neighbors are likely to file a complaint. Controlling the neighborhood of all of $m$'s neighbors should not be possible for the attacker. 
+ 
