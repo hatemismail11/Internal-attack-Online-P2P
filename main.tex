@@ -37,7 +37,7 @@
 \usepackage{algorithm}% http://ctan.org/pkg/algorithms
 \usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
 \usepackage{xifthen}
-
+\usepackage{xspace}
 
 
 
@@ -80,6 +80,8 @@
   {\mntext{\parbox{0.95\marginparwidth}{\superscript{\arabic{mn}} \raggedright{#2}}}}
   {\mntext{\parbox{0.95\marginparwidth}{\superscript{\arabic{mn}}#1 says: \raggedright{#2}}}}
 }}\stepcounter{mn}}
+
+\input{macros}
 
 
 \begin{document}
