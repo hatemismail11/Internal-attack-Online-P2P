@@ -1,3 +1,31 @@
-\section{Background \& Related Work}
+\section{Related Work}
 \label{sec:related}
+
+In this section we highlight the most relevant existing work on attacks on online P2P video streaming systems.
+The most common type of attacks on such systems is pollution attacks \cite{pollution1}. 
+Nonetheless, we do not focus such attack due to: (i) the fact that our proposed internal attack is irrelevant to pollution attacks, and (ii) various detection and mitigation schemes for pollution attacks have been exhaustively studied in literature \cite{pollution2}.
+For example, Network Coding (\textit{NC}) schemes provide an effective light-weight defense against pollution attacks \cite{nc}.
+
+In \cite{defending}, the authors propose a defense mechanism against buffer maps cheating for pull-based DONet system \cite{zhang2005coolstreaming}.
+The proposed attack model only considers peers to be selfish, i.e., peers are not certainly malicious, nevertheless, they aim at bounding their forwarding limit.
+Hence, the proposed countermeasure constitutes a trust model to encourage peers to forward video chunks to other peers in order to receive a better service from other peers when requesting chunks.
+However, the proposed trust model is inapplicable in case peers are intentionally malicious and indeed can intercept video chunks directly from the source, as described in our attack model.
+
+A similar rewarding mechanism against free rides attacks is proposed in \cite{defending2}, where peers who participates more in forwarding video chunks are rewarded with more flexibility to select their partners for a better streaming quality.
+However, no detection or malicious peers isolation scheme is proposed. 
+In addition, the proposed scheme is not effective against severe internal DoS attacks, where malicious peers are capable of performing a severe DoS attack directly on the source's stream, as proposed in this work.
+
+\textit{Antiliar}, another defense mechanism against a diverse set of attacks (selective data omission, fake reporting and fake block attack) is proposed in \cite{antiliar}.
+The main idea behind \textit{Antiliar} is to track peers behaviors in a secure progress log, and thus, detect misbehaving peers.
+Although results verifies the efficiency and low overhead induced by \textit{Antiliar}, the algorithm strongly relies on a complicated cryptographic scheme which might be unsuitable for devices with low CPU resources.
+Moreover, \textit{Antiliar} uses a central entity (tracker), which introduces another security threat when targeted by attackers.
+
+In \cite{nguyen2014resilience}, the authors discuss a very similar problem when headnodes are attacked, and accordingly, propose a robust video chunks striping scheme. 
+The proposed scheme aims at reducing dependencies on headnodes via enforcing peers for more diversity when requesting video chunks, as in a pull-based approach, peers are more likely to keep requesting data from the same set of peers.
+In this scheme, peers are forced to logically their neighbor list into groups and thus, explicitly request specific stripes from a dedicated group.
+
+Although the scheme is shown to remarkably increase the system's robustness and resilience against attacks on headnodes, the striping scheme is only effective against external attacks, where the attacker is only capable of shutting down headnodes.
+In our proposed internal attack, the attacker is capable of controlling the headnodes in a very early stage of the stream start, and thus, makes it impossible to make use of the striping scheme to expand the number of headnodes as proposed in \cite{nguyen2014resilience}.
+
+
 
