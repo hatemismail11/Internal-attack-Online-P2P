@@ -1,16 +1,18 @@
 \section{Introduction}
 \label{sec:intro}
 
-
-
 Over the last few years, the attraction, and thus reliance, on online video streaming P2P systems is continuously growing. 
 As such systems are mainly characterized by being delay intolerant, churn prone and susceptible to attacks, robust data dissemination techniques that can accommodate for large scale applications had been exhaustively studied \cite{sasi2014survey}.
 Among various existing architectures, mesh overlays mostly operate in a pull-based fashion \cite{zhang2014modeling}, where peers exchange available versus required chunks through a periodic buffer-map ($BM$) update.
 
 Several attacks exist, and still evolving, that targets manipulating the $BM$ updates, known as $BM$ cheating attacks \cite{cheatingAnalysis}.
-In a typical $BM$ cheating attack, malicious peers aim to lower the user's streaming experience via faking the content of their own $BM$s: 
-(a) \textit{Drop}: by not including all the chunks available in their buffer, (b) \textit{Manipulation}: requesting chunks they already received, offering chunks they never received or delay sending actual chunks to other peers to out-date their buffer.
-Accordingly, (i) honest peers become more overloaded trying to serve more chunk requests, and (ii) due to the streaming delay constraint, peers easily experience a low-quality and discontinuous stream.
+In a typical $BM$ cheating attack, malicious peers aim to lower the user's streaming experience via lying about the chunks received-required during exchanging $BM$s. 
+Specifically, malicious peers perform the following actions: 
+(a) dropping received chunks including the chunks available in their buffer,
+(b) requesting already received chunks or offering chunks they never received,
+(c) delay sending actual chunks to other peers to out-date their buffer.
+Accordingly, honest peers become more overloaded trying to serve more chunk requests.
+In addition, due to the streaming delay constraint, peers easily experience a low-quality and discontinuous stream.
 
 Although various countermeasures exist \cite{zhang2005coolstreaming, defending2, antiliar}, those solutions render ineffective when cheating attacks is combined with inference attacks \cite{nguyen2016swap,4395124,rbcs}.
 Inference attacks idea is the ability of the attacker to identify the closest peers to the source, i.e., peers directly connected to the source, we refer to those peers as headnodes.
