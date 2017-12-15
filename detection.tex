@@ -20,7 +20,7 @@ We show through the rest of the section the concept behind how peers can identif
 \hline
 
 \bf{Var.} & \bf{Description}  & \bf{Var.} & \bf{Description} \\\hline\hline
-$H_n$ & list of headnodes & $P_n$ & potential candidates list \\\hline
+$H_n$ & headnodes in a complaint & $P_n$ & potential candidates list \\\hline
 $x$ & no. of malicious peers & $\eta$ & mal. headnodes fraction\\\hline
 $BM$ & buffer-map & $MN$ & (1-$\eta$) non-headnodes mal. peers\\\hline
 $\sat$ & peer satisfaction level & $\satThres$ & satisfaction threshold \\\hline
@@ -209,11 +209,13 @@ the fraction of headnodes replaced can be large in order to maximize the likelih
 At this point the source receives a complaint from $b$, the source decides on the next procedure depending on complaint request content.
 The source conducts the following procedure:
 \begin{enumerate}
- \item Divides the set of participating peers into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes. \mn[Stef]{Isn't $H_n$ defined as complete list of headnodes in the table?}
+ \item Divides the set of participating peers into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes. 
+%  \mn[Stef]{Isn't $H_n$ defined as complete list of headnodes in the table?}
  \item Removes all peers in $H_n$ from its neighbor set.
  \item Randomly connects to another $|H_n|$ peers. 
  The reason for not connecting to a fraction of the participating peers in the complaint is to avoid the probability that malicious peers are abusing the detection mechanism in order to get promoted to headnodes.
- \item Adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list). \mn[Stef]{confused on what $P_n$ is}
+ \item Adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list). 
+%  \mn[Stef]{confused on what $P_n$ is}
  \item Sends a \textit{Complaint Reply} to $b$ containing $H_n$ and $P_n$.
 \end{enumerate}
 
@@ -267,7 +269,7 @@ Indeed, the only peers that get blacklisted are those who violate the detection 
 
 In general, the main target of the detection mechanism is to enhance the peers satisfaction level while minimizing: (a) peers replacements (through minimizing the number of detection requests initiated), (b) detection overhead, and (c) malicious peers chances to abuse the detection mechanism.
 In the following section, we evaluate our mechanism's performance and accuracy, along with highlighting the attack's severity.
-\mn[Stef]{why is that only for the drop case?}
+% \mn[Stef]{why is that only for the drop case?}
 
 % Unlike in a \drop detection complaint, in a \block complaint, peers proved
 % \mn[Stef]{again, they might just have a really low performance, why prove, you even state in the next sentence that it could be low resources}
