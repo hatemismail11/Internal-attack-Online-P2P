@@ -20,7 +20,7 @@ Intuitively, attacking headnodes can drastically impact the overlay due to the c
 
 In \cite{nguyen2016swap, rbcs, nguyen2014resilience}, countermeasures to inference attacks are proposed. 
 Nevertheless, the attacks proposed are external, i.e., the attacker is assumed to be able to shutdown headnodes only.
-To the best of our knowledge, no one have considered internal inference attacks where the attacker is capable of placing malicious peers as headnodes.
+To the best of our knowledge, this is the first work that addresses internal $BM$ cheating attacks in top of inferring the overlay's topology, i.e., the attacker is capable of placing malicious peers as headnodes.
 
 In this work, we focus on the class of internal inference attacks conducting $BM$ cheating attacks, i.e., malicious headnodes conducting cheating attacks.
 In fact, the existing countermeasures that address mitigating external inference attacks through diverse the set or periodically replacing the source's headnodes are inefficient against internal attacks.
@@ -29,14 +29,16 @@ The reason is that once the attacker control the source's headnodes, malicious p
 To that end, our contributions in this work are:
 \begin{itemize}
  \item We show the feasibility of \textit{partially-fully} attacking the source's headnodes, which causes significant degradation in the user's satisfaction.
- \item Proposing a detection mechanism as a countermeasure against various adversarial behaviors deployed by malicious peers in an internal attack.
+ \item Proposing a detection mechanism as a countermeasure against \drop adversarial behavior deployed by malicious peers located as headnodes. 
+ \drop is the most sophisticated attack when combined with internal inference attack, as we discuss in Section~\ref{sec:Attack}.
 \end{itemize}
 
-Our mechanism is two-fold. on the one hand, to counter dropping cheating behavior, peers cooperatively decide on filing a complaint to the source when upon agreeing on a certain dissatisfaction level.
+Our mechanism focuses on countering \drop cheating behavior. 
+The mechanism's main idea is that peers cooperatively decide on filing a complaint to the source when upon agreeing on a certain dissatisfaction level.
 Accordingly, the source is capable of detecting suspicious headnodes and thus, removes them to restore a stable data dissemination state.
-On the other hand, we propose a local procedure (no global cooperation between peers) where each peer is able to detect manipulation from malicious peers and accordingly, remove suspicious peers from its own contact list.
+% On the other hand, we propose a local procedure (no global cooperation between peers) where each peer is able to detect manipulation from malicious peers and accordingly, remove suspicious peers from its own contact list.
 
-Through a theoretical and simulation studies, we show that the proposed detection mechanism can fully restore users satisfaction/ experience, with minimal signaling overhead of $<10\%$, up to the range of 90-100\% in worst case scenarios where the attacker is fully occupying the source's headnodes.
+Through a theoretical and simulation studies, we show that the proposed detection mechanism can fully restore users satisfaction/ experience, with minimal signaling overhead of $<10\%$, up to the range of 80-100\% in worst case scenarios where the attacker is fully occupying the source's headnodes.
 
 % 
 % at detection malicious behaviors in a fast, low overhead approach while considering the case where the attacker can fully occupy the source's neighbor list with malicious headnodes.
