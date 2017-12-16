@@ -133,7 +133,7 @@ $b$ files a complaint to the source if:
 \label{eq:drop_satis_equation}
 \frac{1}{z}\sum_{i=1}^{z} \sat_i< \satThres. 
 \end{align} 
-otherwise, $b$ either starts another detection request in case $\kappa >0$ in the interval of $t_{det}$, or waits till it is allowed to send another detection request.
+otherwise, $b$ either starts another detection request in case $\kappa >0$ in the interval of $\treply$, or waits till it is allowed to send another detection request.
 
 Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source with the following information attached in the complaint message: 
 (a) IDs of all participating peers, and (b) $\sat$ value in each reply.
@@ -156,7 +156,7 @@ To that end, to prevent malicious peers from abusing the drop detection mechanis
 % \mn[Stef]{can we try to merge these with the constraints on $b$ starting the request, it is kindof repetitive like this}
 \begin{enumerate}
 \item At least $\minP$ have to participate in the request. 
- \item Each peer can at most generate or participate in maximum $\kappa$ drop complaints to the source per $t_{det}$.
+ \item Each peer can at most generate or participate in maximum $\kappa$ drop complaints to the source per $\treply$.
 %  \mn[Stef]{1000s seems arbitrary, introduce a parameter called for the length of the interval}
  \item No simultaneous generation or participation in more than one complaint is allowed to any peer, i.e., once $d$ is engaged in a detection process, it should wait till the final decision is reached.
 \end{enumerate}
