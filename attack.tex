@@ -4,43 +4,49 @@
 In this section, we introduce the concept of internal attacks in the context of streaming P2P overlays.
 Our focus are attacks on availability that aim to intercept video chunks from the source. 
 We start by introducing attack characteristics such as target, budget, and placement of malicious nodes. 
-Afterwards, our main discussion outlines the the \drop adversarial behavior that can be applied by a malicious peer once a video chunk has been intercepted. 
+Afterwards, our main discussion outlines the the \drop adversarial behavior. 
 
 \subsection{Target, budget and placement}
 
 
 The target of the internal attack is to severely degrade the user's satisfaction by interrupting the video stream close to the source, thus preventing dissemination between benign peers.
-Accordingly, the attacker aims at using its budget to occupy the source's neighbor list, where budget denotes the malicious peers $m\in M$ the attacker can place in the system.
-Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
+
+The budget $x$ of the attacker corresponds to the number of nodes controlled by the malicious party. 
+In accordance with the attack goal of maximizing impact, the attacker aims to use its budget to occupy the source's neighbor list. 
+Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \mn[Stef]{Why do we use less than 10, then?} \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
 
 Assume an attacker with budget $x$ is capable of assigning malicious peers as headnodes.
 In fact, it is feasible to do so, for example through (a) joining the overlay as early as possible in case of a pre-announced time for a streamline, (b) taking down the source's benign headnodes, or (c) Abusing peers' replacement mechanisms \cite{nguyen2016swap}.
-Hence, the attacker initially assigns a fraction $\eta x$, where $\eta\in [0,1]$, of its resources as headnodes.
+Hence, the attacker initially assigns a fraction $\eta x$, where $\eta\in [0,1]$\mn[Stef]{unsure if I would use a fraction here, as the product $\eta x$ always has to be an integer}, of its resources as headnodes.\mn[Stef]{that sounds more like an external attacker, if we want to make clear that is an internal, we should write it as 'the initial system has ...'}
 As the attacker's main objective is to fully occupy the source's neighbor list, the optimum value of $\eta$, from the attacker's perspective, is when $\eta x = |NeighborList|$.
 In case such full exploitation of the source's neighbor list is not feasible when the attack is being initiated, the attacker continuously tries to increase the value of $\eta$.  
 
-The rest of malicious peers $MN=(1-\eta) x$ are assigned as neighbors to the $\eta x$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes. 
-Nonetheless, such placement is considered the best strategy for the attacker for the following reasons: (a) $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ are promoted as headnodes
-, and (b) as benign peers in malicious headnodes neighbors 
+The rest of malicious peers $MN=(1-\eta) x$ are assigned as neighbors to the $\eta x$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes. \mn[Stef]{again, assigned sounds like the attacker can control the topology, which is misleading, what about sth like 'connect to malicious headnodes'}
+Nonetheless\mn[Stef]{why nonetheless?}, such placement is considered the best strategy for the attacker for the following reasons: (a) $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ are promoted as headnodes
+, and (b) as benign peers in malicious headnodes neighbors \mn[Stef]{what?}
 
 
 Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, accordingly, the attacker is capable of inferring the existing headnodes in the system.
-Accordingly, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
+Accordingly, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.\mn[Stef] {Why is this paragraph here? part of the attack strategy, not the parameters governing it}
 
 \subsection{\drop adversarial behavior}
-Here we discuss the main adversarial behavior executed based on the attacker's target, budget.
-In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of different combinations of peers placement strategies executed by the attacker.
+Now, we discuss the main adversarial behavior executed based on the attacker's target, budget. \mn[Stef]{Do you mean 'and'?}
+In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of different combinations of peer placement strategies executed by the attacker. \mn[Stef]{why is that here? and what does combination mean here?}
 
 
 % \subsubsection*{Dropping behavior}
-When a malicious peer $m$ receives a video-chunk from the source or even through another headnode, $m$ drops the packet. 
-Hence, $m$ never advertises for those chunks and instead, keeps on requesting the dropped chunks from other benign peers $b \in B$.
+A malicious peer $m$ executing the \drop behavior performs a stealthy denial-of-service attack: 
+When $m$ receives a video-chunk from a neighbor, irrespective if it is the source or another node, $m$ drops the packet. 
+In particular, $m$ never advertises for those chunks in its $BM$.
+Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$.\mn[Stef]{We never introduced $B$ and $M$, did we?}
 This scenario guarantees that: (a) malicious peers are less susceptible to being suspected given that the requesting benign peers are not aware that $m$ indeed received those chunks,
-and (b) are incapable of inferring that the malicious headnodes fraction $\eta x$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer.
+and (b) are incapable of inferring that the malicious headnodes fraction $\eta x$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer. \mn[Stef]{There is sth grammatically wrong with this sentence, and I am not entirely sure what you want to say}
 
 Note that this behavior minimizes the susceptibility of malicious peers to being detected.
-The reason is that other $BM$ cheating strategies results in eventually defining a certain suspect, i.e., if $m$ keeps on sending correct $BM$ updates, but never sends the actual chunk, eventually $m$ will be suspected by other peers.
-Moreover, sending correct $BM$ updates results in correctly inferring $m$'s position, which positively impacts on the decision of the detection mechanism, which we discuss in the next section. 
+The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, i.e.,\mn[Stef]{did you mean e.g.?} if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, eventually $m$ will be suspected by other peers.
+Moreover, sending correct $BM$ updates results in correctly inferring $m$'s position, which positively impacts the decision of the detection mechanism, which we discuss in the next section. \mn[Stef]{how so? our mechanism does not target this case, so that seems a bold statement to make}
+
+\mn[Stef]{aren't malicious nodes suspicious purely for supposedly \emph{never} getting any chunks?}
 
 % \subsubsection*{Manipulating behavior}
 % When executing manipulating behavior, $m$ sends its updated buffer-map to $b$, i.e., it advertises received chunks. 
