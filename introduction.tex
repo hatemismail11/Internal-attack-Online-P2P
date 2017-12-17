@@ -1,41 +1,52 @@
 \section{Introduction}
 \label{sec:intro}
 
-Streaming video content is an essential aspect of today's entertainment.\mn[Stef]{maybe find a example on how many people use streaming services} Most streaming applications rely on central providers that have significant resources at their hands and hence distribute content to a large audience in a fast and reliable manner. 
-However, these enormous costs of guaranteeing high quality-of-service when streaming videos impede alternative providers and content, entailing oligopolies. Controlling or influencing these few highly visible providers might allow censorship or propaganda, giving powerful parties the opportunity  to dictate the public opinion and undermine freedom of speech.\mn[Stef]{feel free to remove the censorship/propaganda aspect}   
+Streaming video content is an essential aspect of today's entertainment \cite{emule}.
+% \mn[Stef]{maybe find a example on how many people use streaming services} 
+Most streaming applications rely on central providers that have significant resources at their hands and hence distribute content to a large audience in a fast and reliable manner. 
+However, these enormous costs of guaranteeing high quality-of-service when streaming videos impede alternative providers and content, entailing oligopolies. Controlling or influencing these few highly visible providers might allow censorship or propaganda, giving powerful parties the opportunity  to dictate the public opinion and undermine freedom of speech.
+% \mn[Stef]{feel free to remove the censorship/propaganda aspect}   
 Distributing content via a Peer-to-Peer (P2P) network significantly lowers the load that the provider experiences, as participants relay the downloaded content to other participants, eliminating the need that all participants receive their content directly from the source, i.e., the provider. 
 Consequentially, P2P video streaming is an attractive option for alternative providers and user-generated content. Furthermore, including 
 P2P video streaming into the service of established providers will reduce their costs and hence should lead to lower rates for customers or decrease the amount of advertisement within the system, depending on providers' business model. 
 
 
-However, achieving reliability in the face of the dynamic heterogeneous group of content distributers in a P2P overlay is challenging. In addition to the inherent unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and perform denial-of-service attacks, which interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
+However, achieving reliability in the face of the dynamic heterogeneous group of content distributors in a P2P overlay is challenging. In addition to the inherent unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and perform denial-of-service attacks, which interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
 
 In general, nodes in a P2P video streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
 The publisher or \emph{source} of the content divides the video into \emph{chunks}, which each contain a part of the encoded video, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
 The selection of neighbors and the choice of which neighbors to receive from or forward to differ between protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and requests chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
-\mn[Stef]{please check that citations that I moved are still appropriate}
+% \mn[Stef]{please check that citations that I moved are still appropriate}
 
-In pull-based systems, there exists three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. \mn[Stef]{Does the paper actually call them $BM$ cheating attacks?} The attacker might manipulate its buffer-map or the dissemination of chunks by \mn[Stef]{I don't get why `requesting already received chunks or offering chunks they never received' are in the same category, they seem to have different methods and purposes; 'delay sending chunks or offering chunks that were never received' makes more sense as one category}
+In pull-based systems, there exists three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
+% \mn[Stef]{Does the paper actually call them $BM$ cheating attacks?} 
+The attacker might manipulate its buffer-map or the dissemination of chunks by: 
+% \mn[Stef]{I don't get why `requesting already received chunks or offering chunks they never received' are in the same category, they seem to have different methods and purposes; 'delay sending chunks or offering chunks that were never received' makes more sense as one category}
 \begin{enumerate}
-\item dropping received chunks and not including them in their buffer-map, hence terminating the forwarding and keeping peers from obtaining these chunks  
-\item requesting already received chunks or offering chunks they never received, thus creating additional load and delays
-\item delay sending actual chunks to other peers, thus risking that these peers do not receive the chunks in time and creating delays in the video 
+\item dropping received chunks and not including them in their buffer-map, hence terminating the forwarding and keeping peers from obtaining these chunks.
+\item requesting already received chunks, thus creating additional load and delays.
+\item delay sending actual chunks to other peers or offering chunks they never received, hence risking that these peers do not receive the chunks in time and creating delays in the video. 
 \end{enumerate}
 All presented attack strategies either i) interrupt or delay the video stream directly or ii) increase the load on the system, which might in turn lead to delays and interruptions. 
 
 
 Of the above attacks, dropping is the most serious attack and hardest to detect.
 In order to see that, first consider an attacker that delays chunks or advertises chunks that they did not receive. A benign node can easily keep track of neighbors that fail to deliver chunks within a certain time. When realizing this behavior from a neighbor, a node stops requesting chunks from the attacker and even remove it as a neighbor. While delaying chunks might also be a result from overload, these actions also reduce the load on the congested node, hence benefiting the system even if the suspected node is benign. 
-Similarly, detecting repeated requests is simple if the attacker attempts to download a chunk from the same peer multiple times. Hence, the only remaining option for the attacker is to download the chunk from each neighbor exactly once. Even if neighbors do not cooperate to detect such behavior, the amplification of the attack is rather low as the set of neighbors is typically small. \mn[Stef]{cite}
+Similarly, detecting repeated requests is simple if the attacker attempts to download a chunk from the same peer multiple times. Hence, the only remaining option for the attacker is to download the chunk from each neighbor exactly once. Even if neighbors do not cooperate to detect such behavior, the amplification of the attack is rather low as the set of neighbors is typically small \cite{neighborlist1,neighborlist2}. 
+% \mn[Stef]{cite}
 In contrast, dropping chunks indicates that neighbors of the attacker have to receive the chunks via different neighbors, entailing an increased  load on these neighbors. Furthermore, neighbors cannot detect such behavior in a straight-forward manner as they will simply assume that the malicious node is far from the source and hence does receive chunks at a later time. 
-Consequentially, we focus on the dropping attack, called \drop in the following. \mn[Stef]{ I am not really sure if my arguments are convincing; might also be too detailed for the intro}
+Consequentially, we focus on the dropping attack, called \drop in the following. 
+% \mn[Stef]{ I am not really sure if my arguments are convincing; might also be too detailed for the intro}
 
 In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop in particular. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
-However, previous work indicates that it is relatively easy to infer the identity of benign headnodes\mn[Stef]{Which of giang's papers was that? add citation} and then target those important nodes. 
-While there are countermeasures to these inference attacks, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. Hence, the existing work does not evaluate neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks. 
+However, previous work indicates that it is relatively easy to infer the identity of benign headnodes and then target those important nodes \cite{nguyen2016swap}.
+% \mn[Stef]{Which of giang's papers was that? add citation} 
+While there are countermeasures to these inference attacks, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
+Hence, the existing work does not evaluate neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks. 
 
 
-In this paper, we  illustrate the effectiveness of internal attacks that benefit from malicious headnodes. \mn[Stef]{Old version: 'We show the feasibility of \textit{partially-fully} attacking the source's headnodes, which causes significant degradation in the user's satisfaction.', don't get it}
+In this paper, we  illustrate the effectiveness of internal attacks that benefit from malicious headnodes. 
+% \mn[Stef]{Old version: 'We show the feasibility of \textit{partially-fully} attacking the source's headnodes, which causes significant degradation in the user's satisfaction.', don't get it}
 Consequentially, we propose a mechanism for detecting \drop. Our protection mechanism keeps track of the satisfaction of peers. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. Our detection mechanism hence reacts to a low quality-of-service rather than explicitly identifying the misbehavior of one of more specific nodes.
 Note that we focus on attackers that control a low fraction of the nodes, as attackers controlling the majority of the nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
 
@@ -54,12 +65,12 @@ Furthermore, maintaining malicious headnodes despite generally low satisfaction 
 % In details, peers are able to trigger a request to their neighbors once (a) a peer is, with evidence, performing maliciously, or (b) generally, the stream satisfaction (the user's experience) of a peer drops below a given application threshold.
 % Once proven malicious, a peer fires a complaint, on behalf of all other participants in the detection process, to the source to remove the detected peer from it's neighbor list,
 % or to generally decide about peers that might be affecting the satisfaction level of non-headnodes.
-\subsection*{Paper Structure}
-\mn[Stef]{I dislike paper structure sections, but that is personal taste; I can deal with them by ignoring them, which is what I did with this one}
-The rest of the paper is organized as follows: Section~\ref{sec:related} discusses the related work and the background.
-In Section~\ref{sec:Attack}, the concepts underlying the attacker model internal attack and the conducted adversarial behaviors are defined.
-The detection mechanism is fully discussed in Section~\ref{sec:detection}, with the theoretical analysis is discussed in Section~\ref{sec:analysis}.
-The internal attack's impact, along with the detection mechanism performance and efficiency, are evaluated in Section~\ref{sec:eval}. Finally, we conclude our work and discuss the future work in Section~\ref{sec:conclusion}.
+% \subsection*{Paper Structure}
+% \mn[Stef]{I dislike paper structure sections, but that is personal taste; I can deal with them by ignoring them, which is what I did with this one}
+% The rest of the paper is organized as follows: Section~\ref{sec:related} discusses the related work and the background.
+% In Section~\ref{sec:Attack}, the concepts underlying the attacker model internal attack and the conducted adversarial behaviors are defined.
+% The detection mechanism is fully discussed in Section~\ref{sec:detection}, with the theoretical analysis is discussed in Section~\ref{sec:analysis}.
+% The internal attack's impact, along with the detection mechanism performance and efficiency, are evaluated in Section~\ref{sec:eval}. Finally, we conclude our work and discuss the future work in Section~\ref{sec:conclusion}.
 
 
 
