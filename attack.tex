@@ -36,7 +36,7 @@ In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impa
 
 % \subsubsection*{Dropping behavior}
 A malicious peer $m$ executing the \drop behavior performs a stealthy denial-of-service attack: 
-When $m$ receives a video-chunk from a neighbor, irrespective if it is the source or another node, $m$ drops the packet. 
+When $m$ receives\mn{We talk about what $m$ does after receiving, what about requests? does $m$ continue requesting chunks it already received} a video-chunk from a neighbor, irrespective if it is the source or another node, $m$ drops the packet. 
 In particular, $m$ never advertises for those chunks in its $BM$.
 Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$.\mn[Stef]{We never introduced $B$ and $M$, did we?}
 This scenario guarantees that: (a) malicious peers are less susceptible to being suspected given that the requesting benign peers are not aware that $m$ indeed received those chunks,
