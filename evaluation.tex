@@ -1,16 +1,23 @@
 \section{Evaluation}
 \label{sec:eval}
 
-The aim of this section is two fold presentedi in the following two case studies.
-First, we show the severity of conducting an internal attack on the closest peers to the source.
-Second, we evaluate the proposed detection mechanism performance, accuracy and the overhead it induce on the whole system.
+The target of this section is two fold presented in the following two case studies.
+First, we demonstrate the severity of conducting \drop attack on the closest peers to the source.
+Second, we evaluate the proposed detection mechanism's performance, accuracy and the overhead induced on the system due to the messages exchanged by the different detection steps.
+First we describe the simulation framework and the parameters for different simulation configurations. Afterwards the metrics used in both case studies are provided.
+Finally, we detail the simulation results and the interpretation in both case studies.
 
 \subsection{Simulation Framework and Parameters}
-%TODO: GIANG ?!
-Our simulation framework is based OSSim \cite{nguyen2013ossim}. 
-OSSim constitutes a packet level simulator for pull-based online video streaming overlays such as DONet \cite{zhang2005coolstreaming}, which fits our scope in this work.
-% DONet protocol suite was used in similar work \cite{nguyen2016swap} and showed high relevance to the state-of-art \cite{}
+Our simulation framework is based on OSSim \cite{nguyen2013ossim}. 
+OSSim provides a packet level simulator for DONet \cite{zhang2005coolstreaming}, a pull-based online video streaming overlay, which we use in our case studies.
+We use the network topology generator GT-ITM \cite{GT} with 1000 peers connected to 400 edge router.
 
+To simulate for the worst case scenarios, we assume malicious peers never leave the overlay once they join.
+However, to emulate real life measurements \cite{distribution}, benign peers joining is based on Pareto distribution, while their leaving times is estimated using Lognormal distributions.
+Benign peers can rejoin the overlay in a uniform distribution around 10s.
+
+As our proposed attack aims at attacking the overlay once the source starts to send video chunks, we focus on showing both the attack's impact along with the detection mechanism's performance on simulation time of 500s.
+The results are calculated over 10 runs for each simulation configuration.
 
 The parameters used in both case studies are provided in Table \ref{tab:parameters}.
 
@@ -20,11 +27,14 @@ The parameters used in both case studies are provided in Table \ref{tab:paramete
 \begin{tabular}{|c|c||c|c|}
 \hline
 
-\bf{Var.} & \bf{Description}  & \bf{Var.} & \bf{Description} \\\hline\hline
-Overlay size $n$ & 500 & Mal. headnodes $\eta$ & $\{5,8,10\}$\\\hline
-Mal. neighbors $MN$ & $\{1,3,5\}$ & Sat. threshold $\sigma$ & $\{0.7,0.8,0.95\}$\\\hline
-Manp threshold $\alpha$ & $\{2,3,4\}$& Drop det. allowed $\kappa$ & $\{1,2\}$ \\\hline
+\bf{Var.} & \bf{Desc.}  & \bf{Var.} & \bf{Desc.} \\\hline\hline
 
+mal. headnodes $\eta x$ & $\{5,8,10\}$ & chunk size & 2500B \\\hline
+sat. threshold $\satThres$ & $\{0.5,0.7,0.95\}$ & $\treply$ & 10s\\\hline
+mal. neighbors $MN$  & $\{0,15,24,49,100\}$ & stream Rate & 400kbps\\\hline
+min. responses $\minP$ &  $\{3,4\}$ & buffer size & 30s  \\\hline
+det. allowed $\minDR$ & 10 & list size $LS$ & $\{8,10\}$\\\hline
+  
 \end{tabular}
 \label{tab:parameters}
 \end{table}
@@ -32,13 +42,44 @@ Manp threshold $\alpha$ & $\{2,3,4\}$& Drop det. allowed $\kappa$ & $\{1,2\}$ \\
 \subsection{Metrics}
 
 Here we define the metrics used throughout the evaluation.
-\subsubsection*{Satisfaction} which represents the average peer satisfaction level through the whole simulation interval.
+\subsubsection*{Satisfaction $\sat$} which represents the average peer satisfaction level through the whole simulation interval.
 \subsubsection*{Avg. Loss} that indicates the avg chunk loss per peer.
 \subsubsection*{Detection Overhead $DO$} used to evaluate the detection overhead induced on the system, i.e., the ratio of messages exchanged during due to the detection mechanism over all signaling messages in the system.
 \subsubsection*{Malicious Ratio per Neighbor List $MRNL$} which measures the ratio of malicious peers over all peers in benign peers neighbor list.
 
-\subsection{Case 1: Internal Attack Severity}
+\subsection{Case 1: \drop Severity}
 
+In this case study, we evaluate the impact of \drop attack on two different network scenarios:  (1) DONet, and (2) DONet+SWAP \cite{nguyen2016swap}, in order to assess the attack's severity when a replacement mechanism for peers is operating.
+Note that the attacker's budget is independent from the overlay's size, in fact, the attacker's budget is dependent on the neighbor list size $LS$.
+The reason is that as malicious peers target is to occupy the closest peers to the source, the remaining size of the overlay is not a factor on the impact of the \drop attack.
+As the neighbor list size is $LS=10,8$ , respectively, we choose the following combinations for the attackers budget $x={\{\eta x, MN\}}$: $\{10=\{10,0\}\}, \{20=\{5,15\}\}, 56=\{7,49\}\}, 32=\{8,24\}\}$.
+For example, $MN=49$ implies that 7 malicious peers are connected to each of the 10 headnodes.
+
+\subsubsection{DONet}
+In Figure~\ref{subfig:avg-loss-donet}, the average chunk loss is presented. 
+Obviously, the avg. loss is 100\% when $\eta x= LS =10$, which means that all the source's $LS$ is occupied with malicious headnodes, i.e., no chunks are passed to the overlay.
+For other cases, where $\eta x < 10$, it is noticed that the impact of the attack is significantly successful in dropping the chunk success delivery ratio up to ~80\% once the source starts to send video chunks.
+Eventually, the loss ratio is dropped after a fraction of headnodes and non-headnodes benign peers is able to serve the rest of the overlay.
+
+As shown in Figure~\ref{subfig:avg-loss-donet}, the attack's impact over time increases when $\eta x, MN$ increase as other benign peers starve for a longer period of time till they are served as benign peers closer to the source are overloaded with requests that they can not utterly serve.
+For example, when $x=\{7, 49\}$ the loss ratio is higher, for a longer time period, than when $x=\{5, 3\}$.
+
+Figure~\ref{subfig:satisfaction-donet} illustrates the average peer satisfaction level $\sat$ is assessed.
+Similarly, the average $\sat$ for peers ranges between 0-55\% for the first 100s due to ......... 
+
+\begin{figure}[t!]
+\centering
+
+  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+ 
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
+  
+  \caption{Attack's Impact }
+  \label{fig:attack-results}
+  \end{figure}
+
+
+\subsubsection{DONet+SWAP}
 
 
 \subsection{Case 2: Detection Mechanism Performance}
