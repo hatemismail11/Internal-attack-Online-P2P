@@ -1,17 +1,30 @@
 \begin{abstract}
 
-Pull-based data dissemination technique is the most commonly used architecture in online video streaming P2P systems.
-Although a lot of research had been conducted that focus on mitigating various forms of attacks, the class of inference attacks: the attacker is capable of inferring the peers directly connected to the source,
-still constitutes a remarkable threat on streaming P2P systems.
-
-We focus in this work on internal inference attacks, where the attacker first infer the overlay's topology before conducting a buffer-map $BM$ cheating attack using malicious peers located at the closest positions to the source.
-Through the simulations, we demonstrate the feasibility of conducting such attack with few malicious peers and how drastically the P2P overlay is impacted.
-
-Accordingly, we propose a two-fold detection mechanism that is capable of restoring the benign state of the overlay and detect malicious peers conducting various $BM$ cheating behaviors in the worst case scenario where 100\% of the sources neighbors are malicious.
-The proposed mechanism allows peers to collaboratively decide and thus, file a complain to the source who in turn replaces nearby suspicious peers.
+% Pull-based data dissemination technique is the most commonly used architecture in online video streaming P2P systems.
+% Although a lot of research had been conducted that focus on mitigating various forms of attacks, the class of inference attacks: the attacker is capable of inferring the peers directly connected to the source,
+% still constitutes a remarkable threat on streaming P2P systems.
+% 
+% We focus in this work on internal inference attacks, where the attacker first infer the overlay's topology before conducting a buffer-map $BM$ cheating attack using malicious peers located at the closest positions to the source.
+% Through the simulations, we demonstrate the feasibility of conducting such attack with few malicious peers and how drastically the P2P overlay is impacted.
+% 
+% Accordingly, we propose a two-fold detection mechanism that is capable of restoring the benign state of the overlay and detect malicious peers conducting various $BM$ cheating behaviors in the worst case scenario where 100\% of the sources neighbors are malicious.
+% The proposed mechanism allows peers to collaboratively decide and thus, file a complain to the source who in turn replaces nearby suspicious peers.
+% 
+% Through both a theoretical and a simulation-based analysis, we validate that the detection mechanism is able to correctly detect malicious peers with up to 80-90\% while inducing a small overhead of ~8\%.
 
 % Simultaneously, peers locally sanitize their contact lists from peers who conduct adversarial $BM$ cheating behaviors.
 
-Through both a theoretical and a simulation-based analysis, we validate that the detection mechanism is able to correctly detect malicious peers with up to 80-90\% while inducing a small overhead of ~8\%.
+Pull-based data dissemination is one of the most used communication approaches in online video streaming P2P systems, and also constitutes a prominent target for security breaches.
+While extensive research exists on mitigating varied attack types, the class of inference attacks (where the attacker is capable of inferring the peers directly connected to the source), still constitutes a major open threat for streaming P2P systems.
+
+Our research focuses on the critical class internal inference attacks, where the attacker first infers the overlay's topology before conducting a buffer-map ($BM$) cheating attack using malicious peers located at the positions closest to the source. 
+We demonstrate the feasibility of conducting such attacks, and also show how very few malicious peers can drastically compromise the P2P overlay.
+
+Accordingly, we propose a two-fold detection mechanism that is capable of (a) detecting the malicious peers conducting various $BM$ cheating behaviors in the worst case scenario where 100\% of the sources neighbors are malicious, and (b) restoring the the overlay to a benign state. 
+The proposed mechanism allows peers to collaboratively detect and notify the source, which in turn replaces the suspected peers.
+
+% Simultaneously, peers locally sanitize their contact lists from peers who conduct adversarial $BM$ cheating behaviors.
+
+Using a combined theoretical and simulation-based analysis, we validate that the detection mechanism is able to detect malicious peers with up to 80-90\% accuracy while inducing a small overhead of ~8\%.
 
 \end{abstract}
