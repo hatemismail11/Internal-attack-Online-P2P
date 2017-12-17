@@ -57,24 +57,26 @@ For example, $MN=49$ implies that 7 malicious peers are connected to each of the
 
 \subsubsection{DONet}
 In Figure~\ref{subfig:avg-loss-donet}, the average chunk loss is presented. 
-Obviously, the avg. loss is 100\% when $\eta x= LS =10$, which means that all the source's $LS$ is occupied with malicious headnodes, i.e., no chunks are passed to the overlay.
-For other cases, where $\eta x < 10$, it is noticed that the impact of the attack is significantly successful in dropping the chunk success delivery ratio up to ~80\% once the source starts to send video chunks.
-Eventually, the loss ratio is dropped after a fraction of headnodes and non-headnodes benign peers is able to serve the rest of the overlay.
+Obviously, the average loss is 100\% when $\eta x= LS =10$, which means that all the source's $LS$ is occupied with malicious headnodes, i.e., no chunks are passed to the overlay.
+Accordingly, the average peer satisfaction in such case is inevitably 0\%. 
 
-As shown in Figure~\ref{subfig:avg-loss-donet}, the attack's impact over time increases when $\eta x, MN$ increase as other benign peers starve for a longer period of time till they are served as benign peers closer to the source are overloaded with requests that they can not utterly serve.
-For example, when $x=\{7, 49\}$ the loss ratio is higher, for a longer time period, than when $x=\{5, 3\}$.
+For other cases, where $\eta x < 10$, at $x=\{7, 49\}$ the average loss when the stream starts reaches up to ~82\%, at $x=\{5, 3\}$, where the chunks loss is ~54\%, As shown in Figure~\ref{subfig:avg-loss-donet}.
+For the case of having high $\eta x$ and relatively low $MN$ ($x=\{8, 3\}$), the chunk loss is ~73\%.
 
+% it is noticed that the impact of the attack is significantly successful in dropping the chunk success delivery ratio up to ~82\% once the source starts to send video chunks.
+It is inferred that depending on the value of $\eta x, MN$, benign peers starve for a longer period of time till they are served as benign peers closer to the source are overloaded with requests that they can not utterly serve. 
+Eventually, the loss ratio decreases after a fraction of benign (headnodes and non-headnodes) peers are able to serve the rest of the overlay.
 Figure~\ref{subfig:satisfaction-donet} illustrates the average peer satisfaction level $\sat$ is assessed.
-Similarly, the average $\sat$ for peers ranges between 0-55\% for the first 100s due to ......... 
+As a consequence of experiencing high chunk loss, higher values of $\eta x, MN$ results in lower peer satisfaction over time, where benign peers at $x=\{5, 3\}$ restore their $\sat$ at ~340s, earlier than at $x=\{7, 7\}$ and $x=\{8, 3\}$.
 
 \begin{figure}[t!]
 \centering
 
-  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
- 
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
-  
-  \caption{Attack's Impact }
+%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+%  
+%   \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
+  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+  \caption{Attack's Impact on DONet }
   \label{fig:attack-results}
   \end{figure}
 
