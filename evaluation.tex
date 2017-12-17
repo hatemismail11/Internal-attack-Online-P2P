@@ -31,7 +31,7 @@ The parameters used in both case studies are provided in Table \ref{tab:paramete
 
 mal. headnodes $\eta x$ & $\{5,8,10\}$ & chunk size & 2500B \\\hline
 sat. threshold $\satThres$ & $\{0.5,0.7,0.95\}$ & $\treply$ & 10s\\\hline
-mal. neighbors $MN$  & $\{0,15,24,49,100\}$ & stream Rate & 400kbps\\\hline
+mal. neighbors $MN$  & $\{0,15,24,70,100\}$ & stream Rate & 400kbps\\\hline
 min. responses $\minP$ &  $\{3,4\}$ & buffer size & 30s  \\\hline
 det. allowed $\minDR$ & 10 & list size $LS$ & $\{8,10\}$\\\hline
   
@@ -52,156 +52,49 @@ Here we define the metrics used throughout the evaluation.
 In this case study, we evaluate the impact of \drop attack on two different network scenarios:  (1) DONet, and (2) DONet+SWAP \cite{nguyen2016swap}, in order to assess the attack's severity when a replacement mechanism for peers is operating.
 Note that the attacker's budget is independent from the overlay's size, in fact, the attacker's budget is dependent on the neighbor list size $LS$.
 The reason is that as malicious peers target is to occupy the closest peers to the source, the remaining size of the overlay is not a factor on the impact of the \drop attack.
-As the neighbor list size is $LS=10,8$ , respectively, we choose the following combinations for the attackers budget $x={\{\eta x, MN\}}$: $\{10=\{10,0\}\}, \{20=\{5,15\}\}, 56=\{7,49\}\}, 32=\{8,24\}\}$.
-For example, $MN=49$ implies that 7 malicious peers are connected to each of the 10 headnodes.
+\mn[Hatem]{I'm not entirely sure that the assumption above is always correct, and even if it is correct, shouldn't we back it up with results and numbers, so feel free to remove it.}   
 
-\subsubsection{DONet}
-In Figure~\ref{subfig:avg-loss-donet}, the average chunk loss is presented. 
-Obviously, the average loss is 100\% when $\eta x= LS =10$, which means that all the source's $LS$ is occupied with malicious headnodes, i.e., no chunks are passed to the overlay.
-Accordingly, the average peer satisfaction in such case is inevitably 0\%. 
+Given the source's neighbor list size $LS=10$, we choose the following combinations for the attackers budget $x={\{\eta x, MN\}}$: $\{10=\{10,0\}\}, \{20=\{5,15\}\}, 77=\{7,70\}\}, 32=\{8,24\}\}$.
+In otherwords, $MN=70$ denotes that 7 malicious peers are connected to each of the 10 headnodes.
+We start with analyzing the attack's impact on DONet and then we evaluate the resilience of the SWAP mechanism to the attack.
 
-For other cases, where $\eta x < 10$, at $x=\{7, 49\}$ the average loss when the stream starts reaches up to ~82\%, at $x=\{5, 3\}$, where the chunks loss is ~54\%, As shown in Figure~\ref{subfig:avg-loss-donet}.
-For the case of having high $\eta x$ and relatively low $MN$ ($x=\{8, 3\}$), the chunk loss is ~73\%.
+In Figure~\ref{subfig:avg-loss-donet}, the average chunk loss ratio is presented. 
+As expected, the average loss is 100\% when $\eta x= LS =10$, which means that the source's $LS$ is utterly saturated with malicious headnodes, i.e., no chunks are transmitted to the rest of the overlay.
+Accordingly, the average peer satisfaction in such case is always 0\%. 
 
+For the other cases where $\eta x < 10$; the average loss when the stream starts reaches up to ~82\% for $x=\{7, 70\}$, for $x=\{5, 15\}$ the loss ratio is ~54\% and ~73\% for $x=\{8, 24\}$, as shown in Figure~\ref{subfig:avg-loss-donet}.
 % it is noticed that the impact of the attack is significantly successful in dropping the chunk success delivery ratio up to ~82\% once the source starts to send video chunks.
-It is inferred that depending on the value of $\eta x, MN$, benign peers starve for a longer period of time till they are served as benign peers closer to the source are overloaded with requests that they can not utterly serve. 
-Eventually, the loss ratio decreases after a fraction of benign (headnodes and non-headnodes) peers are able to serve the rest of the overlay.
-Figure~\ref{subfig:satisfaction-donet} illustrates the average peer satisfaction level $\sat$ is assessed.
-As a consequence of experiencing high chunk loss, higher values of $\eta x, MN$ results in lower peer satisfaction over time, where benign peers at $x=\{5, 3\}$ restore their $\sat$ at ~340s, earlier than at $x=\{7, 7\}$ and $x=\{8, 3\}$.
+It is inferred that as the value of $\eta x, MN$ increase, benign peers experience remarkable service degradation for a longer time period as a result of having benign peers closer to the source overloaded with requests that they can not completely respond to. 
+Nevertheless, the loss ratio decreases once a fraction of benign (headnodes and non-headnodes) peers are able to serve the rest of the overlay.
+
+Figure~\ref{subfig:satisfaction-donet} presents the average peer satisfaction level $\sat$.
+As a consequence of experiencing high chunk loss rate, higher values of $\eta x, MN$ result in lower peer satisfaction over time, where benign peers at $x=\{5, 15\}$ restore their satisfaction level at ~340s, which is earlier than at $x=\{7, 70\}$ and $x=\{8, 24\}$.
+
+Now we analyze the attack's impact while SWAP is operating.
+While executing SWAP's operations, peers nominate and forward other peers nominations to the source. 
+Consequentially, malicious peers abuse the mechanism via nominating other malicious peers at each nomination round. 
+Moreover, malicious peers connected to benign headnodes are eventually nominated to the source and thus, results in occupying the sources $LS$.
+
+As shown in Figure~\ref{subfig:avg-loss-donet}, comparing the same values at $x=\{5, 15\}$ for both DONet and SWAP show that the impact of the attack when SWAP is operating is more significant.
+Before the source's $LS$ is saturated with malicious peers at $t=80s$, the average loss is in fact decreasing, However, afterwards the the average chunk loss increases up to ~97\% as a result of more malicious peers being promoted as headnodes, which in turn decreases the fraction of reachable chunks to benign peers.
+For the same reason, the satisfaction level of benign peers eventually decreases to ~6\%, which highlights the unsuitability of SWAP against our proposed attack.
 
 \begin{figure}[t!]
 \centering
 
-%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
-%  
-%   \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
-  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
-  \caption{Attack's Impact on DONet }
+  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+ 
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
+%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+  \caption{Attack's Impact on DONet}
   \label{fig:attack-results}
   \end{figure}
 
 
-\subsubsection{DONet+SWAP}
-
-
 \subsection{Case 2: Detection Mechanism Performance}
 
-% 
-% The results along with a discussion for each of the two aforementioned case studies are detailed next.
-% 
-% \subsubsection{Impact of $Hx$}
-% Given that the maximum number of neighbors that the source or any other peer can have is $\alpha =10$, it's interesting to see the impact of occupying a certain fraction of the source's neighbor list.
-% Figure~\ref{fig:DONet} and Figure~\ref{fig:swap} depict the impact of increasing the fraction of malicious headnodes while keeping the number of malicious neighbors to those malicious headnodes constant.
-% 
-% For DONet, as long as the source's neighbor list size $\alpha$ is not fully saturated with malicious peers, benign peers $b$ eventually get a stable flow of the video chunks, as depicted in Figure~\ref{subfig:Donet-hx2} through Figure~\ref{subfig:Donet-hx8}.
-% Nevertheless, due to the time constraints of such overlay, the fraction of lost chunks is remarkably high once the source starts to generate chunks as the average $IL$ ranges between 49\%-80\% at times 50s-150s. 
-% This denotes that once the source starts sending video chunks, benign peers are almost unable to receive those chunks for an intolerant period of time, which is commonly unacceptable for P2P streaming applications' users.
-% 
-% Figure~\ref{subfig:Donet-hx10} shows the impact of fully exploiting the source's neighbor list neighbors by malicious peers, where in this case $\alpha = Hx$.
-% In this case, the average $IL$ is almost 100\%, which denotes benign peers being totally unable to receive video chunks as malicious peers fully acquire all chunks from the source.
-% 
-% For the attack's impact when SWAP is functioning, which is illustrated in Figure~\ref{fig:swap}, the attack's impact is even worse compared to DONet.
-% This is due to that malicious headnodes $Hx$ constantly nominate malicious neighbors $MN$ to the source.
-% Eventually, the source acquires $\alpha$ malicious peers in its neighbor list, which in turn causes the $IL$ to reach to ~100\%.
-% Indeed, higher values of $Hx$ results in earlier total block of video chunks as shown in Figure~\ref{subfig:swap-hx2} through Figure~\ref{subfig:swap-hx10}.
-% Next, the impact of having different values of $MN$ is discussed.
-% 
-% \begin{figure}[t!]
-% \centering
-% 
-%   \mbox{\subfloat[DONet-$Hx=2$]{\label{subfig:Donet-hx2}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx2.eps}}}
-%   \mbox{\subfloat[DONet-$Hx=5$]{\label{subfig:Donet-hx5}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx5.eps}}}
-%   \mbox{\subfloat[DONet-$Hx=8$]{\label{subfig:Donet-hx8}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx8.eps}}}
-%   \mbox{\subfloat[DONet-$Hx=10$]{\label{subfig:Donet-hx10}\includegraphics[width=7cm,height=4cm]{./Figures/donet-hx10.eps}}}
-%    
-%   \caption{DONet performance}
-% 
-%   \label{fig:DONet}
-%   \end{figure}
-%   
-% \begin{figure}[t!]
-% \centering
-% 
-%   \mbox{\subfloat[SWAP-$Hx=2$]{\label{subfig:swap-hx2}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx2.eps}}}
-%   \mbox{\subfloat[SWAP-$Hx=5$]{\label{subfig:swap-hx5}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx5.eps}}}
-%   \mbox{\subfloat[SWAP-$Hx=8$]{\label{subfig:swap-hx8}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei5-hops1.eps}}}
-%   \mbox{\subfloat[SWAP-$Hx=10$]{\label{subfig:swap-hx10}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx10.eps}}}
-% 
-%   
-%   \caption{SWAP performance}
-% 
-%   \label{fig:swap}
-%   \end{figure}
-%     
-% \subsubsection{Impact of $MN$}
-% 
-% In this case study, $xH=8$ is selected instead of $Hx=10$ to avoid hindering the impact of varying $MN$ when the source's neighbor list is already saturated with malicious peers, i.e., when $\alpha=x=10$.
-% Figures~\ref{subfig:swap-MN1} through \ref{subfig:swap-MN5} show that for $MN=1$, $IL$ reaches ~100\% at time $t=250s$. 
-% For $MN=5$, $IL$ is already at 80\% at $t=50s$.
-% 
-% As expected, when $MN$ increases, the source's neighbor list gets saturated with malicious peers earlier as the number of nominated malicious peers increases.
-% Note that the source does not accept a connection with a peer who was previously connected to it.
-% 
-% Moreover, as mentioned in Section~\ref{sec:Attack}, malicious peers can drop or manipulate the number of hops in the nomination requests from benign peers.
-% Thus, assessing the attack's impact over different number of hops would yield the same results.
-% 
-% \begin{figure}[t!]
-% \centering
-% 
-%   \mbox{\subfloat[SWAP-$MN=1$]{\label{subfig:swap-MN1}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei1-hops1.eps}}}
-%   \mbox{\subfloat[SWAP-$MN=3$]{\label{subfig:swap-MN3}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei3-hops1.eps}}}
-%   \mbox{\subfloat[SWAP-$MN=5$]{\label{subfig:swap-MN5}\includegraphics[width=7cm,height=4cm]{./Figures/swap-hx8-nei5-hops1.eps}}}
-%   
-%   \caption{SWAP performance when varying $MN$}
-% 
-%   \label{fig:varyingMN}
-%   \end{figure}
-% 
-% \subsubsection{Detection mechanism}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/satisfaction.eps}
-%   \caption{Avg. peer satisfaction}
-% \label{peer_satisfaction} 
-% \end{figure}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/source_RT.eps}
-%   \caption{Source neighbor list ratio}
-% \label{source_list} 
-% \end{figure}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/peer_RT.eps}
-%   \caption{Benign peers neighbor list ratio}
-% \label{peer-list} 
-% \end{figure}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/manipulation_complain_ratio.eps}
-%   \caption{Manipulation detection fired complain ratio}
-% \label{manipulation-complain} 
-% \end{figure}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/manipulation-peers-removal.eps}
-%   \caption{Manipulation detection malicious to benign removals ratio}
-% \label{manipulation-removals} 
-% \end{figure}
-% 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=8cm,height=5cm]{./Figures/Drop-removals.eps}
-%   \caption{Drop detections malicious to benign removals ratio}
-% \label{drop-list} 
-% \end{figure}
-% 
-%   
+
+
 % \subsubsection{Summary of the results}
 % 
 % As a summary, for DONet, when the source's neighbor list is fully saturated with malicious peers, $IL$ is at ~100\%.
