@@ -6,6 +6,7 @@ In this section, we explain our proposed two-fold\mn[Stef]{why two-fold?} detect
 The goal of the detection algorithm is to restore the user's satisfaction in the face of a \drop attack. The key idea of our method is to replace headnodes associated with peer groups of low satisfaction levels. 
 
 Throughput the section, we assume that nodes authenticate their messages using a private signature key. The source keeps track of the verification keys of all participants and can hence establish the authenticity of messages. In particular, malicious nodes cannot forge responses of honest peers to influence the detection mechanism. 
+Furthermore, we assume that neighboring nodes periodically exchange messages stating that they are neighbors. These \emph{proofs of neighborhood} are signed and contain a time stamp. In this manner, $u$ can proof if $v$ is (or has recently been) its neighbor. 
 
 
 \begin{table}[ht]
@@ -98,7 +99,7 @@ Otherwise, $b$ either starts another detection request if it can start further r
 
  
 
-Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source containing the IDs of all nodes in $D$ as well as the received satisfaction levels including the signatures.  
+Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source containing the IDs of all nodes in $D$, recent proofs of neighborhood,  and the received satisfaction levels including signatures and time stamps.  
 
 
 The reason for requesting at least $\minP$ replies is to prevent a few number of malicious nodes from accusing benign headnodes. By imposing a lower bound on the requested number of replies, a considerable number of malicious nodes has to use one of their $\kappa$ requests. We present an in-depth analysis on how these constraints prevent misuse in Section~\ref{sec:analysis}. 

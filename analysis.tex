@@ -5,72 +5,75 @@
 
 %Due to the high flexibility of pull-based content distribution and the corresponding loose correlation between a node's position in the network and its satisfaction, 
 We focus on characterizing the behavior of malicious nodes aiming to subvert the detection mechanism to remove honest headnodes and retain malicious ones. 
-More precisely, we show that successfully accusing a benign headnode of manipulation requires that the malicious peer starting the complaint presents a neighbor list that is either dominated by malicious peers or contains benign peers with unusually low satisfaction levels. Similarly, preventing the removal of a malicious headnode requires that a high number of the complaint issuer's neighbors are malicious. 
-The exact conditions differ between \drop and \block.
+More precisely, we show that successfully accusing a benign headnode of cheating requires that the malicious peer starting the complaint presents a neighbor list that is either dominated by malicious peers or contains benign peers with unusually low satisfaction levels. Similarly, preventing the removal of a malicious headnode requires that a high number of the complaint issuer's neighbors are malicious. 
 
+%Recall that a \drop request issued by a node $u$ succeeds in removing a headnode $h$ if the average satisfaction level in the responses that $u$ sends to the source is below a threshold $\satThres$.  
 
+\subsection{Falsely Accusing Benign Headnodes}
 
-\subsection{False Accusations in \drop} 
-  
-Recall that a \drop request issued by a node $u$ succeeds in removing a headnode $h$ if the average satisfaction level in the responses that $u$ sends to the source is below a threshold $\satThres$.  
-
-We start by considering the case that malicious nodes want to use the detection mechanism to remove a benign headnode. 
+We start by considering the case that malicious nodes want to misuse the detection mechanism to remove a benign headnode. 
 Note that there are reliable methods to identify headnodes~\cite{nguyen2016swap}, so malicious peers are likely to know if one of their neighbors is a headnode.  
 The malicious node $m$ initiating a request with the goal of removing one benign headnode can manipulate the set $D$ of nodes whose satisfaction levels $m$ forwards to the source. 
 In other words, after querying all nodes in its actual neighbor list, $m$ might send only  subset of the responses as well as responses from additional nodes to the source. If possible, $m$ chooses these responses in such a manner that the source will remove the benign headnode. 
 There are restrictions guiding the construction of $D$ that $m$ has to take into consideration:
 \begin{itemize}
 \item $m$ has to include the benign headnode that it aims to remove. 
-\item $m$ does not have to include peers that are in its actual neighbor list, as there is no possibility to detect excluded neighbors short of asking all peers in the system if they are neighbors of $m$. 
-\item $m$ cannot include benign nodes that are not in its actual neighbor list, as $m$ does not have any signatures that prove that they are neighbors.
-\item $m$ can include malicious peers that are not in its actual neighbor list, as these peers are willing to generate false signatures. Only the inclusion of malicious nodes that can participate in a \drop request, i.e., those that have not yet reached their limit of \drop request participation, is beneficial for the success of the request. Malicious peers contained in $D$ claim that their satisfaction level is 0 to maximize the chance of removal. 
+\item $m$ cannot include benign nodes that are not in its actual neighbor list, as $m$ does not have valid proofs of neighborhood. 
+\item $m$ does not have to include all peers that are in its actual neighbor list, as there is no possibility to detect excluded neighbors short of asking all peers in the system if they are neighbors of $m$. 
+\item $m$ can include malicious peers that are not in its actual neighbor list, as these peers are willing to generate false proofs of neighborhood. Only the inclusion of malicious nodes that can participate in a \drop request, i.e., those that have not yet reached their limit of \drop request participation, is beneficial for the success of the request. Malicious peers contained in $D$ claim that their satisfaction level is 0 to maximize the chance of removal. 
 \end{itemize}
 
 When deciding on a set $D$, $m$ tries to minimize the number of malicious nodes contained in $D$ in order to use as little of the attack budget as possible. 
 Preposition \ref{prop:dropping-removal} states the number of malicious nodes that have to be involved for the request to succeed and the proof illustrates the strategy for choosing the set $D$. 
 
-For simplicity, Preposition~\ref{prop:dropping-removal} consider the case that only one headnode is contained in $m$'s neighbor list. In the presence of several headnodes, $m$ has to slightly adapt its attack strategy. 
-If additional malicious headnodes are neighbors of $m$, $m$ does not include the respective nodes in $D$ to avoid accidentally causing the removal of malicious headnodes.  In contrast, if additional benign headnodes are neighbors of $m$, $m$ will include all of them in $D$ if the \drop request can be successful. If success is not possible due to the high satisfaction level of the included headnodes, $m$ successively removes each headnode using the strategy outlined in Preposition~\ref{prop:dropping-removal}.   
+For simplicity, Preposition~\ref{prop:dropping-removal} considers the case that only one headnode is contained in $m$'s neighbor list. In the presence of several headnodes, $m$ has to slightly adapt its attack strategy. 
+If additional malicious headnodes are neighbors of $m$, $m$ does not include the respective nodes in $D$ to avoid accidentally causing the removal of malicious headnodes.  In contrast, if additional benign headnodes are neighbors of $m$, $m$ will include all of them in $D$ if the detection request can be successful. If success is not possible due to the high satisfaction level of the included headnodes, $m$ successively removes each headnode using the strategy outlined in Preposition~\ref{prop:dropping-removal}.   
  
 
 \begin{proposition}
 \label{prop:dropping-removal}
-Let $m$ be a malicious neighbor of a benign headnode $h$ with satisfaction level $s_h$. Assume that $m$ has $k$ benign neighbors $v_1, \ldots , v_k$ sorted by their satisfaction levels $sat_1 \leq sat_2 \leq \ldots  \leq sat_k$. 
-Then $m$ has to include at least $c$ responses of malicious nodes in the set $D$ of forwarded responses such that
+Let $m$ be a malicious neighbor of a benign headnode $h$ with satisfaction level $\sat_h$. Assume that $m$ has $k$ benign neighbors $v_1, \ldots , v_k$ sorted by their satisfaction levels $\sat_1 \leq \sat_2 \leq \ldots  \leq \sat_k$. 
+Then $m$ has to include at least $c$ responses of malicious nodes, including $m$ itself, in the set $D$ of forwarded responses such that
 \begin{align}
 \label{eq:drop-rem}
-c = argmin_{c' in \mathbb{N}} \frac{1}{t}\left(s_h+\sum_{i=1}^{t-c'-1}sat_i \right) < \satThres
+\begin{split}
+c &= \max \Big( 1,  \\
+ & argmin_{c' in \mathbb{N}} 
+\left\lbrace \frac{1}{\minP}\left(\sat_h+\sum_{i=1}^{\minP-c'-1}\sat_i \right) < \satThres \right\rbrace 
+\Big)
+\end{split}
 \end{align}
 to achieve the removal of $h$. 
 \end{proposition}
 \begin{proof}
-To remove the headnode $h$, there has to be a \drop requests containing the responses of $h$ and $n\geq t-1$ nodes with satisfaction levels $s_1, \ldots , s_hn$ and 
+To remove the headnode $h$, there has to be a detection requests containing the responses of $h$ and $n\geq \minP-1$ nodes with satisfaction levels $s_1, \ldots , s_n$ and 
 $\frac{1}{n+1}\left( s_h + \sum_{i=1}^{n}s_i \right) < \satThres$.
-The node $m$ aims to minimize the number of involved malicious nodes $c$ because each malicious node can only participate in $\minDR$ \drop request per interval. At the same time, $m$ has to ensure that the average satisfaction level of the involved nodes is below $\satThres$ and that the request includes at least $t$ nodes in total.
-In other words, $m$ solves the optimization problem of finding a minimal $c$ and a set of integers $I \subset \{1, \ldots, k\}$ such that i) $c + |I|+1 \geq t$, and ii) $\frac{1}{c + |I|+1}\left( s_h + \sum_{i \in I} sat_i \right) < \satThres$. 
-Choosing the lowest satisfaction levels indeed solves the optimization problem and results in Eq. \ref{eq:drop-rem}. 
+The node $m$ aims to minimize the number of involved malicious nodes $c$ because each malicious node can only participate in $\kappa$ detection requests per interval. At the same time, $m$ has to ensure that the average satisfaction level of the involved nodes is below $\satThres$ and that the request includes at least $\minP$ nodes in total. As $m$ files the request, at least one malicious node has to be included. 
+In other words, $m$ solves the optimization problem of finding a minimal $c$ and a set of integers $I \subset \{1, \ldots, k\}$ such that i) $c + |I|+1 \geq \minP$, ii) $\frac{1}{c + |I|+1}\left( \sat_h + \sum_{i \in I} sat_i \right) < \satThres$, and iii) $c\geq 1$. 
+Choosing the lowest satisfaction levels indeed solves the optimization problem and results in Eq.~\ref{eq:drop-rem}. 
 \end{proof}
 
 Proposition~\ref{prop:dropping-removal} indicates that a high number of malicious peers have to participate in the removal of one honest headnode if the satisfaction levels are high. 
 For instance, if all benign peers have a satisfaction level of 1, then Eq.~\ref{eq:drop-rem} states that $\lfloor \satThres*t \rfloor +1$ malicious peers are required to remove \emph{one} benign headnode. As the source chooses the replacement headnode  randomly, the new headnode is likely benign. Hence, under the assumption of a low attacker budget, the attacker might only be able to remove one or two headnodes per interval and does not manage to place its own nodes close to the source. 
 
+\subsection{Retaining Malicious Headnodes}
 Now, we consider the case that malicious nodes collude to retain one or several malicious headnode when a benign peer initiates a detection request that includes these malicious headnode in the neighbor list. 
 All malicious nodes in the respective neighbor list will provide a satisfaction level of 1 to prevent the removal of a malicious node. We assume that malicious neighbors will try to prevent the removal of malicious headnodes even if the request can in addition result in the removal of benign headnodes. This assumption seems reasonable as the removal of a benign headnode is unlikely to lead to an additional malicious headnodes, indicating that retaining existing malicious headnodes is of higher importance than removing benign headnodes.  Preposition~\ref{prop:dropping-retain} provides the condition governing the success or failure of the \drop request in the face of the proposed adversarial behavior. 
 
 \begin{proposition}
 \label{prop:dropping-retain}
-Let $m$ be a malicious headnode and $b$ be a benign neighbor of $m$ that initiates a \drop request.
-Assume that $b$ has $k$ benign neighbors $v_1, \ldots , v_k$ with satisfaction levels $sat_1, sat_2 ,\ldots  , sat_k$. In addition, $b$ has $y$ malicious neighbors, which includes the malicious headnode, and $k\geq \minP$.
+Let $m$ be a malicious headnode and $b$ be a benign neighbor of $m$ that initiates a detection request due to its low satisfaction level $\sat_b$.
+Assume that $b$ has $k$ benign neighbors $v_1, \ldots , v_k$ with satisfaction levels $\sat_1, \sat_2 ,\ldots  , \sat_k$. In addition, $b$ has $y$ malicious neighbors, which includes the malicious headnode, and $k\geq \minP$.
  Then the removal of $m$ fails if and only if 
 \begin{align}
 \label{eq:drop-retain}
-\frac{1}{k+y}\left(y+\sum_{i=1}^k sat_i\right) \geq \satThres.  
+\frac{1}{k+y+1}\left(y+\sat_b + \sum_{i=1}^k \sat_i\right) \geq \satThres.  
 \end{align} 
 \end{proposition}
 \begin{proof}
 The claim follows directly as all $y$ malicious peers will set their satisfaction level to 1 and \drop requests with an average satisfaction of at least $\satThres$ are not successful.   
 \end{proof}
-If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. However, in practice, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their option of influencing the average satisfaction level. Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
+If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. However, in practice, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
 
 Proposition~\ref{prop:dropping-retain} indicates that the removal of malicious nodes is successful unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
 If indeed satisfaction levels remain high, there is no real need to remove the malicious peer. In contrast, it is highly unlikely that an honest peer is surrounded by malicious peers if the attack budget is low. Even if one neighbor of the malicious headnode has primarily malicious neighbors, other benign neighbors are likely to file a complaint. Dominating the neighborhood of all of $m$'s neighbors should not be possible for the attacker due to its limited resources.
