@@ -94,41 +94,35 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 
 \subsection{Case 2: Detection Mechanism Performance}
 
-The aim of this case study is to evaluate the performance of the detection mechanism.
-In order to do so, we select the following combinations for $\eta x, MN$: $x=\{5, 80\}$, $x=\{8, 50\}$ and $x=\{10, 50\}$ to assess the performance of the mechanism in severe attack conditions.
+We now evaluate the performance of the detection mechanism. Benign peers execute the detection mechanism as described in Section~\ref{sec:detection} whereas malicious peers aim to misuse the detection mechanism. More precisely, malicious peers reply with a satisfaction level of 0 if the complaint might remove a benign peer and 1 if it might remove a malicious peer. 
 
+In order to do so, we selected the following combinations for $(\eta x, MN)$: $(5, 80)$, $(8, 50)$ and $(10, 50)$ to assess the performance of the mechanism in severe attack conditions.
 The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers are able to fully restore their satisfaction level when the detection mechanism in operating.
 The detection mechanism is effective starting $t=250s$ to allow for a reasonable amount of peers to join the overlay to adequately assess the efficiency of the mechanism.
-In this scenario, every peer is allowed to initiate $\minDR=10$ detection requests for $t_{det}=500$, and the minimum number of responses to generate a complaint is $\minP=3$. 
+In this scenario, every peer is allowed to initiate $\minDR=10$ detection requests for $t_{det}=500s$, and the minimum number of responses to generate a complaint is $\minP=3$. 
 We discuss the effect of varying those parameters later on.
 
-As depicted in Figure~\ref{subfig:BRNL}, once the detection mechanism is operating, at $t=250s$, we observe an increase in the benign headnodes ration in the source's neighbor list.
-for $x=\{5, 80\}$, the source successfully attains ~80\% benign headnodes due to the detection mechanism.
-For $x=\{8, 50\}$, the $BRNL$ ratio increases up to ~90-100\%, which reflects the efficiency of the detection mechanism in replacing malicious headnodes to restore peers satisfaction level.
-Intuitively, in the worst case scenario, where the source is initially fully occupied with malicious headnodes $\eta x=10$, the source is capable of restoring ~80\% of its benign state.
-In fact, this agrees with our theoretical analysis that even when the attacker's budget is relatively high and malicious peers are able to remove benign headnodes, there is no guarantee that those peers are replaced with malicious peers, 
-i.e., even when the replacement occurs due to the detection mechanism, there is more likelihood that the source will reconnect with another benign peers as headnodes.
-
+As depicted in Figure~\ref{subfig:BRNL}, once the detection mechanism is operating at $t=250s$, we observe an increase in the benign headnodes ratio in the source's neighbor list.
+For instance, for $(\eta x, MN)=(5, 80)$, the source successfully attains ~80\% benign headnodes due to the detection mechanism.
+For $(\eta x, MN)=(8, 50)$, the $BRNL$ ratio increases up to 90-100\%, which reflects the efficiency of the detection mechanism in replacing malicious headnodes to restore peers' satisfaction levels. 
+Even if the source is initially only connected to malicious headnodes, i.e., $\eta x=10$, the detection mechanism is capable of restoring a $BRNL$ of close to 80\%. 
 
 Figure~\ref{subfig:det-sat} illustrates the average restored peer satisfaction level due to the detection mechanism.
-For the various attack placement strategies, peers satisfaction level $\sat$ increases up to ~95-100\%, even for $\eta x=10$.
+For the various attack placement strategies, the average satisfaction level increases up to ~95-100\%, even for $\eta x=10$.
 As the detection mechanism starts at $t=250s$, the mechanism's impact on the peers satisfaction level $\sat$ can be noticed in a short time period.
-The reason is that the number of initial detection requests sent to the source results in replacing a high fraction of the source's headnodes, which in turn impacts the peers satisfaction level.
-Moreover, observing no degradation in the peers satisfaction level while the detection mechanism is on highlights the inapplicability of malicious peers to abuse the detection mechanism.
+The reason is that the number of initial detection requests sent to the source results in replacing a high fraction of the source's headnodes and quickly increases the satisfaction levels. 
+Moreover, malicious peers are unable to misuse the detection mechanism, as indicated by the absence of degradation in  satisfaction levels. 
 
-Figure~\ref{subfig:overhead}, the average detection overhead induced by our mechanism is depicted.
+Figure~\ref{subfig:overhead} depicts the average detection overhead induced by our mechanism. 
 As notice, the maximum overhead due to the detection mechanism is ~8\% for the different attack scenarios.
 As peers are eventually satisfied, i.e., the number of detection requests initiated decreases, the overhead decreases to ~4\% at $t=500s$.
-This implies that the overhead is not constant throughout time, i.e., once all peers $\sat > \satThres$, the detection mechanism is not invoked and hence, no extra overhead is induced on the system.
-Moreover, the maximum number of detections that can be initiated is dependent on $\minDR$, which is set to 10 in this scenario.
+This implies that the overhead is not constant throughout time, i.e., once all peers' satisfaction level exceeds $\satThres$, they do not invoke the detection mechanism and hence do not induce additional overhead. 
+Moreover, the maximum number of detection requests that can be initiated is dependent on $\minDR$, which is set to 10 in this scenario.
 Thus, smaller values of $\minDR$ result in lower overhead, which is a useful application parameter that can be set according to suit the application's criticality or user's CPU resources.
 
-In fact, varying $\minP$ between 3, 4 and 5 yields the same detection performance.
-The reason is that the neighbor list size for all peers is 10. 
-Hence, on average, once the detection mechanism is operating, peers are able to more than ~6-7 replies from their neighbors.
-This denotes that setting higher values of $\minP$ to ~60-70\% of the neighbor list size results in higher rate of failure detection requests, i.e., low complaints are actually filed to the source. 
+In fact, varying $\minP$ between 3, 4 and 5 has little impact on the detection performance, indicating that nodes receive sufficient replies.
 
-To that end, through the results, we highlight that the detection mechanism is indeed effective against \drop attacks even in cases where the attacker possesses high malicious budget as headnodes.
+To that end, through the results, we highlight that the detection mechanism is indeed effective against \drop attacks, even if the attacker possesses high malicious budget as headnodes.
 Moreover, we show that malicious peers are incapable of abusing the detection mechanism and place themselves as headnodes. Finally, the detection mechanism induces a very small overhead on the overlay.
 
 
