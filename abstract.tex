@@ -7,11 +7,12 @@ While extensive research exists on mitigating varied attack types, the class of 
 Our research focuses on the critical class internal inference attacks for pull-based overlays, where the attacker first infers the overlay's topology before conducting a buffer-map ($BM$) cheating attack using malicious peers located at the positions closest to the source. 
 We demonstrate the feasibility of conducting such attacks, and also show how very few malicious peers can drastically compromise the P2P overlay.
 
-Accordingly, we propose a two-fold detection mechanism that is capable of (a) detecting the malicious peers conducting various\mn[Stef]{Are we still doing 'various'? I would say only dropping} $BM$ cheating behaviors in the worst case scenario where 100\% of the sources neighbors are malicious\mn[Stef]{detecting the worst-case attack is not really an achievement, detecting less obvious attacks is... I would rewrite this}, and (b) restoring the the overlay to a benign state.\mn[Stef]{What is a `benign state'? sounds like we actually remove nodes} 
+Accordingly, we propose a two-fold detection mechanism that is capable of (a) detecting the malicious peers conducting dropping $BM$ cheating behavior in the worst case scenario where 100\% of the sources neighbors are malicious, and (b) restoring the the overlay to a benign state.
 The proposed mechanism allows peers to collaboratively detect and notify the source, which in turn replaces the suspected peers.
-
+% \mn[Stef]{What is a `benign state'? sounds like we actually remove nodes} 
+% \mn[Stef]{detecting the worst-case attack is not really an achievement, detecting less obvious attacks is... I would rewrite this}
 % Simultaneously, peers locally sanitize their contact lists from peers who conduct adversarial $BM$ cheating behaviors.
 
-Using a combined theoretical and simulation-based analysis, we validate that the detection mechanism is able to detect malicious peers with up to 80-90\% accuracy while inducing a small overhead of  approximately 8\%. Furthermore, we ascertain theoretically and hrough simulations that malicious peers cannot misuse the detection mechanism to gain influence. 
+Using a combined theoretical and simulation-based analysis, we validate that the detection mechanism is able to detect malicious peers with up to 80-90\% accuracy while inducing a small overhead of approximately 8\%. Furthermore, we ascertain theoretically and through simulations that malicious peers cannot misuse the detection mechanism to gain influence. 
 
 \end{abstract}

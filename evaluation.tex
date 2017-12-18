@@ -52,7 +52,7 @@ Here we define the metrics used throughout the evaluation.
 In this case study, we evaluate the impact of \drop attack on two different network scenarios:  (1) DONet, and (2) DONet+SWAP \cite{nguyen2016swap}, in order to assess the attack's severity when a replacement mechanism for peers is operating.
 Note that the attacker's budget is independent from the overlay's size, in fact, the attacker's budget is dependent on the neighbor list size $LS$.
 The reason is that as malicious peers target is to occupy the closest peers to the source, the remaining size of the overlay is not a factor on the impact of the \drop attack.
-\mn[Hatem]{I'm not entirely sure that the assumption above is always correct, and even if it is correct, shouldn't we back it up with results and numbers, so feel free to remove it.}   
+% \mn[Hatem]{I'm not entirely sure that the assumption above is always correct, and even if it is correct, shouldn't we back it up with results and numbers, so feel free to remove it.}   
 
 Given the source's neighbor list size $LS=10$, we choose the following combinations for the attackers budget $x={\{\eta x, MN\}}$: $\{10=\{10,0\}\}, \{20=\{5,15\}\}, 77=\{7,70\}\}, 32=\{8,24\}\}$.
 In otherwords, $MN=70$ denotes that 7 malicious peers are connected to each of the 10 headnodes.
@@ -82,9 +82,9 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 \begin{figure}[t!]
 \centering
 
-  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=4cm]{./Figures/avg-loss-donet.eps}}}
  
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=4cm]{./Figures/satisfaction-donet.eps}}}
 %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
   \caption{Attack's impact on DONet}
   \label{fig:attack-results}
@@ -93,12 +93,53 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 
 \subsection{Case 2: Detection Mechanism Performance}
 
+The aim of this case study is to evaluate the performance of the detection mechanism.
+In order to do so, we select the following combinations for $\eta x, MN$: $x=\{5, 80\}$, $x=\{8, 50\}$ and $x=\{10, 50\}$ to assess the performance of the mechanism in severe attack conditions.
+
+The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers are able to fully restore their satisfaction level when the detection mechanism in operating.
+The detection mechanism is effective starting $t=250s$ to allow for a reasonable amount of peers to join the overlay to adequately assess the efficiency of the mechanism.
+In this scenario, every peer is allowed to initiate $\minDR=10$ detection requests for $t_{det}=500$, and the minimum number of responses to generate a complaint is $\minP=3$. 
+We discuss the effect of varying those parameters later on.
+
+As depicted in Figure~\ref{subfig:BRNL}, once the detection mechanism is operating, at $t=250s$, we observe an increase in the benign headnodes ration in the source's neighbor list.
+for $x=\{5, 80\}$, the source successfully attains ~80\% benign headnodes due to the detection mechanism.
+For $x=\{8, 50\}$, the $BRNL$ ratio increases up to ~90-100\%, which reflects the efficiency of the detection mechanism in replacing malicious headnodes to restore peers satisfaction level.
+Intuitively, in the worst case scenario, where the source is initially fully occupied with malicious headnodes $\eta x=10$, the source is capable of restoring ~80\% of its benign state.
+In fact, this agrees with our theoretical analysis that even when the attacker's budget is relatively high and malicious peers are able to remove benign headnodes, there is no guarantee that those peers are replaced with malicious peers, 
+i.e., even when the replacement occurs due to the detection mechanism, there is more likelihood that the source will reconnect with another benign peers as headnodes.
+
+
+Figure~\ref{subfig:det-sat} illustrates the average restored peer satisfaction level due to the detection mechanism.
+For the various attack placement strategies, peers satisfaction level $\sat$ increases up to ~95-100\%, even for $\eta x=10$.
+As the detection mechanism starts at $t=250s$, the mechanism's impact on the peers satisfaction level $\sat$ can be noticed in a short time period.
+The reason is that the number of initial detection requests sent to the source results in replacing a high fraction of the source's headnodes, which in turn impacts the peers satisfaction level.
+Moreover, observing no degradation in the peers satisfaction level while the detection mechanism is on highlights the inapplicability of malicious peers to abuse the detection mechanism.
+
+Figure~\ref{subfig:overhead}, the average detection overhead induced by our mechanism is depicted.
+As notice, the maximum overhead due to the detection mechanism is ~8\% for the different attack scenarios.
+As peers are eventually satisfied, i.e., the number of detection requests initiated decreases, the overhead decreases to ~4\% at $t=500s$.
+This implies that the overhead is not constant throughout time, i.e., once all peers $\sat > \satThres$, the detection mechanism is not invoked and hence, no extra overhead is induced on the system.
+Moreover, the maximum number of detections that can be initiated is dependent on $\minDR$, which is set to 10 in this scenario.
+Thus, smaller values of $\minDR$ result in lower overhead, which is a useful application parameter that can be set according to suit the application's criticality or user's CPU resources.
+
+In fact, varying $\minP$ between 3, 4 and 5 yields the same detection performance.
+The reason is that the neighbor list size for all peers is 10. 
+Hence, on average, once the detection mechanism is operating, peers are able to more than ~6-7 replies from their neighbors.
+This denotes that setting higher values of $\minP$ to ~60-70\% of the neighbor list size results in higher rate of failure detection requests, i.e., low complaints are actually filed to the source. 
+
+To that end, through the results, we highlight that the detection mechanism is indeed effective against \drop attacks even in cases where the attacker possesses high malicious budget as headnodes.
+Moreover, we show that malicious peers are incapable of abusing the detection mechanism and place themselves as headnodes. Finally, the detection mechanism induces a very small overhead on the overlay.
+
+
 \begin{figure}[t!]
 \centering
 
-  \mbox{\subfloat[Avg. BRNL]{\label{subfig:BRNL}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-BRNL.eps}}}
+  \mbox{\subfloat[Avg. BRNL]{\label{subfig:BRNL}\includegraphics[width=8.4cm,height=4cm]{./Figures/det-BRNL1.eps}}}
  
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:det-sat}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-sat.eps}}}
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:det-sat}\includegraphics[width=8.4cm,height=4cm]{./Figures/det-sat.eps}}}
+  
+   \mbox{\subfloat[Detection overhead]{\label{subfig:overhead}\includegraphics[width=8.4cm,height=4cm]{./Figures/overhead.eps}}}
+  
 %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
   \caption{Detection mechanism performance}
   \label{fig:detection-results}
