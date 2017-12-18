@@ -1,25 +1,25 @@
 \section{Evaluation}
 \label{sec:eval}
 
-The target of this section is two fold presented in the following two case studies.
-First, we demonstrate the severity of conducting \drop attack on the closest peers to the source.
-Second, we evaluate the proposed detection mechanism's performance, accuracy and the overhead induced on the system due to the messages exchanged by the different detection steps.
-First we describe the simulation framework and the parameters for different simulation configurations. Afterwards the metrics used in both case studies are provided.
-Finally, we detail the simulation results and the interpretation in both case studies.
+The goal of this section is to address two research questions: 
+First, we quantify the severity of \drop. 
+Second, we evaluate the proposed detection mechanism's performance in terms of effectiveness and overhead. 
+
+We start by describing simulation model and set-up. 
+Afterwards, in the main part of the section, we detail the simulation results and their interpretation for both research questions.
 
 \subsection{Simulation Framework and Parameters}
-Our simulation framework is based on OSSim \cite{nguyen2013ossim}. 
-OSSim provides a packet level simulator for DONet \cite{zhang2005coolstreaming}, a pull-based online video streaming overlay, which we use in our case studies.
-We use the network topology generator GT-ITM \cite{GT} with 1000 peers connected to 400 edge router.
+Our simulation framework relies on OSSim \cite{nguyen2013ossim}. 
+OSSim is a packet level simulator for DONet \cite{zhang2005coolstreaming}, a pull-based online video streaming overlay, which we use in our case studies.
+All our overlays use the network topology generator GT-ITM \cite{GT} with 1000 peers connected to 400 edge router. Furthermore, our simulation time is 500s and the presented results are averages over 10 runs. 
 
-To simulate for the worst case scenarios, we assume malicious peers never leave the overlay once they join.
-However, to emulate real life measurements \cite{distribution}, benign peers joining is based on Pareto distribution, while their leaving times is estimated using Lognormal distributions.
+We differentiate between malicious and benign peers when considering their online times. 
+We assume that malicious peers join the overlay early and do not leave before the video dissemination ends in order to maximize their impact. 
+In contrast,  benign peers joining is based on Pareto distribution, while their leaving times is estimated using Lognormal distributions, as motivated by real-world measurements \cite{distribution}.
 Benign peers can rejoin the overlay in a uniform distribution around 10s.
 
-As our proposed attack aims at attacking the overlay once the source starts to send video chunks, we focus on showing both the attack's impact along with the detection mechanism's performance on simulation time of 500s.
-The results are calculated over 10 runs for each simulation configuration.
 
-The parameters used in both case studies are provided in Table \ref{tab:parameters}.
+Table \ref{tab:parameters} gives an overview of our parameters. 
 
 \begin{table}[ht]
 \center
@@ -41,11 +41,12 @@ det. allowed $\minDR$ & 10 & list size $LS$ & $\{8,10\}$\\\hline
 
 \subsection{Metrics}
 
-Here we define the metrics used throughout the evaluation.
-\subsubsection*{Satisfaction $\sat$} which represents the average peer satisfaction level through the whole simulation interval.
-\subsubsection*{Avg. Loss} that indicates the avg chunk loss per peer.
-\subsubsection*{Detection Overhead $DO$} used to evaluate the detection overhead induced on the system, i.e., the ratio of messages exchanged during due to the detection mechanism over all signaling messages in the system.
-\subsubsection*{Benign Ratio per Neighbor List $BRNL$} which measures the ratio of benign peers over all peers in the source's neighbor list.
+We rely upon four metrics to characterize the video streaming performance.
+
+\subsubsection*{Satisfaction $\sat$} The satisfaction or satisfaction is the fraction of chunks peers receive in time, averaged over all peers. 
+\subsubsection*{Avg. Loss $lo$} The average loss indicates the fraction of chunks that peers do not receive or not receive in time. 
+\subsubsection*{Detection Overhead $DO$} The detection overhead describes the communication overhead created by the detection mechanism. More formally, it is the ratio of messages exchanged during due to the detection mechanism and all signaling messages in the system.
+\subsubsection*{Benign Ratio per Neighbor List $BRNL$} The benign ratio per nieghbor list measures the fraction of benign peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
 
