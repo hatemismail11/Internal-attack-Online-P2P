@@ -45,7 +45,7 @@ Here we define the metrics used throughout the evaluation.
 \subsubsection*{Satisfaction $\sat$} which represents the average peer satisfaction level through the whole simulation interval.
 \subsubsection*{Avg. Loss} that indicates the avg chunk loss per peer.
 \subsubsection*{Detection Overhead $DO$} used to evaluate the detection overhead induced on the system, i.e., the ratio of messages exchanged during due to the detection mechanism over all signaling messages in the system.
-\subsubsection*{Malicious Ratio per Neighbor List $MRNL$} which measures the ratio of malicious peers over all peers in benign peers neighbor list.
+\subsubsection*{Benign Ratio per Neighbor List $BRNL$} which measures the ratio of benign peers over all peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
 
@@ -86,13 +86,23 @@ For the same reason, the satisfaction level of benign peers eventually decreases
  
   \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
 %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
-  \caption{Attack's Impact on DONet}
+  \caption{Attack's impact on DONet}
   \label{fig:attack-results}
   \end{figure}
 
 
 \subsection{Case 2: Detection Mechanism Performance}
 
+\begin{figure}[t!]
+\centering
+
+  \mbox{\subfloat[Avg. BRNL]{\label{subfig:BRNL}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-BRNL.eps}}}
+ 
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:det-sat}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-sat.eps}}}
+%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+  \caption{Detection mechanism performance}
+  \label{fig:detection-results}
+  \end{figure}
 
 
 % \subsubsection{Summary of the results}
