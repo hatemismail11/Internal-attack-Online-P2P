@@ -1,31 +1,28 @@
 \section{Related Work}
 \label{sec:related}
 
-In this section, we highlight relevant contributions with respect to attacks and defences in the context of P2P video streaming systems.
-The most common type of attacks on such systems is pollution attacks \cite{pollution1}. 
-Nonetheless, we do not focus such attack due to: (i) the fact that our proposed internal attack is irrelevant to pollution attacks, and (ii) various detection and mitigation schemes for pollution attacks have been exhaustively studied in literature \cite{pollution2}.
-For example, Network Coding (\textit{NC}) schemes provide an effective light-weight defense against pollution attacks \cite{nc}.
+In this section, we highlight the prominent work on attacks and attack detection in the area of P2P video streaming systems.
+Previous work considered three types of attacks: (i) pollution attacks, i.e., flooding the overlay with arbitrary content and claiming it to be relevant video chunks, (ii) free riding, i.e., participating in the overlay without contributing, and iii) cheating attacks, i.e., attacks that maliciously drop packets or manipulate buffer-maps. 
 
-In \cite{defending}, the authors propose a defense mechanism against buffer maps cheating for pull-based DONet system \cite{zhang2005coolstreaming}.
-The proposed attack model only considers peers to be selfish, i.e., peers are not certainly malicious, nevertheless, they aim at bounding their forwarding limit.
-Hence, the proposed countermeasure constitutes a trust model to encourage peers to forward video chunks to other peers in order to receive a better service from other peers when requesting chunks.
-However, the proposed trust model is inapplicable in case peers are intentionally malicious and indeed can intercept video chunks directly from the source, as described in our attack model.
+Pollution attacks are one of the most common attacks \cite{pollution1}.
+Consequently, researchers have studied them extensively and there exist various detection and mitigation schemes \cite{pollution2}.    
+As the existing approaches seem to render the attack harmless, we do not focus on it in this work but rather assume that appropriate measures against these attacks such as network coding \cite{nc} are already in place.
 
-A similar rewarding mechanism against free rides attacks is proposed in \cite{defending2}, where peers who participates more in forwarding video chunks are rewarded with more flexibility to select their partners for a better streaming quality.
-However, no detection or malicious peers isolation scheme is proposed. 
-In addition, the proposed scheme is not effective against severe internal DoS attacks, where malicious peers are capable of performing a severe DoS attack directly on the source's stream, as proposed in this work.
+In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distributed the stream to others; e.g., with an increased flexibility in the neighbor selection or positions close to the source node that generally receive a better service. 
+As a consequence, free riders likely end up far from the source, meaning that they are not required to forward the stream anyways, because all their neighbors already requested the chunks from others by the time the free riders receive them. 
+Note that these strategies only are effective for peers that aim to minimize their level of participating. 
 
-\textit{Antiliar}, another defense mechanism against a diverse set of attacks (selective data omission, fake reporting and fake block attack) is proposed in \cite{antiliar}.
-The main idea behind \textit{Antiliar} is to track peers behaviors in a secure progress log, and thus, detect misbehaving peers.
-Although results verifies the efficiency and low overhead induced by \textit{Antiliar}, the algorithm strongly relies on a complicated cryptographic scheme which might be unsuitable for devices with low CPU resources.
-Moreover, \textit{Antiliar} uses a central entity (tracker), which introduces another security threat when targeted by attackers.
 
-In \cite{nguyen2014resilience}, the authors discuss a very similar problem when headnodes are attacked, and accordingly, propose a robust video chunks striping scheme. 
-The proposed scheme aims at reducing dependencies on headnodes via enforcing peers for more diversity when requesting video chunks, as in a pull-based approach, peers are more likely to keep requesting data from the same set of peers.
-In this scheme, peers are forced to logically their neighbor list into groups and thus, explicitly request specific stripes from a dedicated group.
+Cheating attacks are severe denial-of-service attacks, performed with the goal of maximizing the damage to the overlay and preventing peers from downloading the video.   
+\textit{Antiliar} is a general defense mechanism against a diverse set of attacks, including dropping and buffer map manipulation\cite{antiliar}.
+The key idea of \textit{Antiliar} is to track peers behaviors in a secure progress log. It hence detects misbehaving peers by identifying irregularities in the log. While highly effective, \textit{Antiliar} relies on expensive cryptographic operations that are not suitable for  devices with low CPU resources.
+Moreover, \textit{Antiliar} uses a central entity to review the logs, creating a number of security and privacy problems. 
 
-Although the scheme is shown to remarkably increase the system's robustness and resilience against attacks on headnodes, the striping scheme is only effective against external attacks, where the attacker is only capable of shutting down headnodes.
-In our proposed internal attack, the attacker is capable of controlling the headnodes in a very early stage of the stream start, and thus, makes it impossible to make use of the striping scheme to expand the number of headnodes as proposed in \cite{nguyen2014resilience}.
+An alternative approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting video chunks. In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating. The work focuses in particular on attacks on headnodes, yet assumes an external attacker that can take over arbitrary nodes at will. In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
+As shown in Section~\ref{sec:eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  
+
+
+
 
 
 
