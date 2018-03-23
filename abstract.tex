@@ -2,19 +2,13 @@
 
 Online streaming is a very popular service and P2P-based solutions for streaming can reduce costs for both providers and users.
 Yet, involving users into the data dissemination entails security risks including a variety of denial-of-service attacks. 
-While extensive research exists on mitigating varied attack types, the class of inference attacks (where the attacker is capable of inferring the peers directly connected to the source), still constitutes a major open threat for streaming P2P systems.
+While extensive research exists on mitigating varied attack types, their effectiveness is limited if the attacker can infer information about the topology such as the identity of nodes that have direct connections to the source.  
 
-Our research focuses on the critical class internal inference attacks for pull-based overlays, where the attacker first infers the overlay's topology before conducting a buffer-map ($BM$) cheating attack using malicious peers located at the positions closest to the source. 
-We demonstrate the feasibility of conducting such attacks, and also show how very few malicious peers can drastically compromise the P2P overlay.
+Our research focuses on the critical class of internal inference attacks for pull-based overlays: the attacker first infers the overlay's topology. Based on the gained knowledge,  the attacker positions malicious peers in prominent positions and performs a buffer-map cheating attack. By dropping chunks that should be forwarded, the malicious peers degrade the performance in a stealthy way that does not raise suspicion. 
 
-Accordingly, we propose a two-fold detection mechanism that is capable of (a) detecting the malicious peers conducting dropping $BM$ cheating behavior in the worst case scenario where 100\% of the sources neighbors are malicious, and (b) restoring the the overlay to a benign state.
-The proposed mechanism allows peers to collaboratively detect and notify the source, which in turn replaces the suspected peers.
-
-Using a combined theoretical and simulation-based analysis, we validate that the detection mechanism is able to detect malicious peers with up to 80-90\% accuracy while inducing a small overhead of approximately 8\%. Furthermore, we ascertain theoretically and through simulations that malicious peers cannot misuse the detection mechanism to gain influence. 
-% \mn[Stef]{What is a `benign state'? sounds like we actually remove nodes} 
-% \mn[Stef]{detecting the worst-case attack is not really an achievement, detecting less obvious attacks is... I would rewrite this}
-% Simultaneously, peers locally sanitize their contact lists from peers who conduct adversarial $BM$ cheating behaviors.
-
+We first demonstrate the feasibility of conducting such attacks. 
+Accordingly, we propose a detection mechanism that identifies the attack and removes potential malicious peers from their prominent positions. 
+Our simulation-based study indicates that the detection mechanism is able to detect malicious peers with up to 80-90\% accuracy while inducing a small overhead of approximately 8\%. Furthermore, we ascertain theoretically and through simulations that malicious peers cannot misuse the detection mechanism to gain influence. 
 
 
 \end{abstract}
