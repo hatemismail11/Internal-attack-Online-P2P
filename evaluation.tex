@@ -18,8 +18,7 @@ Benign peers can rejoin the overlay in a uniform distribution around 10s.
 
 As our proposed attack aims at attacking the overlay once the source starts to send video chunks, we focus on showing both the attack's impact along with the detection mechanism's performance on simulation time of 500s.
 The results are calculated over 10 runs for each simulation configuration.
-
-The parameters used in both case studies are provided in Table \ref{tab:parameters}.
+The parameters used are provided in Table \ref{tab:parameters}.
 
 \begin{table}[ht]
 \center
@@ -38,20 +37,20 @@ det. allowed $\minDR$ & 10 & list size $LS$ & $\{8,10\}$\\\hline
 \end{tabular}
 \label{tab:parameters}
 \end{table}
-
+\vspace{-2.5mm}
 \subsection{Metrics}
 
 Here we define the metrics used throughout the evaluation.
 \subsubsection*{Satisfaction $\sat$} which represents the average peer satisfaction level through the whole simulation interval.
 \subsubsection*{Avg. Loss} that indicates the avg chunk loss per peer.
 \subsubsection*{Detection Overhead $DO$} used to evaluate the detection overhead induced on the system, i.e., the ratio of messages exchanged during due to the detection mechanism over all signaling messages in the system.
-\subsubsection*{Benign Ratio per Neighbor List $BRNL$} which measures the ratio of benign peers over all peers in the source's neighbor list.
+\subsubsection*{Benign Ratio per Neighbor List $BRNL$} measures the ratio of benign peers over all peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
 
 In this case study, we evaluate the impact of \drop attack on two different network scenarios:  (1) DONet, and (2) DONet+SWAP \cite{nguyen2016swap}, in order to assess the attack's severity when a replacement mechanism for peers is operating.
-Note that the attacker's budget is independent from the overlay's size, in fact, the attacker's budget is dependent on the neighbor list size $LS$.
-The reason is that as malicious peers target is to occupy the closest peers to the source, the remaining size of the overlay is not a factor on the impact of the \drop attack.
+Note that the attacker's budget is independent from the overlay's size, in fact, the attacker's budget depends on the neighbor list size $LS$.
+The reason is that as malicious peers target is to occupy headnodes only, the remaining size of the overlay is not a factor on the impact of the \drop attack.
 % \mn[Hatem]{I'm not entirely sure that the assumption above is always correct, and even if it is correct, shouldn't we back it up with results and numbers, so feel free to remove it.}   
 
 Given the source's neighbor list size $LS=10$, we choose the following combinations for the attackers budget $x={\{\eta x, MN\}}$: $\{10=\{10,0\}\}, \{20=\{5,15\}\}, 77=\{7,70\}\}, 32=\{8,24\}\}$.
@@ -68,10 +67,10 @@ It is inferred that as the value of $\eta x, MN$ increase, benign peers experien
 Nevertheless, the loss ratio decreases once a fraction of benign (headnodes and non-headnodes) peers are able to serve the rest of the overlay.
 
 Figure~\ref{subfig:satisfaction-donet} presents the average peer satisfaction level $\sat$.
-As a consequence of experiencing high chunk loss rate, higher values of $\eta x, MN$ result in lower peer satisfaction over time, where benign peers at $x=\{5, 15\}$ restore their satisfaction level at ~340s, which is earlier than at $x=\{7, 70\}$ and $x=\{8, 24\}$.
+As a consequence of experiencing high chunk loss rate, higher values of $\eta x, MN$ result in lower peer satisfaction over time, where peers at $x=\{5, 15\}$ restore their satisfaction level at ~340s, which is earlier than at $x=\{7, 70\}$ and $x=\{8, 24\}$.
 
 Now we analyze the attack's impact while SWAP is operating.
-While executing SWAP's operations, peers nominate and forward other peers nominations to the source. 
+When SWAP is on, peers nominate and forward other peers nominations to the source. 
 Consequentially, malicious peers abuse the mechanism via nominating other malicious peers at each nomination round. 
 Moreover, malicious peers connected to benign headnodes are eventually nominated to the source and thus, results in occupying the sources $LS$.
 
@@ -82,11 +81,13 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 \begin{figure}[t!]
 \centering
 
-  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=4cm]{./Figures/avg-loss-donet.eps}}}
- 
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=4cm]{./Figures/satisfaction-donet.eps}}}
+  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+   \vspace{-1.5mm}
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
 %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+
   \caption{Attack's impact on DONet}
+  \vspace{-3.5mm}
   \label{fig:attack-results}
   \end{figure}
 
@@ -96,8 +97,8 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 The aim of this case study is to evaluate the performance of the detection mechanism.
 In order to do so, we select the following combinations for $\eta x, MN$: $x=\{5, 80\}$, $x=\{8, 50\}$ and $x=\{10, 50\}$ to assess the performance of the mechanism in severe attack conditions.
 
-The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers are able to fully restore their satisfaction level when the detection mechanism in operating.
-The detection mechanism is effective starting $t=250s$ to allow for a reasonable amount of peers to join the overlay to adequately assess the efficiency of the mechanism.
+The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers can fully restore their satisfaction level when the detection mechanism is operating.
+The detection mechanism is effective starting $t=250s$ to allow for a reasonable amount of peers to join to adequately assess the efficiency of the mechanism.
 In this scenario, every peer is allowed to initiate $\minDR=10$ detection requests for $t_{det}=500$, and the minimum number of responses to generate a complaint is $\minP=3$. 
 We discuss the effect of varying those parameters later on.
 
@@ -106,14 +107,17 @@ for $x=\{5, 80\}$, the source successfully attains ~80\% benign headnodes due to
 For $x=\{8, 50\}$, the $BRNL$ ratio increases up to ~90-100\%, which reflects the efficiency of the detection mechanism in replacing malicious headnodes to restore peers satisfaction level.
 Intuitively, in the worst case scenario, where the source is initially fully occupied with malicious headnodes $\eta x=10$, the source is capable of restoring ~80\% of its benign state.
 In fact, this agrees with our theoretical analysis that even when the attacker's budget is relatively high and malicious peers are able to remove benign headnodes, there is no guarantee that those peers are replaced with malicious peers, 
-i.e., even when the replacement occurs due to the detection mechanism, there is more likelihood that the source will reconnect with another benign peers as headnodes.
-
+%Hatem: trim
+% i.e., even when the replacement occurs due to the detection mechanism, there is more likelihood that the source will reconnect with another benign peers as headnodes.
+i.e., even when the replacement occurs due to the detection mechanism, there is more likelihood that the source reconnects with another benign peers.
 
 Figure~\ref{subfig:det-sat} illustrates the average restored peer satisfaction level due to the detection mechanism.
 For the various attack placement strategies, peers satisfaction level $\sat$ increases up to ~95-100\%, even for $\eta x=10$.
 As the detection mechanism starts at $t=250s$, the mechanism's impact on the peers satisfaction level $\sat$ can be noticed in a short time period.
 The reason is that the number of initial detection requests sent to the source results in replacing a high fraction of the source's headnodes, which in turn impacts the peers satisfaction level.
-Moreover, observing no degradation in the peers satisfaction level while the detection mechanism is on highlights the inapplicability of malicious peers to abuse the detection mechanism.
+%Hatem: trim
+% Moreover, observing no degradation in the peers satisfaction level while the detection mechanism is on highlights the inapplicability of malicious peers to abuse the detection mechanism.
+Moreover, observing no degradation in the peers satisfaction level highlights the inapplicability of malicious peers to abuse the detection mechanism.
 
 Figure~\ref{subfig:overhead}, the average detection overhead induced by our mechanism is depicted.
 As notice, the maximum overhead due to the detection mechanism is ~8\% for the different attack scenarios.
@@ -134,14 +138,16 @@ Moreover, we show that malicious peers are incapable of abusing the detection me
 \begin{figure}[t!]
 \centering
 
-  \mbox{\subfloat[Avg. BRNL]{\label{subfig:BRNL}\includegraphics[width=8.4cm,height=4cm]{./Figures/det-BRNL1.eps}}}
- 
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:det-sat}\includegraphics[width=8.4cm,height=4cm]{./Figures/det-sat.eps}}}
-  
-   \mbox{\subfloat[Detection overhead]{\label{subfig:overhead}\includegraphics[width=8.4cm,height=4cm]{./Figures/overhead.eps}}}
-  
+  \mbox{\subfloat[Avg. BRNL]{\label{subfig:BRNL}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-BRNL1.eps}}}
+\vspace{-1.5mm}    
+  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:det-sat}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-sat.eps}}}
+  \vspace{-1.5mm}   
+   \mbox{\subfloat[Detection overhead]{\label{subfig:overhead}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/overhead.eps}}}
+%   \vspace{-1.5mm}   
 %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+
   \caption{Detection mechanism performance}
+  \vspace{-3.5mm}   
   \label{fig:detection-results}
   \end{figure}
 

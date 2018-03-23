@@ -20,12 +20,12 @@ The selection of neighbors and the choice of which neighbors to receive from or 
 
 In pull-based systems, there exists three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
 % \mn[Stef]{Does the paper actually call them $BM$ cheating attacks?} 
-The attacker might manipulate its buffer-map or the dissemination of chunks by: 
+Malicious peers might manipulate their buffer-map or the dissemination of chunks by: 
 % \mn[Stef]{I don't get why `requesting already received chunks or offering chunks they never received' are in the same category, they seem to have different methods and purposes; 'delay sending chunks or offering chunks that were never received' makes more sense as one category}
 \begin{enumerate}
 \item dropping received chunks and not including them in their buffer-map, hence terminating the forwarding and keeping peers from obtaining these chunks.
 \item requesting already received chunks, thus creating additional load and delays.
-\item delay sending actual chunks to other peers or offering chunks they never received, hence risking that these peers do not receive the chunks in time and creating delays in the video. 
+\item delay sending actual chunks or offering chunks they never received, hence risking that these peers do not receive the chunks in time and creating delays in the video. 
 \end{enumerate}
 All presented attack strategies either i) interrupt or delay the video stream directly or ii) increase the load on the system, which might in turn lead to delays and interruptions. 
 
@@ -38,19 +38,23 @@ In contrast, dropping chunks indicates that neighbors of the attacker have to re
 Consequentially, we focus on the dropping attack, called \drop in the following. 
 % \mn[Stef]{ I am not really sure if my arguments are convincing; might also be too detailed for the intro}
 
-In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop in particular. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
+%Hatem:trim
+% In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop in particular. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
+In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
 However, previous work indicates that it is relatively easy to infer the identity of benign headnodes and then target those important nodes \cite{nguyen2016swap}.
 % \mn[Stef]{Which of giang's papers was that? add citation} 
-While there are countermeasures to these inference attacks, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
-Hence, the existing work does not evaluate neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks. 
+While countermeasures to these inference attacks exist, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
+Hence, the existing work does not evaluate neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks.
 
 
 In this paper, we  illustrate the effectiveness of internal attacks that benefit from malicious headnodes. 
 % \mn[Stef]{Old version: 'We show the feasibility of \textit{partially-fully} attacking the source's headnodes, which causes significant degradation in the user's satisfaction.', don't get it}
-Consequentially, we propose a mechanism for detecting \drop. Our protection mechanism keeps track of the satisfaction of peers. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. Our detection mechanism hence reacts to a low quality-of-service rather than explicitly identifying the misbehavior of one of more specific nodes.
-Note that we focus on attackers that control a low fraction of the nodes, as attackers controlling the majority of the nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
+Consequentially, we propose a mechanism for detecting \drop. Our protection mechanism keeps track of peers' satisfaction. 
+If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
+Our detection mechanism hence reacts to a low quality-of-service rather than explicitly identifying the misbehavior of one or more specific nodes.
+Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
 
-In an extensive simulation study, we show that the proposed detection mechanism can fully restore peer satisfaction, even when starting from the scenario that  the attacker controls all headnodes. 
+In an extensive simulation study, we show that the proposed detection mechanism can fully restore peers' satisfaction, even in a scenario where the attacker controls all headnodes. 
 Our mechanism only introduces a signaling overhead of less than $10\%$, meaning that it is both effective and efficient.
 
 A theoretical analysis complements our concrete practical results, focusing on the opportunities to abuse the detection mechanism. 

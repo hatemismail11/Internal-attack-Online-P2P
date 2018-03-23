@@ -1,9 +1,9 @@
 \section{Internal Attack Model}
 \label{sec:Attack}
 
-In this section, we introduce the concept of internal attacks in the context of streaming P2P overlays.
+In this section, we introduce the concept of internal attacks in streaming P2P overlays.
 Our focus are attacks on availability that aim to intercept video chunks from the source. 
-We start by introducing attack characteristics such as target, budget, and placement of malicious nodes. 
+We start by introducing the attack characteristics such as target, budget, and malicious nodes' placement. 
 Afterwards, our main discussion outlines the the \drop adversarial behavior. 
 
 \subsection{Target, budget and placement}
@@ -39,7 +39,7 @@ Accordingly, such distribution of the attacker's budget assures that even if the
 
 \subsection{\drop adversarial behavior}
 Now, we discuss the main adversarial behavior executed based on the attacker's target and budget. 
-In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of different scenarios of peer placement strategies executed by the attacker. 
+In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of different scenarios of malicious peers' placement strategies. 
 % \mn[Stef]{Do you mean 'and'?}
 % \mn[Stef]{why is that here? and what does combination mean here?}
 % \subsubsection*{Dropping behavior}
@@ -49,14 +49,14 @@ When $m$ receives a video-chunk from a neighbor, irrespective of the neighbor's 
 In particular, $m$ never advertises for those chunks in its $BM$.
 Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$, where $B$ is the set of benign peers.
 % \mn[Stef]{We never introduced $B$ and $M$, did we?}
-This scenario guarantees that: (a) malicious peers are less susceptible to being suspected given that the requesting benign peers are not aware that $m$ indeed received those chunks,
+This scenario guarantees that: (a) malicious peers are less susceptible to being suspected as the requesting benign peers are not aware that $m$ indeed received those chunks,
 and (b) detecting $m$'s direct or close connection to the source, inferring the overlay's topology, is not possible, which lowers the probability of $m$ being suspected.
 
 % are incapable of inferring that the malicious headnodes fraction $\eta x$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer. 
 % \mn[Stef]{There is sth grammatically wrong with this sentence, and I am not entirely sure what you want to say}
 
-Note that this behavior minimizes the susceptibility of malicious peers to being detected.
-The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, e.g,if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, eventually $m$ will be suspected by other peers.
+Note that this behavior minimizes the detection susceptibility of malicious peers.
+The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, e.g, if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, eventually $m$ will be suspected.
 % \mn[Stef]{did you mean e.g.?} 
 Moreover, sending correct $BM$ updates results in correctly inferring $m$'s position, which positively impacts the decision of the detection mechanism, which we discuss in the next section. 
 % \mn[Stef]{how so? our mechanism does not target this case, so that seems a bold statement to make}

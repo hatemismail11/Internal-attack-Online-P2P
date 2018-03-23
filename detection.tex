@@ -5,8 +5,14 @@
 In this section, we explain our detection mechanism, starting with an overview of the different steps followed by a detailed description of each step.  
 The goal of the detection algorithm is to restore the user's satisfaction in the face of a \drop attack. The key idea of our method is to replace headnodes associated with peer groups of low satisfaction levels. 
 
-Throughput the section, we assume that nodes authenticate their messages using a private signature key. The source keeps track of the verification keys of all participants and can hence establish the authenticity of messages. In particular, malicious nodes cannot forge responses of honest peers to influence the detection mechanism. 
-Furthermore, we assume that neighboring nodes periodically exchange messages stating that they are neighbors. These \emph{proofs of neighborhood} are signed and contain a time stamp. In this manner, $u$ can proof if $v$ is (or has recently been) its neighbor. 
+Throughput the section, we assume that nodes authenticate their messages using a private signature key. 
+% Hatem: trim
+% The source keeps track of the verification keys of all participants and can hence establish the authenticity of messages.
+The source keeps track of participants' verification keys and can hence establish the authenticity of messages.
+In particular, malicious nodes cannot forge responses of honest peers to influence the mechanism. 
+We assume that neighboring nodes periodically exchange messages stating that they are neighbors.
+These \emph{proofs of neighborhood} are signed and contain a time stamp. 
+In this manner, $u$ can proof if $v$ is (or has recently been) its neighbor. 
 
 
 \begin{table}[ht]
@@ -23,12 +29,13 @@ $\sat$ & peer satisfaction level & $\satThres$ & satisfaction threshold \\\hline
 $\minP$ & min. drop responses & $\minDR$ & no. allowed det. \\\hline
 \end{tabular}
 \label{tab:acronyms}
+\vspace{-1mm}
 \end{table}
+
 % \mn[Stef]{Definition of $x, \eta$ in table inconsistent with evaluation; fix table size}
 
 \subsection{Mechanism Overview}
-We illustrated the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
-
+We illustrate the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
 When a malicious peer $m$ performs a \drop attack, benign peers $b$ are unable to immediately identify malicious behavior.
 Specifically, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has. 
 % % \mn[Stef]{how can it be `only'? it has to get the chunk for the first time at some point}
@@ -36,11 +43,11 @@ Thus, detecting a violation in this case is not straight-forward. In particular,
 In the remainder of the section, we present a mechanism how nodes can collaboratively identify suspects that are subsequently removed as headnodes.  
 
 
-The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in the replacement of one or several headnodes. 
+The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in replacing one or several headnodes. 
 First, when a peer $b$ suspects a \drop attack based on its local observations, $b$ sends a \emph{detection request} to all peers in its neighbor list.
 Second, each peer receiving a detection request prepares a reply. 
-Third, the initiator $b$ decides based on the received responses if it should file a complaint with the source.
-If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the detection request. 
+Third, the initiator $b$ decides based on the received responses a complaint should be filed to the source.
+If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the request. 
 Afterwards, the source verifies the complaint, reacts accordingly, and replies to $b$ detailing the steps taken. 
 The reaction of the source is either the replacement of one or several headnodes and proposing other potential headnodes or the rejection of the removal request.
 Finally, $b$ reacts based on the received reply from the source and then forwards the source's reply to the other participants in the complaint, who in turn do the same procedure.
@@ -53,10 +60,13 @@ The node $b$ bases its decision on whether to initiate a request or forward a co
 
 \begin{figure}
  \centering
- \includegraphics[width=5.5cm,height=7cm]{./Figures/detection.pdf}
+ \includegraphics[width=5.5cm,height=5cm]{./Figures/detection.pdf}
+ 
   \caption{Detection process for \drop. $S$ represents the source peer.}
+  \vspace{-4.5mm}
 \label{detection-blocks} 
 \end{figure}
+
 
 \subsection{Detection Trigger}
 \label{Detection-Trigger}
@@ -72,9 +82,13 @@ However, to limit the ability of malicious peers to incorrectly accuse benign pe
  \item The number of drop detection requests sent by $b$ in the time interval $t_{det}$ is $< \kappa$. 
 %   \mn[Stef]{unclear: is it 'only $\kappa$ requests in last $t_{det}$ timeunits' or 'we divide the time into epochs of length $t_{det}$ and you can only send $\kappa$ per epoch'?}
 %   \mn[Hatem]{It is the second one (for every $t_{det}$, only $\kappa$ requests are allowed by peer), I fixed that in the text, please double check.}
- \item $b$ has not initiated or replied to any other \drop detection request that the source has not decided on yet
+ \item $b$ has not initiated or replied to any other \drop detection request that the source has not decided on yet.
 \end{enumerate}
-The latter condition guarantees that peers cannot trigger or participate in multiple detection requests in parallel. In addition to limiting the opportunities for abuse, restricting the concurrent detection requests for benign peers is sensible as their low satisfaction level is already noted in their reply to previous requests. 
+% Hatem: trim
+% The latter condition guarantees that peers cannot trigger or participate in multiple detection requests in parallel.
+The latter condition guarantees that peers cannot abuse the mechanism via triggering or participating in multiple detection requests in parallel. 
+% In addition to limiting the opportunities for abuse, restricting concurrent requests for benign peers is sensible as their low satisfaction level is already noted in their reply to previous requests.
+Moreover, restricting concurrent requests for benign peers is sensible as their low satisfaction level is already noted in their reply to previous requests.
 
 \subsection{Processing a Detection Request}
 Let $D$ denote the set of queried peers, usually corresponding to the neighbors of the initiator $b$ if $b$ executes the protocol honestly.  
@@ -83,13 +97,14 @@ When receiving a detection request, a peer $d \in D$ hence first checks if it ca
 % \mn[Stef]{Is that correct, or how/when else is that checked?}
 % \mn[Hatem]{at the source, if i got your question right}   
     
-If so, $d$ replies with its satisfaction level $\sat_d$ and a time stamp, both signed by its private signature key. 
-The time stamp prevents an attacker from replaying previous (low) satisfaction levels from benign nodes, as only recent satisfaction levels are valid.  
+If so, $d$ replies with its $\sat_d$ and a time stamp, both signed by its private signature key. 
+The time stamp prevents the attacker from replaying benign peers' previous (low) satisfaction levels, as only recent satisfaction levels are valid.
 
 
 \subsection{Filing and Processing a Complaint}
 
-Having received feedback from its neighbors, $b$ decides if it files a complaint to the source. If $b$ files a complaint, the source verifies the complaints and potentially removes some of its headnodes. 
+Upon receiving a feedback from its neighbors, $b$ decides whether to file a complaint or not.
+If so, the source verifies the complaints and potentially removes some of its headnodes. 
 
 \subsubsection*{Filing a complaint}
 $b$ will start processing the replies once all nodes in $D$ have replied or a time-out $t_{replies}$ occurs. 
@@ -102,8 +117,8 @@ Assuming a sufficient number of replies, $b$ files a complaint to the source if:
 \label{eq:drop_satis_equation}
 \frac{1}{z+1}\left( \sat_b + \sum_{i=1}^{z} \sat_i \right) < \satThres. 
 \end{align} 
-Otherwise, $b$ either starts another detection request if it can start further requests or waits until it is allowed to send another detection request.
-
+%Hatem: trim
+Otherwise, $b$ either starts another detection request depending on $\kappa$ or waits until allowed to send another detection request.
  
 
 Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source containing the IDs of all nodes in $D$, recent proofs of neighborhood,  and the received satisfaction levels including signatures and time stamps.  
@@ -144,7 +159,7 @@ Similarly, $b$ forwards the complaint to the other participants, who in turn exe
 
 \subsection{General Notes}
 The detection mechanism does not aim at expelling peers from the system.
-The reason for the lack of harshness of the penalty associated with a detection lies in the potentially high false positive rate for headnodes that exhibit a low performance. 
+The reason for the lack of harshness of the penalty associated with a detection lies in the potentially high false positive rate for headnodes exhibiting a low performance. 
 These might be accidentally declared to be malicious peers due to not forwarding chunks sufficiently fast. 
 While removing such peers as headnodes is likely to benefit the system, it is not in our interest to ban them from the system. 
 Indeed, the only peers that get blacklisted are those who violate the detection mechanism constraints, i.e., participating in more than a single request at a time or initiating more than $\kappa$.

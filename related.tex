@@ -8,15 +8,17 @@ Pollution attacks are one of the most common attacks \cite{pollution1}.
 Consequently, researchers have studied them extensively and there exist various detection and mitigation schemes \cite{pollution2}.    
 As the existing approaches seem to render the attack harmless, we do not focus on it in this work but rather assume that appropriate measures against these attacks such as network coding \cite{nc} are already in place.
 
-In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distributed the stream to others; e.g., with an increased flexibility in the neighbor selection or positions close to the source node that generally receive a better service. 
+In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distributed the stream to others; e.g., with an increased flexibility in the neighbor selection or positions closer to the source to receive a better service. 
 As a consequence, free riders likely end up far from the source, meaning that they are not required to forward the stream anyways, because all their neighbors already requested the chunks from others by the time the free riders receive them. 
-Note that these strategies only are effective for peers that aim to minimize their level of participating. 
+Note that these strategies are only effective for peers that aim to minimize their level of participating. 
 
-
-Cheating attacks are severe denial-of-service attacks, performed with the goal of maximizing the damage to the overlay and preventing peers from downloading the video.   
+% Hatem: trim
+% Cheating attacks are severe denial-of-service attacks, performed with the goal of maximizing the damage to the overlay and preventing peers from downloading the video.   
+Cheating attacks are severe DoS attacks, performed to maximize the damage to the overlay and preventing peers from downloading the video.   
 \textit{Antiliar} is a general defense mechanism against a diverse set of attacks, including dropping and buffer map manipulation\cite{antiliar}.
-The key idea of \textit{Antiliar} is to track peers behaviors in a secure progress log. It hence detects misbehaving peers by identifying irregularities in the log. While highly effective, \textit{Antiliar} relies on expensive cryptographic operations that are not suitable for  devices with low CPU resources.
-Moreover, \textit{Antiliar} uses a central entity to review the logs, creating a number of security and privacy problems. 
+Mainly, \textit{Antiliar} tracks peers behaviors in a secure progress log and thus, detecting misbehaving peers by identifying irregularities in the log. 
+While highly effective, \textit{Antiliar} relies on expensive cryptographic operations that are unsuitable for devices with low CPU resources.
+Moreover, \textit{Antiliar} uses a central entity to review the logs, creating additional security and privacy problems. 
 
 An alternative approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting video chunks. In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating. The work focuses in particular on attacks on headnodes, yet assumes an external attacker that can take over arbitrary nodes at will. In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
 As shown in Section~\ref{sec:eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  
