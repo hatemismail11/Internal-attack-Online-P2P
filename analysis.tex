@@ -85,7 +85,10 @@ Assume that $b$ has $k$ benign neighbors $v_1, \ldots , v_k$ with satisfaction l
 \begin{proof}
 The claim follows directly as all $y$ malicious peers will set their satisfaction level to 1 and \drop requests with an average satisfaction of at least $\satThres$ are not successful.   
 \end{proof}
-If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. However, in practice, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
+If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. 
+However, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. 
+Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. 
+Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
 
 Proposition~\ref{prop:dropping-retain} indicates a successful removal of malicious nodes unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
 If indeed satisfaction levels remain high, then no real need to remove the malicious peer.

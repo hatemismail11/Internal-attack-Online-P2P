@@ -20,7 +20,10 @@ Mainly, \textit{Antiliar} tracks peers behaviors in a secure progress log and th
 While highly effective, \textit{Antiliar} relies on expensive cryptographic operations that are unsuitable for devices with low CPU resources.
 Moreover, \textit{Antiliar} uses a central entity to review the logs, creating additional security and privacy problems. 
 
-An alternative approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting video chunks. In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating. The work focuses in particular on attacks on headnodes, yet assumes an external attacker that can take over arbitrary nodes at will. In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
+An alternative approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting chunks. 
+In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating.
+The work focuses in particular on attacks on headnodes, yet assumes an external attacker that can take over arbitrary nodes at will.
+In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
 As shown in Section~\ref{sec:eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  
 
 
