@@ -4,13 +4,15 @@
 In this section, we highlight the prominent work on attacks and attack detection in the area of P2P video streaming systems.
 Previous work considered three types of attacks: (i) pollution attacks, i.e., flooding the overlay with arbitrary content and claiming it to be relevant video chunks, (ii) free riding, i.e., participating in the overlay without contributing, and iii) cheating attacks, i.e., attacks that maliciously drop packets or manipulate buffer-maps. 
 
-Pollution attacks are one of the most common attacks \cite{pollution1}.
-Consequently, researchers have studied them extensively and there exist various detection and mitigation schemes \cite{pollution2}.    
-As the existing approaches seem to render the attack harmless, we do not focus on it in this work but rather assume that appropriate measures against these attacks such as network coding \cite{nc} are already in place.
+Pollution attacks are one of the most common attacks \cite{pollution1}. 
+As the attack strategy differs from the \drop attack and efficient network coding techniques \cite{nc} and others \cite{pollution2} already exist, we do not consider those attacks in our work.
+% Consequently, researchers have studied them extensively and there exist various detection and mitigation schemes .    
+% As the existing approaches seem to render the attack harmless, we do not focus on it in this work but rather assume that appropriate measures against these attacks such as network coding  are already in place.
 
-In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distributed the stream to others; e.g., with an increased flexibility in the neighbor selection or positions closer to the source to receive a better service. 
-As a consequence, free riders likely end up far from the source, meaning that they are not required to forward the stream anyways, because all their neighbors already requested the chunks from others by the time the free riders receive them. 
-Note that these strategies are only effective for peers that aim to minimize their level of participating. 
+In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distributed the stream to others; 
+% e.g., with an increased flexibility in the neighbor selection or positions closer to the source to receive a better service. 
+% As a consequence, free riders likely end up far from the source, meaning that they are not required to forward the stream anyways, because all their neighbors already requested the chunks from others by the time the free riders receive them. 
+However, these strategies are only effective for peers that aim to minimize their level of participating. 
 
 % Hatem: trim
 % Cheating attacks are severe denial-of-service attacks, performed with the goal of maximizing the damage to the overlay and preventing peers from downloading the video.   

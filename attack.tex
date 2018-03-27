@@ -2,7 +2,7 @@
 \label{sec:Attack}
 
 In this section, we introduce the concept of internal attacks in streaming P2P overlays.
-Our focus are attacks on availability that aim to intercept video chunks from the source. 
+Our focus is attacks on availability that aim to intercept video chunks from the source. 
 We start by introducing the attack characteristics such as target, budget, and malicious nodes' placement. 
 Afterwards, our main discussion outlines the the \drop adversarial behavior. 
 
@@ -10,28 +10,27 @@ Afterwards, our main discussion outlines the the \drop adversarial behavior.
 
 
 The target of the internal attack is to severely degrade the user's satisfaction by interrupting the video stream close to the source, thus preventing dissemination between benign peers.
-
 The budget $x$ of the attacker corresponds to the number of nodes controlled by the malicious party. 
 In accordance with the attack goal of maximizing impact, the attacker aims to use its budget to occupy the source's neighbor list. 
 Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
 % \mn[Stef]{Why do we use less than 10, then?} 
 
 Assume an attacker with budget $x$ is capable of assigning malicious peers as headnodes.
-In fact, it is feasible to do so, for example through (a) joining the overlay as early as possible in case of a pre-announced time for a streamline, (b) taking down the source's benign headnodes, or (c) Abusing peers' replacement mechanisms \cite{nguyen2016swap}.
+In fact, it is feasible to do so, for example through: (a) joining the overlay as early as possible in case of a pre-announced time for a streamline, (b) taking down the source's benign headnodes, or (c) abusing peers' replacement mechanisms \cite{nguyen2016swap}.
 Hence, the attacker initially assigns $\eta x$, where $\eta\in [0,1]$ , of its resources as headnodes.
 % \mn[Stef]{that sounds more like an external attacker, if we want to make clear that is an internal, we should write it as 'the initial system has ...'}
 % \mn[Stef]{unsure if I would use a fraction here, as the product $\eta x$ always has to be an integer}
-As the attacker's main objective is to fully occupy the source's neighbor list, the optimum value of $\eta$, from the attacker's perspective, is when $\eta x = |NeighborList|$.
+As the attacker's main objective is to fully occupy the source's neighbor list, the optimum value of $\eta$ for the attacker, is $\eta x = |NeighborList|$.
 In case such full exploitation of the source's neighbor list is not feasible when the attack is being initiated, the attacker continuously tries to increase the value of $\eta$.  
 
-The rest of malicious peers $MN=(1-\eta) x$ are connected as neighbors to the $\eta x$ malicious headnodes, i.e., those peers are not headnodes, they are connected as neighbors to the malicious headnodes. 
+The rest of malicious peers $MN=(1-\eta) x$ are connected as neighbors to the $\eta x$ headnodes. 
 % \mn[Stef]{again, assigned sounds like the attacker can control the topology, which is misleading, what about sth like 'connect to malicious headnodes'}
 Such placement is considered the best strategy for the attacker since $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ malicious peers are eventually promoted to headnodes
 % , and (b) as benign peers in malicious headnodes neighbors 
 % \mn[Stef]{why nonetheless?}
 % \mn[Stef]{what?}
-Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, accordingly, the attacker is capable of inferring the existing headnodes in the system.
-Accordingly, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
+Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, accordingly, the attacker is capable of inferring the existing headnodes.
+Thus, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
 
 
 % \mn[Stef] 

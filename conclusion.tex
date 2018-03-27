@@ -1,9 +1,9 @@
 \section{Conclusion \& Future Work}
 \label{sec:conclusion}
-In this work, we focus on the class of internal inference attacks for pull-based overlay where the attacker conducts a $BM$ cheating attack after placing malicious peers as headnodes.
+In this work\footnote{Research supported in part by EC H2020 CIPSEC GA \#700378 and BMBF TUD-CRISP}, we focus on the class of internal inference attacks for pull-based overlay where the attacker conducts a $BM$ cheating attack after placing malicious peers as headnodes.
 We show that the attack severity increases the chunk loss ratio to ~10\%, accompanied by low satisfaction level experienced by benign peers.
-As a countermeasure, we propose a detection mechanism where peers are able to collaboratively file a complaint to the source when their average aggregated satisfaction drops below a certain threshold.
-Accordingly, the source can replace specific headnodes that is most likely to be malicious.
+As a countermeasure, we propose a detection mechanism where peers are able to collaboratively file a complaint to the source when their average aggregated satisfaction drops below a certain threshold so the source can replace suspicious headnodes.
+% Accordingly, the source can replace specific headnodes that is most likely to be malicious.
 
 Our simulations show that the detection mechanism is capable of restoring ~95-100\% of peers satisfaction level while removing ~80-90\% of malicious headnodes from its neighbor list while inducing a minimum overhead of approximately 8\%.
 As an ongoing work, we focus on evaluating the resilience of our approach against various $BM$ cheating strategies and integrating anonymous monitoring for proactive defense.
