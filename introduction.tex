@@ -15,39 +15,19 @@ However, achieving reliability in the face of the dynamic heterogeneous group of
 In general, nodes in a P2P video streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
 The publisher or \emph{source} of the content divides the video into \emph{chunks}, which each contain a part of the encoded video, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
 The selection of neighbors and the choice of which neighbors to receive from or forward to differ between protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and requests chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
-% \mn[Stef]{please check that citations that I moved are still appropriate}
+
 
 In pull-based systems, there exists three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
-% \mn[Stef]{Does the paper actually call them $BM$ cheating attacks?} 
-Malicious peers might manipulate their buffer-map or the dissemination of chunks by: 
-% \mn[Stef]{I don't get why `requesting already received chunks or offering chunks they never received' are in the same category, they seem to have different methods and purposes; 'delay sending chunks or offering chunks that were never received' makes more sense as one category}
-\begin{enumerate}
-\item dropping received chunks and not including them in their buffer-map, hence terminating the forwarding and keeping peers from obtaining these chunks.
-\item requesting already received chunks, thus creating additional load and delays.
-\item delay sending actual chunks or offering chunks they never received, hence risking that these peers do not receive the chunks in time and creating delays in the video. 
-\end{enumerate}
-All presented attack strategies either i) interrupt or delay the video stream directly or ii) increase the load on the system, which might in turn lead to delays and interruptions. 
+In such an attack, a node might drop or delay chunks. Alternatively, they might advertise chunks that they do not have. As detection of the latter is locally possible and the effect of delaying chunks is at most as severe as entirely dropping the respective chunks, we focus on a denial-of-service attack through dropping chunks without advertising them, called \drop in the following.  
 
 
-Of the above attacks, dropping is the most serious attack and hardest to detect.
-In order to see that, first consider an attacker that delays chunks or advertises chunks that they did not receive. A benign node can easily keep track of neighbors that fail to deliver chunks within a certain time. When realizing this behavior from a neighbor, a node stops requesting chunks from the attacker and even remove it as a neighbor. While delaying chunks might also be a result from overload, these actions also reduce the load on the congested node, hence benefiting the system even if the suspected node is benign. 
-Similarly, detecting repeated requests is simple if the attacker attempts to download a chunk from the same peer multiple times. Hence, the only remaining option for the attacker is to download the chunk from each neighbor exactly once. Even if neighbors do not cooperate to detect such behavior, the amplification of the attack is rather low as the set of neighbors is typically small \cite{neighborlist1,neighborlist2}. 
-% \mn[Stef]{cite}
-In contrast, dropping chunks indicates that neighbors of the attacker have to receive the chunks via different neighbors, entailing an increased  load on these neighbors. Furthermore, neighbors cannot detect such behavior in a straight-forward manner as they will simply assume that the malicious node is far from the source and hence does receive chunks at a later time. 
-Consequentially, we focus on the dropping attack, called \drop in the following. 
-% \mn[Stef]{ I am not really sure if my arguments are convincing; might also be too detailed for the intro}
-
-%Hatem:trim
-% In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop in particular. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
-In the past, multiple countermeasures aimed to reduce the severity of $BM$ cheating attacks and \drop. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the headnodes, i.e., the peers connected to the source. 
+In the past, multiple countermeasures aimed to reduce the severity \drop. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the \emph{headnodes}, i.e., the peers connected to the source. 
 However, previous work indicates that it is relatively easy to infer the identity of benign headnodes and then target those important nodes \cite{nguyen2016swap}.
-% \mn[Stef]{Which of giang's papers was that? add citation} 
 While countermeasures to these inference attacks exist, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
-Hence, the existing work does not evaluate neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks.
+Hence, the existing work evaluates neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks.
 
 
 In this paper, we  illustrate the effectiveness of internal attacks that benefit from malicious headnodes. 
-% \mn[Stef]{Old version: 'We show the feasibility of \textit{partially-fully} attacking the source's headnodes, which causes significant degradation in the user's satisfaction.', don't get it}
 Consequentially, we propose a mechanism for detecting \drop. Our protection mechanism keeps track of peers' satisfaction. 
 If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
 Our detection mechanism hence reacts to a low quality-of-service rather than explicitly identifying the misbehavior of one or more specific nodes.
@@ -57,7 +37,7 @@ In an extensive simulation study, we show that the proposed detection mechanism 
 Our mechanism only introduces a signaling overhead of less than $10\%$, meaning that it is both effective and efficient.
 
 A theoretical analysis complements our concrete practical results, focusing on the opportunities to abuse the detection mechanism. 
-Indeed, the detection algorithm mostly prevents malicious from removing benign headnodes in favor of malicious nodes unless they control a large fraction of the total number of nodes. 
+Indeed, the detection algorithm mostly prevents malicious nodes from replacing benign headnodes with malicious nodes unless they control a large fraction of the total number of nodes. 
 Furthermore, maintaining malicious headnodes despite generally low satisfaction levels is not possible for the considered attacker. 
   
 
