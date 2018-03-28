@@ -5,7 +5,7 @@
 In this section, we explain our detection mechanism, starting with an overview of the different steps followed by a detailed description of each step.  
 The goal of the detection algorithm is to restore the user's satisfaction in the face of a \drop attack. The key idea of our method is to replace headnodes associated with peer groups of low satisfaction levels. 
 
-Throughput the section, we assume that nodes authenticate their messages using a private signature key. 
+Throughput the section, we assume that nodes authenticate their messages using digital signatures. 
 % Hatem: trim
 % The source keeps track of the verification keys of all participants and can hence establish the authenticity of messages.
 The source keeps track of participants' verification keys and can hence establish the authenticity of messages.
@@ -32,13 +32,12 @@ $\minP$ & min. drop responses & $\minDR$ & no. allowed det. \\\hline
 \vspace{-1mm}
 \end{table}
 
-% \mn[Stef]{Definition of $x, \eta$ in table inconsistent with evaluation; fix table size}
+
 
 \subsection{Mechanism Overview}
 We illustrate the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
 When a malicious peer $m$ performs a \drop attack, benign peers $b$ are unable to immediately identify malicious behavior.
 Specifically, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has. 
-% % \mn[Stef]{how can it be `only'? it has to get the chunk for the first time at some point}
 Thus, detecting a violation in this case is not straight-forward. In particular, nodes are generally unable to identify a suspected attacker based only on local information.
 In the remainder of the section, we present a mechanism how nodes can collaboratively identify suspects that are subsequently removed as headnodes.  
 
@@ -46,12 +45,11 @@ In the remainder of the section, we present a mechanism how nodes can collaborat
 The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in replacing one or several headnodes. 
 First, when a peer $b$ suspects a \drop attack based on its local observations, $b$ sends a \emph{detection request} to all peers in its neighbor list.
 Second, each peer receiving a detection request prepares a reply. 
-Third, the initiator $b$ decides based on the received responses a complaint should be filed to the source.
+Third, the initiator $b$ decides based on the received responses if they should file a complaint with the source. 
 If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the request. 
 Afterwards, the source verifies the complaint, reacts accordingly, and replies to $b$ detailing the steps taken. 
 The reaction of the source is either the replacement of one or several headnodes and proposing other potential headnodes or the rejection of the removal request.
-Finally, $b$ reacts based on the received reply from the source and then forwards the source's reply to the other participants in the complaint, who in turn do the same procedure.
-% \mn[Stef]{unclear: do they also forward to neighbors? probably not}
+Finally, $b$ reacts based on the received reply from the source and then forwards the source's reply to the other participants in the complaint, who in turn execute the same procedure.
 
 The node $b$ bases its decision on whether to initiate a request or forward a complaint on a number of threshold parameters, which we summarize in Table~\ref{tab:acronyms} together with various system parameters governing the attack. 
 

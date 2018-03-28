@@ -18,60 +18,32 @@ Note that in a real streaming system, the typical size of the source's neighbor 
 Assume an attacker with budget $x$ is capable of assigning malicious peers as headnodes.
 In fact, it is feasible to do so, for example through: (a) joining the overlay as early as possible in case of a pre-announced time for a streamline, (b) taking down the source's benign headnodes, or (c) abusing peers' replacement mechanisms \cite{nguyen2016swap}.
 Hence, the attacker initially assigns $\eta x$, where $\eta\in [0,1]$ , of its resources as headnodes.
-% \mn[Stef]{that sounds more like an external attacker, if we want to make clear that is an internal, we should write it as 'the initial system has ...'}
-% \mn[Stef]{unsure if I would use a fraction here, as the product $\eta x$ always has to be an integer}
 As the attacker's main objective is to fully occupy the source's neighbor list, the optimum value of $\eta$ for the attacker, is $\eta x = |NeighborList|$.
 In case such full exploitation of the source's neighbor list is not feasible when the attack is being initiated, the attacker continuously tries to increase the value of $\eta$.  
 
 The rest of malicious peers $MN=(1-\eta) x$ are connected as neighbors to the $\eta x$ headnodes. 
-% \mn[Stef]{again, assigned sounds like the attacker can control the topology, which is misleading, what about sth like 'connect to malicious headnodes'}
-Such placement is considered the best strategy for the attacker since $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ malicious peers are eventually promoted to headnodes
-% , and (b) as benign peers in malicious headnodes neighbors 
-% \mn[Stef]{why nonetheless?}
-% \mn[Stef]{what?}
+Such placement is considered the best strategy for the attacker since $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ malicious peers are eventually promoted to headnodes. 
 Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, accordingly, the attacker is capable of inferring the existing headnodes.
-Thus, such distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as the source's neighbors (headnodes), having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
+Thus, such a distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as headnodes, having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
 
 
-% \mn[Stef] 
-% {Why is this paragraph here? part of the attack strategy, not the parameters governing it}
 
 \subsection{\drop adversarial behavior}
 Now, we discuss the main adversarial behavior executed based on the attacker's target and budget. 
-In Section~\ref{sec:eval}, we provide a simulation study to demonstrate the impact of different scenarios of malicious peers' placement strategies. 
-% \mn[Stef]{Do you mean 'and'?}
-% \mn[Stef]{why is that here? and what does combination mean here?}
-% \subsubsection*{Dropping behavior}
 A malicious peer $m \in M$, where $M$ is the set of malicious peers, executing the \drop behavior performs a stealthy denial-of-service attack: 
 When $m$ receives a video-chunk from a neighbor, irrespective of the neighbor's identity (if it is the source or not), $m$ drops the packet.
-% \mn{We talk about what $m$ does after receiving, what about requests? does $m$ continue requesting chunks it already received}
 In particular, $m$ never advertises for those chunks in its $BM$.
 Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$, where $B$ is the set of benign peers.
-% \mn[Stef]{We never introduced $B$ and $M$, did we?}
 This scenario guarantees that: (a) malicious peers are less susceptible to being suspected as the requesting benign peers are not aware that $m$ indeed received those chunks,
 and (b) detecting $m$'s direct or close connection to the source, inferring the overlay's topology, is not possible, which lowers the probability of $m$ being suspected.
 
-% are incapable of inferring that the malicious headnodes fraction $\eta x$ is an actual headnode as the availability and the freshness of chunks in the buffer-maps are a key factor to infer the position of a peer. 
-% \mn[Stef]{There is sth grammatically wrong with this sentence, and I am not entirely sure what you want to say}
+
 
 Note that this behavior minimizes the detection susceptibility of malicious peers.
 The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, e.g, if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, eventually $m$ will be suspected.
-% \mn[Stef]{did you mean e.g.?} 
+
 Moreover, sending correct $BM$ updates results in correctly inferring $m$'s position, which positively impacts the decision of the detection mechanism, which we discuss in the next section. 
-% \mn[Stef]{how so? our mechanism does not target this case, so that seems a bold statement to make}
 
-% \mn[Stef]{aren't malicious nodes suspicious purely for supposedly \emph{never} getting any chunks?}
-
-% \subsubsection*{Manipulating behavior}
-% When executing manipulating behavior, $m$ sends its updated buffer-map to $b$, i.e., it advertises received chunks. 
-% Although having the actual video chunks $m$ advertised for, $m$ never sends the requested video chunks from $b$.
-% In this scenario, malicious peers are more susceptible to being detected, however, a benign peer might be overloaded and can not serve all the requests it receive and might also appear manipulating to other benign peers.
-% In Section~\ref{sec:detection}, we further discuss this case and propose a procedure that decreases the likelihood of suspecting a benign peer of being malicious.
-% 
-% \subsubsection*{Outdated time stamps behavior}
-% In this behavior, $m$ simply advertises for the chunks in its buffer-map. 
-% However, $m$ starts serving the requests once the requested chunks are considered out-dated.
-% Similar to the manipulating behavior, malicious peers are more susceptible to being detected than in the dropping behavior case.
 
 
 
