@@ -2,9 +2,7 @@
 
 Online streaming is a very popular service and P2P-based solutions for streaming can reduce costs for both providers and users.
 Yet, involving users into the data dissemination entails security risks including a variety of denial-of-service attacks. 
-While extensive research exists on mitigating varied attack types, their effectiveness is limited if the attacker can infer information about the topology such as the identity of nodes that have direct connections to the source.  
-
-Our research focuses on the critical class of internal inference attacks for pull-based overlays: the attacker first infers the overlay's topology. Based on the gained knowledge,  the attacker positions malicious peers in prominent positions and performs a buffer-map cheating attack. By dropping chunks that should be forwarded, the malicious peers degrade the performance in a stealthy way that does not raise suspicion. 
+While extensive research exists on mitigating varied attack types, their effectiveness is limited if the attacker can infer information about the topology such as the identity of nodes that have direct connections to the source.  The attacker can then leverage the gained insights to place malicious participants in prominent positions. By dropping chunks that should be forwarded, the malicious peers degrade the performance in a stealthy way that does not raise suspicion. 
 
 We first demonstrate the feasibility of conducting such attacks. 
 Accordingly, we propose a detection mechanism that identifies the attack and removes potential malicious peers from their prominent positions. 
