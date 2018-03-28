@@ -36,12 +36,10 @@ Let $m$ be a malicious neighbor of a benign headnode $h$ with satisfaction level
 Then, to successfully remove $h$, $m$ has to include at least $c$ responses of malicious nodes, including $m$ itself, in the set $D$ of forwarded responses such that:
 \begin{align}
 \label{eq:drop-rem}
-\begin{align}
 c &= \max \Big( 1,  \\
  & argmin_{c' in \mathbb{N}} 
 \left\lbrace \frac{1}{\minP}\left(\sat_h+\sum_{i=1}^{\minP-c'-1}\sat_i \right) < \satThres \right\rbrace 
 \Big) \nonumber 
-\end{align}
 \end{align}
 \end{proposition}
 \begin{proof}
@@ -73,11 +71,11 @@ Assume that $b$ has $k$ benign neighbors $v_1, \ldots , v_k$ with satisfaction l
 \begin{proof}
 The claim follows directly as all $y$ malicious peers will set their satisfaction level to 1 and \drop requests with an average satisfaction of at least $\satThres$ are not successful.   
 \end{proof}
-If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. 
-However, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. 
-Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. 
-Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
-Then Proposition~\ref{prop:dropping-retain} indicates a successful removal of malicious nodes unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
+%If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. 
+%However, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. 
+%Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. 
+%Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
+%Then Proposition~\ref{prop:dropping-retain} indicates a successful removal of malicious nodes unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
 
 
  
