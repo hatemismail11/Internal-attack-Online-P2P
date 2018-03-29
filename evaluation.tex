@@ -67,32 +67,35 @@ Figure~\ref{subfig:satisfaction-donet} presents the average peer satisfaction le
 As a consequence of experiencing high chunk loss rate, higher values of $\eta x, MN$ result in lower peer satisfaction over time, where benign peers at $(\eta x, MN)=(5, 15)$ restore their satisfaction level at ~340s, which is earlier than at $(\eta x, MN)=(7, 70)$ and $(\eta x, MN)=(8, 24)$.
 
 Now we analyze the attack's impact while SWAP is operating.
-While executing SWAP's operations, peers nominate new headnodes and forward these nominations to the source. 
-Consequentially, malicious peers abuse the mechanism via nominating other malicious peers at each nomination round. 
+During SWAP, peers nominate new headnodes and forward these nominations to the source. 
+Malicious peers abuse the mechanism via nominating other malicious peers at each nomination round. 
 Moreover, malicious peers connected to benign headnodes are eventually nominated to the source and thus can occupy the source's neighbor list $LS$. 
 
 As shown in Figure~\ref{subfig:avg-loss-donet}, comparing the same values at $(\eta x, MN)=(5, 15)$ for both DONet and SWAP show that the impact of the attack is more significant if SWAP is active.
 Before the source's $LS$ is saturated with malicious peers at $t=80s$, the average loss is in fact decreasing, However, as soon as malicious peers control the neighbor list, the average loss increases up to ~97\%. 
 For the same reason, the satisfaction level of benign peers eventually decreases to ~6\%, which highlights the unsuitability of SWAP against our proposed attack.
 
+
+
+
 \begin{figure}[tb]
 %   \setlength{\belowcaptionskip}{-10pt}
   \centering
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/avg-loss-donet.eps}
     \caption{Average loss}%
     \label{subfig:avg-loss-donet}
   \end{subfigure}
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/satisfaction-donet.eps}
     \caption{Average peer satisfaction}%
     \label{subfig:satisfaction-donet}
   \end{subfigure}
   \caption{Attack's impact on DONet}%
   \label{fig:attack-results}
-  \vspace{-4mm}
+  \vspace{-7mm}
 \end{figure}
 
 % 
@@ -112,6 +115,34 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 % 
 
 \subsection{Case 2: Detection Mechanism Performance}
+
+
+\begin{figure*}[tb]
+%   \setlength{\belowcaptionskip}{-10pt}
+  \centering
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=6cm,height=3cm]{./Figures/det-BRNL1.eps}
+    \caption{Average BRNL}%
+    \label{subfig:BRNL}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=6cm,height=3cm]{./Figures/det-sat.eps}
+    \caption{Avg. peer satisfaction}%
+    \label{subfig:det-sat}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=6cm,height=3cm]{./Figures/overhead.eps}
+    \caption{Detection overhead}%
+    \label{subfig:overhead}
+  \end{subfigure}
+  \caption{Detection mechanism performance}%
+  \label{fig:detection-results}
+   \vspace{-4.5mm}
+\end{figure*}
+
 
 We now evaluate the performance of the detection mechanism.
 Benign peers execute the detection mechanism as described in Section~\ref{sec:detection} whereas malicious peers aim to misuse the mechanism.
@@ -135,41 +166,45 @@ The reason is that the number of initial detection requests sent to the source r
 Moreover, malicious peers are unable to misuse the mechanism, as indicated by the absence of degradation in satisfaction levels. 
 
 Figure~\ref{subfig:overhead} depicts the average detection overhead induced by our mechanism. 
-As notice, the maximum overhead due to the detection mechanism is ~8\% for the different attack scenarios.
-As peers are eventually satisfied, i.e., the number of detection requests initiated decreases, the overhead decreases to ~4\% at $t=500s$.
-This implies that the overhead is not constant throughout time, i.e., once all peers' satisfaction level exceeds $\satThres$, they do not invoke the detection mechanism and hence do not induce additional overhead. 
+The maximum overhead due to the detection mechanism is ~8\% for all scenarios.
+As peers are eventually satisfied, the number of detection requests initiated decreases and the overhead decreases to ~4\% at $t=500s$, i.e., peers stop invoking the mechanism.
+% This implies that the overhead is not constant throughout time, i.e., once all peers' satisfaction level exceeds $\satThres$, they do not invoke the detection mechanism and hence do not induce additional overhead. 
 Moreover, the maximum number of detection requests that can be initiated is dependent on $\minDR$, which is set to 10 in this scenario.
-Thus, smaller values of $\minDR$ result in lower overhead, which is a useful application parameter that can be set according to suit the application's criticality or user's CPU resources.
+Thus, smaller values of $\minDR$ result in lower overhead, which is a useful application parameter that can be set according to the application's criticality or the user's CPU resources.
 In fact, varying $\minP$ between 3, 4 and 5 has little impact on the detection performance, indicating that nodes receive sufficient replies.
 
-To that end, through the results, we highlight that the detection mechanism is indeed effective against \drop attacks, even if the attacker possesses high malicious budget as headnodes.
-Moreover, we show that malicious peers are incapable of abusing the detection mechanism and place themselves as headnodes. Finally, the detection mechanism induces a very small overhead on the overlay.
+To that end, through the results, we highlight the efficiency of the detection mechanism against \drop attacks, even if the attacker possesses high malicious budget as headnodes.
+% Moreover, we show that malicious peers are incapable of abusing the detection mechanism and place themselves as headnodes. Finally, the detection mechanism induces a very small overhead on the overlay.
 
-\begin{figure}[tb]
-%   \setlength{\belowcaptionskip}{-10pt}
-  \centering
-  \begin{subfigure}[c]{0.95\columnwidth}
-    \centering
-    \includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-BRNL1.eps}
-    \caption{Average BRNL}%
-    \label{subfig:BRNL}
-  \end{subfigure}
-  \begin{subfigure}[c]{0.95\columnwidth}
-    \centering
-    \includegraphics[width=8.4cm,height=3.5cm]{./Figures/det-sat.eps}
-    \caption{Avg. peer satisfaction}%
-    \label{subfig:det-sat}
-  \end{subfigure}
-  \begin{subfigure}[c]{0.95\columnwidth}
-    \centering
-    \includegraphics[width=8.4cm,height=3.5cm]{./Figures/overhead.eps}
-    \caption{Detection overhead}%
-    \label{subfig:overhead}
-  \end{subfigure}
-  \caption{Detection mechanism performance}%
-  \label{fig:detection-results}
-   \vspace{-4.5mm}
-\end{figure}
+
+
+% 
+% \begin{figure*}[tb]
+%   \centering
+%   \begin{subfigure}[t]{0.32\textwidth}
+%     \centering
+%     \includegraphics[keepaspectratio]{fib-pass-114-rt}
+%     \caption{$FIB$}%
+%     \label{fig:anatime-fib}
+%   \end{subfigure}%
+%   \begin{subfigure}[t]{0.32\textwidth}
+%     \centering
+%     \includegraphics[keepaspectratio]{avl-max-pass-114-rt}
+%     \caption{$AVL_{max}$}%
+%     \label{fig:anatime-avl-max}
+%   \end{subfigure}%
+%   \begin{subfigure}[t]{0.32\textwidth}
+%     \centering
+%     \includegraphics[keepaspectratio]{avl-min-pass-114-rt}
+%     \caption{$AVL_{min}$}%
+%     \label{fig:anatime-avl-min}
+%   \end{subfigure}
+%   \caption{Time needed for the static analysis of the three synthetic test suites with varying number of test cases.
+%            The colored upper part of the bars marks the time needed to apply the different subset search heuristics.}%
+%   \label{fig:anatime-synwls}
+% \end{figure*}
+
+
 
 
 % \begin{figure}[t!]
