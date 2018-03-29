@@ -2,14 +2,14 @@
 \label{sec:Attack}
 
 In this section, we introduce the concept of internal attacks in streaming P2P overlays.
-Our focus is attacks on availability that aim to intercept video chunks from the source. 
+Our focus is attacks on availability that aim to intercept data chunks from the source. 
 We start by introducing the attack characteristics such as target, budget, and malicious nodes' placement. 
 Afterwards, our main discussion outlines the the \drop adversarial behavior. 
 
 \subsection{Target, budget and placement}
 
 
-The target of the internal attack is to severely degrade the user's satisfaction by interrupting the video stream close to the source, thus preventing dissemination between benign peers.
+The target of the internal attack is to severely degrade the user's satisfaction by interrupting the stream close to the source, thus preventing dissemination between benign peers.
 The budget $x$ of the attacker corresponds to the number of nodes controlled by the malicious party. 
 In accordance with the attack goal of maximizing impact, the attacker aims to use its budget to occupy the source's neighbor list. 
 Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
@@ -31,7 +31,7 @@ Thus, such a distribution of the attacker's budget assures that even if the atta
 \subsection{\drop adversarial behavior}
 Now, we discuss the main adversarial behavior executed based on the attacker's target and budget. 
 A malicious peer $m \in M$, where $M$ is the set of malicious peers, executing the \drop behavior performs a stealthy denial-of-service attack: 
-When $m$ receives a video-chunk from a neighbor, irrespective of the neighbor's identity (if it is the source or not), $m$ drops the packet.
+When $m$ receives a chunk from a neighbor, irrespective of the neighbor's identity (if it is the source or not), $m$ drops the packet.
 In particular, $m$ never advertises for those chunks in its $BM$.
 Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$, where $B$ is the set of benign peers.
 This scenario guarantees that: (a) malicious peers are less susceptible to being suspected as the requesting benign peers are not aware that $m$ indeed received those chunks,

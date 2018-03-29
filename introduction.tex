@@ -1,19 +1,20 @@
 \section{Introduction}
 \label{sec:intro}
 
-Streaming video content is an essential aspect of today's entertainment \cite{emule}.
+Streaming content is an essential aspect of today's data driven infrastructure \cite{emule}.
 Most streaming applications rely on central providers that have significant resources at their hands and hence distribute content to a large audience in a fast and reliable manner. 
-However, these enormous costs of guaranteeing high quality-of-service when streaming videos impede alternative providers and content, entailing oligopolies. Controlling or influencing these few highly visible providers might allow censorship or propaganda, giving powerful parties the opportunity  to dictate the public opinion and undermine freedom of speech.
+However, these enormous costs of guaranteeing high quality-of-service when streaming impede alternative providers and content, entailing oligopolies.
+Controlling or influencing these few highly visible providers might allow censorship or propaganda, giving powerful parties the opportunity  to dictate the public opinion and undermine freedom of speech.
 % \mn[Stef]{feel free to remove the censorship/propaganda aspect}   
 Distributing content via a Peer-to-Peer (P2P) network significantly lowers the load that the provider experiences, as participants relay the downloaded content to other participants, eliminating the need that all participants receive their content directly from the source, i.e., the provider. 
-Consequentially, P2P video streaming is an attractive option for alternative providers and user-generated content. Furthermore, including 
-P2P video streaming into the service of established providers will reduce their costs and hence should lead to lower rates for customers or decrease the amount of advertisement within the system, depending on providers' business model. 
+Consequentially, P2P streaming is an attractive option for alternative providers and user-generated content.
+Furthermore, including P2P streaming into the service of established providers will reduce their costs and hence should lead to lower rates for customers or decrease the amount of advertisement within the system, depending on providers' business model. 
 
 
 However, achieving reliability in the face of the dynamic heterogeneous group of content distributors in a P2P overlay is challenging. In addition to the inherent unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and perform denial-of-service attacks, which interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
 
-In general, nodes in a P2P video streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
-The publisher or \emph{source} of the content divides the video into \emph{chunks}, which each contain a part of the encoded video, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
+In general, nodes in a P2P streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
+The publisher or \emph{source} of the content divides the stream into \emph{chunks}, which each contain a part of the encoded data, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
 The selection of neighbors and the choice of which neighbors to receive from or forward to differ between protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and requests chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
 
 
