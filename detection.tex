@@ -1,179 +1,81 @@
-\section{Detection Mechanism}
-\label{sec:detection}
+\section{Analysis}
+\label{sec:analysis}
 
 
-In this section, we explain our detection mechanism, starting with an overview of the different steps followed by a detailed description of each step.  
-The goal of the detection algorithm is to restore the user's satisfaction in the face of a \drop attack. The key idea of our method is to replace headnodes associated with peer groups of low satisfaction levels. 
-
-Throughput the section, we assume that nodes authenticate their messages using digital signatures. 
-% Hatem: trim
-% The source keeps track of the verification keys of all participants and can hence establish the authenticity of messages.
-The source keeps track of participants' verification keys and can hence establish the authenticity of messages.
-In particular, malicious nodes cannot forge responses of honest peers to influence the mechanism. 
-We assume that neighboring nodes periodically exchange messages stating that they are neighbors.
-These \emph{proofs of neighborhood} are signed and contain a time stamp. 
-In this manner, $u$ can proof if $v$ is (or has recently been) its neighbor. 
+We focus on characterizing the behavior of malicious nodes aiming to subvert the detection mechanism to remove honest headnodes and retain malicious ones. 
+More precisely, we show that successfully accusing a benign headnode of cheating requires that the malicious peer issuing a complaint presents a neighbor list that is either dominated by malicious peers or by benign peers with unusually low satisfaction levels.
+Similarly, preventing the removal of a malicious headnode requires that a high number of the  neighbors are malicious.
 
 
-\begin{table}[ht]
-\center
-\caption{Acronyms}
-\begin{tabular}{|c|l||c|l|}
-\hline
+%Recall that a \drop request issued by a node $u$ succeeds in removing a headnode $h$ if the average satisfaction level in the responses that $u$ sends to the source is below a threshold $\satThres$.  
 
-\bf{Var.} & \bf{Description}  & \bf{Var.} & \bf{Description} \\\hline\hline
-$H_n$ & headnodes in a complaint & $P_n$ & potential candidates list \\\hline
-$x$ & no. of malicious peers & $\eta$ & mal. headnodes fraction\\\hline
-$BM$ & buffer-map & $MN$ & mal. non-headnodes \\\hline
-$\sat$ & peer satisfaction level & $\satThres$ & satisfaction threshold \\\hline
-$\minP$ & min. drop responses & $\minDR$ & no. allowed det. \\\hline
-\end{tabular}
-\label{tab:acronyms}
-\vspace{-3mm}
-\end{table}
+\subsection{Falsely Accusing Benign Headnodes}
 
+We start by considering the case that malicious nodes want to misuse the detection mechanism to remove a benign headnode. 
+Note that there are reliable methods to identify headnodes~\cite{nguyen2016swap}, so malicious peers are likely to know if one of their neighbors is a headnode.  
+The malicious node $m$ initiating a request with the goal of removing one benign headnode can manipulate the set $D$ of nodes whose satisfaction levels $m$ forwards to the source. 
+In other words, after querying all nodes in its actual neighbor list, $m$ might send only  subset of the responses as well as responses from additional nodes to the source. If possible, $m$ chooses these responses in such a manner that the source will remove the benign headnode. 
+There are restrictions guiding the construction of $D$ that $m$ has to take into consideration:
+\begin{itemize}
+\item $m$ should include the benign headnode it aims to remove. 
+\item $m$ cannot include benign nodes that are not in its actual neighbor list, as $m$ has no valid proofs of neighborhood. 
+\item $m$ does not have to include all peers that are in its actual neighbor list, as there is no possibility to detect excluded neighbors short of asking all peers in the system if they are neighbors of $m$. 
+\item $m$ can include malicious peers that are not in its actual neighbor list, as these peers are willing to generate false proofs of neighborhood. Only the inclusion of malicious nodes that can participate in a \drop request, i.e., those that have not yet reached their limit of \drop request participation, is beneficial for the success of the request. Malicious peers contained in $D$ claim that their satisfaction level is 0 to maximize the chance of removal. 
+\end{itemize}
 
-
-\subsection{Mechanism Overview}
-We illustrate the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
-When a malicious peer $m$ performs a \drop attack, benign peers $b$ are unable to immediately identify malicious behavior.
-Specifically, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has. 
-Thus, detecting a violation in this case is not straight-forward. In particular, nodes are generally unable to identify a suspected attacker based only on local information.
-In the remainder of the section, we present a mechanism how nodes can collaboratively identify suspects that are subsequently removed as headnodes.  
+When deciding on a set $D$, $m$ tries to minimize the number of malicious nodes in $D$ in order to use as little of the attack budget as possible. 
+Preposition \ref{prop:dropping-removal} gives a lower bound on the number of required malicious nodes. 
 
 
-The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in replacing one or several headnodes. 
-First, when a peer $b$ suspects a \drop attack based on its local observations, $b$ sends a \emph{detection request} to all peers in its neighbor list.
-Second, each peer receiving a detection request prepares a reply. 
-Third, the initiator $b$ decides based on the received responses if they should file a complaint with the source. 
-If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the request. 
-Afterwards, the source verifies the complaint, reacts accordingly, and replies to $b$ detailing the steps taken. 
-The reaction of the source is either the replacement of one or several headnodes and proposing other potential headnodes or the rejection of the removal request.
-Finally, $b$ reacts based on the received reply from the source and then forwards the source's reply to the other participants in the complaint, who in turn execute the same procedure.
-
-The node $b$ bases its decision on whether to initiate a request or forward a complaint on a number of threshold parameters, which we summarize in Table~\ref{tab:acronyms} together with various system parameters governing the attack. 
-
-
-
-
-\begin{figure}
- \centering
- \includegraphics[width=5.5cm,height=5cm]{./Figures/detection.pdf}
+  
  
-  \caption{Detection process for \drop. $S$ denotes the source.}
-  \vspace{-4.5mm}
-\label{detection-blocks} 
-\end{figure}
 
-
-\subsection{Detection Trigger}
-\label{Detection-Trigger}
-
-
-In order to start a detection request, the $b$ has to experience a low level of satisfaction. 
-The satisfaction of a peer is defined as the fraction of missed chunks, i.e., the continuity of the stream according to the $Hit/Hit+miss$ chunk ratio.
-% \mn[Stef]{how many chunks does the peer consider for that; all during the whole download, only the last $s$ seconds?}
-In a nutshell, $b$ starts a detection request if its satisfaction is below a satisfaction threshold $\satThres$.
-However, to limit the ability of malicious peers to incorrectly accuse benign peers and increase the load through false detection requests, the concrete conditions that result in a detection request from $b$ are: 
-
-% \begin{itemize}[noitemsep,wide=0pt, leftmargin=\dimexpr\labelwidth + 2\labelsep\relax]
-
-\begin{enumerate}
-% \begin{compactenum}
- \item $b$'s current satisfaction level $\sat_b$ is less than the predefined threshold, i.e., $\sat_b < \satThres$.
- \item The number of drop detection requests sent by $b$ in the time interval $t_{det}$ is $< \kappa$. 
-%   \mn[Stef]{unclear: is it 'only $\kappa$ requests in last $t_{det}$ timeunits' or 'we divide the time into epochs of length $t_{det}$ and you can only send $\kappa$ per epoch'?}
-%   \mn[Hatem]{It is the second one (for every $t_{det}$, only $\kappa$ requests are allowed by peer), I fixed that in the text, please double check.}
- \item $b$ has not initiated or replied to any other \drop detection request that the source has not decided on yet.
-% \end{compactenum}
-\end{enumerate}
-% Hatem: trim
-% The latter condition guarantees that peers cannot trigger or participate in multiple detection requests in parallel.
-The latter condition guarantees that peers cannot abuse the mechanism via triggering or participating in multiple detection requests in parallel. 
-% In addition to limiting the opportunities for abuse, restricting concurrent requests for benign peers is sensible as their low satisfaction level is already noted in their reply to previous requests.
-Moreover, restricting concurrent requests for benign peers is sensible as their low satisfaction level is already noted in their reply to previous requests.
-
-\subsection{Processing a Detection Request}
-Let $D$ denote the set of queried peers, usually corresponding to the neighbors of the initiator $b$ if $b$ executes the protocol honestly.  
-To avoid abuse of the detection mechanism, each node can only participate in $\kappa$ requests for $t_{det}$ timeunits. 
-When receiving a detection request, a peer $d \in D$ hence first checks if it can participate in any more requests. 
-% \mn[Stef]{Is that correct, or how/when else is that checked?}
-% \mn[Hatem]{at the source, if i got your question right}   
-    
-If so, $d$ replies with its $\sat_d$ and a time stamp, both signed by its private signature key. 
-The time stamp prevents the attacker from replaying benign peers' previous (low) satisfaction levels, as only recent satisfaction levels are valid.
-
-
-\subsection{Filing and Processing a Complaint}
-
-Upon receiving a feedback from its neighbors, $b$ decides whether to file a complaint or not.
-If so, the source verifies the complaints and potentially removes some of its headnodes. 
-
-\subsubsection*{Filing a complaint}
-$b$ will start processing the replies once all nodes in $D$ have replied or a time-out $t_{replies}$ occurs. 
-We assume that the source's address is publicly known and $b$ can send a complaint to the source directly.
-
-$b$ sends a complaint if the average satisfaction level indicated in the responses is below a threshold $\satThres$ and at least $\minP$ peers replied to the request. 
-More specifically, let $\sat_1, \ldots ,\sat_z$ are the satisfaction levels expressed in the replies and $\sat_b$ be $b$'s satisfaction level. 
-Assuming a sufficient number of replies, $b$ files a complaint to the source if:
+\begin{proposition}
+\label{prop:dropping-removal}
+Let $m$ be a malicious neighbor of a benign headnode $h$ with satisfaction level $\sat_h$. Assume that $m$ has $k$ benign neighbors $v_1, \ldots , v_k$ sorted by their satisfaction levels $\sat_1 \leq \sat_2 \leq \ldots  \leq \sat_k$. 
+Then, to successfully remove $h$, $m$ has to include at least $c$ responses of malicious nodes, including $m$ itself, in the set $D$ of forwarded responses such that:
 \begin{align}
-\label{eq:drop_satis_equation}
-\frac{1}{z+1}\left( \sat_b + \sum_{i=1}^{z} \sat_i \right) < \satThres. 
+\label{eq:drop-rem}
+c &= \max \Big( 1,  \\
+ & argmin_{c' in \mathbb{N}} 
+\left\lbrace \frac{1}{\minP}\left(\sat_h+\sum_{i=1}^{\minP-c'-1}\sat_i \right) < \satThres \right\rbrace 
+\Big) \nonumber 
+\end{align}
+\end{proposition}
+\begin{proof}
+To remove the headnode $h$, there has to be a detection request containing the responses of $h$ and $n\geq \minP-1$ nodes with satisfaction levels $s_1, \ldots , s_n$ and 
+$\frac{1}{n+1}\left( s_h + \sum_{i=1}^{n}s_i \right) < \satThres$.
+The node $m$ aims to minimize the number of involved malicious nodes $c$ because each malicious node can only participate in $\kappa$ detection requests per interval. At the same time, $m$ has to ensure that the average satisfaction level of the involved nodes is below $\satThres$ and that the request includes at least $\minP$ nodes in total. As $m$ files the request, at least one malicious node has to be included. 
+In other words, $m$ solves the optimization problem of finding a minimal $c$ and a set of integers $I \subset \{1, \ldots, k\}$ such that i) $c + |I|+1 \geq \minP$, ii) $\frac{1}{c + |I|+1}\left( \sat_h + \sum_{i \in I} sat_i \right) < \satThres$, and iii) $c\geq 1$. 
+Choosing the lowest satisfaction levels indeed solves the optimization problem and results in Eq.~\ref{eq:drop-rem}. 
+\end{proof}
+
+For simplicity, Preposition~\ref{prop:dropping-removal} considers the case that only one headnode is contained in $m$'s neighbor list. In the presence of several headnodes, $m$ has to slightly adapt its attack strategy. 
+If additional malicious headnodes are neighbors of $m$, $m$ does not include the respective nodes in $D$ to avoid accidentally causing the removal of malicious headnodes.  In contrast, if additional benign headnodes are neighbors of $m$, $m$ will include all of them in $D$ if the detection request can be successful. If success is not possible due to the high satisfaction level of the included headnodes, $m$ successively removes each headnode using the strategy outlined in Preposition~\ref{prop:dropping-removal}. 
+
+
+\subsection{Retaining Malicious Headnodes}
+Now, we consider the case that malicious nodes collude to retain one or several malicious headnode when a benign peer initiates a detection request. 
+All malicious nodes in the respective neighbor list will provide a satisfaction level of 1 to prevent the removal of a malicious node. We assume that malicious neighbors will try to prevent the removal of malicious headnodes even if the request can in addition result in the removal of benign headnodes. This assumption seems reasonable as the removal of a benign headnode is unlikely to lead to additional malicious headnodes, indicating that retaining existing malicious headnodes is of higher importance than removing benign headnodes.  Preposition~\ref{prop:dropping-retain} provides the condition governing the success or failure of the \drop request in the face of the proposed adversarial behavior. 
+
+\begin{proposition}
+\label{prop:dropping-retain}
+Let $m$ be a malicious headnode and $b$ be a benign neighbor of $m$ that initiates a detection request due to its low satisfaction level $\sat_b$.
+Assume that $b$ has $k$ benign neighbors $v_1, \ldots , v_k$ with satisfaction levels $\sat_1, \sat_2 ,\ldots  , \sat_k$. In addition, $b$ has $y$ malicious neighbors, which includes the malicious headnode, and $k\geq \minP$.
+ Then the removal of $m$ fails if and only if: 
+\begin{align}
+\label{eq:drop-retain}
+\frac{1}{k+y+1}\left(y+\sat_b + \sum_{i=1}^k \sat_i\right) \geq \satThres.  
 \end{align} 
-%Hatem: trim
-Otherwise, $b$ either starts another detection request depending on $\kappa$ or waits until allowed to send another detection request.
+\end{proposition}
+\begin{proof}
+The claim follows directly as all $y$ malicious peers will set their satisfaction level to 1 and \drop requests with an average satisfaction of at least $\satThres$ are not successful.   
+\end{proof}
+%If the condition $k\geq \minP$ in Preposition~\ref{prop:dropping-retain} does not hold, the malicious nodes have the option of undermining the request by not responding. 
+%However, the attacker generally does not know the number of benign neighbors and hence cannot strategically decide whether to answer. 
+%Refusing to answer if actually $k\geq \minP$ is likely to lead to the removal of the malicious peer as the malicious peers forfeit their opportunity to influence the average satisfaction level. 
+%Thus, we assume that malicious peers indeed always reply with a satisfaction level of 1. 
+%Then Proposition~\ref{prop:dropping-retain} indicates a successful removal of malicious nodes unless the satisfaction level of benign peers remains high or the neighborhood of the benign peer contains many malicious peers. 
+
+
  
-
-Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source containing the IDs of all nodes in $D$, recent proofs of neighborhood,  and the received satisfaction levels including signatures and time stamps.  
-
-
-The reason for requesting at least $\minP$ replies is to prevent a few number of malicious nodes from accusing benign headnodes. By imposing a lower bound on the requested number of replies, a considerable number of malicious nodes has to use one of their $\kappa$ requests. We present an in-depth analysis on how these constraints prevent misuse in Section~\ref{sec:analysis}. 
-
-
-
-
-
-\subsubsection*{Processing a Complaint at the Source}
-
-The source $s$ first verifies the content of the complaint. First, the source rejects any complaint from a node $b$ that has already participated in $\kappa$ requests. 
-If $s$ does not reject the complaint, $s$ then removes any satisfaction levels without valid signatures from the complaint.
-Furthermore, $s$ removes any responses from nodes that have exceeded their participation limit or are participating in two complaints at the same time. 
-
-If the remaining valid responses still indicate an average satisfaction level of less than $\satThres$, the source 
-\begin{enumerate}
- \item Divides the set of peers in $D$ into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes. 
-%  \mn[Stef]{Itemize lists are strange as they are not full sentences but start with a capital letter and end in .}
- \item Removes all peers in $H_n$ from its neighbor set.
- \item Randomly connects to another $|H_n|$ peers. 
- \item Adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list). 
- \item Sends a \textit{Complaint Reply} to $b$ containing $H_n$ and $P_n$.
-\end{enumerate}
- The reason for choosing random new headnodes rather than nodes participating in the complaint is to lower the incentive for complaints by malicious peers. Even if such a complaint is successful, the new headnodes are likely benign, meaning that the malicious nodes did not gain anything from initiating the request apart from increasing the load slightly. 
-
-
-\subsubsection*{Processing a Complaint Reply \& Forwarding}
-
-Finally, when $b$ receives the \textit{complaint Reply} from the source, $b$ 
-\begin{enumerate}
- \item Disconnects from all peers in $H_n$. Note that $b$ does not blacklist peers in $H_n$ from its neighbor list due to the fact that those peers are not proven malicious.
- \item Connects to $|H_n|$ peers from $P_n$, in case $|H_n|>|P_n|$, peers connect to $|P_n|+(|H_n|-|P_n|)$ random peers.
-\end{enumerate}
-Similarly, $b$ forwards the complaint to the other participants, who in turn execute steps 1 and 2.
-
-\subsection{General Notes}
-The detection mechanism does not aim at expelling peers from the system. Simply  removing peers from their role as headnodes is effective.
-Indeed, the only peers that get blacklisted are those who violate the detection mechanism constraints, i.e., participating in more than a single request at a time or initiating more than $\kappa$.
-The reason for the lack of harshness of the penalty associated with a detection lies in the potentially high false positive rate for headnodes exhibiting a low performance. 
-% These might be accidentally declared to be malicious peers due to not forwarding chunks sufficiently fast. 
-% While removing such peers as headnodes is likely to benefit the system, it is not in our interest to ban them from the system. 
-In general, the main target of the detection mechanism is to enhance the peers satisfaction level while keeping peer replacements and signaling overhead low.
-% \mn[Stef]{Where does it talk about that? who does it when?}
-
-
-% In Section \ref{sec:eval}, we evaluate these three aspects from various scenarios. 
-% Furthermore, we design our protocol such that offers little opportunity for misuse, as we show in the next section. 
-
-
-
-
-
