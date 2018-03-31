@@ -8,24 +8,24 @@ Controlling or influencing these few highly visible providers might allow censor
 % \mn[Stef]{feel free to remove the censorship/propaganda aspect}   
 Distributing content via a Peer-to-Peer (P2P) network significantly lowers the load that the provider experiences, as participants relay the downloaded content to other participants, eliminating the need that all participants receive their content directly from the source, i.e., the provider. 
 Consequentially, P2P streaming is an attractive option for alternative providers and user-generated content.
-Furthermore, including P2P streaming into the service of established providers will reduce their costs and hence should lead to lower rates for customers or decrease the amount of advertisement within the system, depending on providers' business model. 
+Furthermore, including P2P streaming into the service of established providers will reduce their costs and hence should lead to lower rates for customers or decrease the amount of advertisement within the system, depending on the providers' business model. 
 
 
 However, achieving reliability in the face of the dynamic heterogeneous group of content distributors in a P2P overlay is challenging. In addition to the inherent unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and perform denial-of-service attacks, which interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
 
 In general, nodes in a P2P streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
-The publisher or \emph{source} of the content divides the stream into \emph{chunks}, which each contain a part of the encoded data, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
-The selection of neighbors and the choice of which neighbors to receive from or forward to differ between protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and requests chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
+The publisher or the \emph{source} of the content divides the stream into \emph{chunks}, each contains a part of the encoded data, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
+The selection of neighbors and the choice of which neighbors to receive from or forward to differ between protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and request chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
 
 
-In pull-based systems, there exists three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
+In pull-based systems, there exist three types of denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
 In such an attack, a node might drop or delay chunks. Alternatively, they might advertise chunks that they do not have. As detection of the latter is locally possible and the effect of delaying chunks is at most as severe as entirely dropping the respective chunks, we focus on a denial-of-service attack through dropping chunks without advertising them, called \drop in the following.  
 
 
-In the past, multiple countermeasures aimed to reduce the severity \drop. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the \emph{headnodes}, i.e., the peers connected to the source. 
+In the past, multiple countermeasures aimed to reduce the severity of\drop attack. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assumes that the attacker is unaware of the topology of the streaming network and specifically does not know the \emph{headnodes}, i.e., the peers connected to the source. 
 However, previous work indicates that it is relatively easy to infer the identity of benign headnodes and then target those important nodes \cite{nguyen2016swap}.
 While countermeasures to these inference attacks exist, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
-Hence, the existing work evaluates neither the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor protection mechanism against these attacks.
+Thus, the existing work neither evaluates the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor proposes a protection mechanism against these attacks.
 
 
 In this paper, we  illustrate the effectiveness of internal attacks that benefit from malicious headnodes. 
@@ -35,7 +35,7 @@ Our detection mechanism hence reacts to a low quality-of-service rather than exp
 Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
 
 In an extensive simulation study, we show that the proposed detection mechanism can fully restore peers' satisfaction, even in a scenario where the attacker controls all headnodes. 
-Our mechanism only introduces a signaling overhead of less than $10\%$, meaning that it is both effective and efficient.
+Our mechanism only introduces a signaling overhead of less than $8\%$, meaning that it is both effective and efficient.
 
 A theoretical analysis complements our concrete practical results, focusing on the opportunities to abuse the detection mechanism. 
 Indeed, the detection algorithm mostly prevents malicious nodes from replacing benign headnodes with malicious nodes unless they control a large fraction of the total number of nodes. 
