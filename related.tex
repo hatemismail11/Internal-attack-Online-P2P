@@ -1,8 +1,7 @@
 \section{Related Work}
 \label{sec:related}
 
-In this section, we highlight the prominent work on attacks and attack detection in the area of P2P streaming systems.
-Previous work considered three types of attacks: (i) pollution attacks, i.e., flooding the overlay with arbitrary content and claiming it to be relevant chunks, (ii) free riding, i.e., participating in the overlay without contributing, and iii) cheating attacks, i.e., maliciously dropping packets or manipulating buffer-maps. 
+We overview the prominent existing work on attacks and attack detection in the area of P2P streaming systems. Most prior work has considered three attack types: (i) pollution attacks, i.e., flooding the overlay with arbitrary content and claiming it to be relevant chunks, (ii) free riding, i.e., participating in the overlay without contributing, and iii) cheating attacks, i.e., maliciously dropping packets or manipulating buffer-maps. 
 
 Pollution attacks are one of the most common attacks \cite{pollution1}. 
 As the attack strategy differs from the \drop attack and efficient network coding techniques \cite{nc} and others \cite{pollution2} already exist, we do not consider those attacks in our work.
@@ -24,12 +23,6 @@ Moreover, \textit{Antiliar} uses a central entity to review the logs, creating a
 
 An alternative approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting chunks. 
 In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating.
-The work focuses in particular on attacks on headnodes, yet assumes an external attacker that can take over arbitrary nodes at will.
+The work focuses in particular on attacks on headnodes yet assumes an external attacker that can take over arbitrary nodes at will.
 In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
 As shown in Section~\ref{sec:eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  
-
-
-
-
-
-
