@@ -161,7 +161,7 @@ Finally, when $b$ receives the \textit{complaint Reply} from the source, $b$
 Similarly, $b$ forwards the complaint to the other participants, who in turn execute steps 1 and 2.
 
 \subsection{General Notes}
-The detection mechanism does not aim at expelling peers from the system as removing peers as headnodes is highly likely to effectively benefit the system.
+The detection mechanism does not aim at expelling peers from the system. Simply  removing peers from their role as headnodes is effective.
 Indeed, the only peers that get blacklisted are those who violate the detection mechanism constraints, i.e., participating in more than a single request at a time or initiating more than $\kappa$.
 The reason for the lack of harshness of the penalty associated with a detection lies in the potentially high false positive rate for headnodes exhibiting a low performance. 
 % These might be accidentally declared to be malicious peers due to not forwarding chunks sufficiently fast. 
