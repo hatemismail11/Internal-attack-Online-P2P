@@ -1,31 +1,31 @@
 \section{Introduction}
 \label{sec:intro}
 
-Streaming content is an essential component of data driven infrastructures \cite{emule}.
+Streaming content is an essential component of data-driven infrastructures \cite{emule}.
 Most streaming applications rely on (monopolistic) central providers that have significant computing and communication resources to distribute high quality of service content to a large audience in a fast and reliable manner. For the providers, this entails the use of dedicated resources, involves performance and scalability issues along with considerations of handling single point of failures.
 Distributing content via a Peer-to-Peer (P2P) network significantly lowers the load that the provider experiences as the participants relay the downloaded content to other participants. This eliminates the need that all participants receive their content directly from the source, i.e., the provider. 
 Consequentially, P2P streaming (including P2P streaming into the service of established providers) becomes an attractive option for alternative distributed providers and user-generated content to help reduce data delivery costs and resultant lower rates for customers.
 
 
-However, achieving high reliability in a P2P overlay and across a dynamic and heterogeneous group of content distributors is challenging. In addition to the inherent operational unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and conduct denial-of-service attacks. This can interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
+However, achieving high reliability in a P2P overlay and across a dynamic and heterogeneous group of content distributors is challenging. In addition to the inherent operational unreliability of benign participants, attackers such as competitors can infiltrate the set of peers and conduct denial-of-service attacks. In this manner, malicious participants can interrupt or delay the distribution of the content with the goal of degrading the quality of service. 
 
 In general, nodes in a P2P streaming system connect to a small set of other nodes, called the \emph{neighbor set}. 
-The publisher or the \emph{source} of the content divides the stream into \emph{chunks}, each contains a part of the encoded data, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the chunks. 
+The publisher or the \emph{source} of the content divides the stream into \emph{chunks}, which each contain an equal-sized part of the encoded data, and forwards these chunks to its neighbors. Nodes in the system receive chunks from neighbors and forward them to neighbors that have not previously received the respective chunks. 
 The selection of neighbors and the choice of neighbors to receive-from or forward-to differs across protocols \cite{sasi2014survey}.  Yet, pull-based mesh networks are the predominant method in P2P streaming systems \cite{zhang2014modeling}. In a mesh overlay, peers maintain a buffer-map indicating which chunks they possess.  Neighbors periodically exchange their buffer-maps and request chunks from neighbors whose buffer-maps indicate possession of the respective chunk. Peers then forward chunks based on the received requests. 
 
 
 In pull-based systems, there exist several denial-of-service attacks, known as buffer-map or $BM$ cheating attacks \cite{cheatingAnalysis}. 
-In such an attack, a node might drop or delay chunks. Alternatively, they might advertise chunks that they do not have. As detection of the latter is locally possible and the effect of delaying chunks is at most as severe as entirely dropping the respective chunks, we focus on a denial-of-service attack through dropping chunks without advertising them, called \drop in the following.  
+In such an attack, malicious nodes might drop or delay chunks. Alternatively, they might advertise chunks that they do not have. As detection of the latter is locally possible and the effect of delaying chunks is at most as severe as entirely dropping the respective chunks, we focus on a denial-of-service attack through dropping chunks without advertising them, called \drop in the following.  
 
 
-In the past, multiple countermeasures aimed to reduce the severity of \drop attack. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assume that the attacker is unaware of the topology of the streaming network and specifically does not know the \emph{headnodes}, i.e., the peers connected to the source. 
+In the past, multiple countermeasures aimed to reduce the severity of the \drop attack. However, the majority of these defences \cite{zhang2005coolstreaming, defending2, antiliar} assume that the attacker is unaware of the topology of the streaming network and specifically does not know the \emph{headnodes}, i.e., the peers connected to the source. 
 However, previous work indicates that it is relatively easy to infer the identity of benign headnodes and then target those important nodes \cite{nguyen2016swap}.
 While countermeasures to these inference attacks exist, they assume an external adversary that can shut-down or replace certain nodes \cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
-Hence, the existing work neither evaluates the impact of internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants, nor the protection mechanism against these attacks.
+Hence, the existing work evaluates neither the impact of nor protection mechanism against internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants. 
 
 
 In this paper, we first illustrate the effectiveness of internal attacks based on malicious headnodes. 
-Consequently, we propose a mechanism for detecting \drop where our protection mechanism keeps track of peers satisfaction. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
+Consequently, we propose a mechanism for detecting \drop by keeping track of peer satisfaction. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
 Hence, our detection and mitigation mechanism efficiently reacts to a detected low quality-of-service.
 Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
 
