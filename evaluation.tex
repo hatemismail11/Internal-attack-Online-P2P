@@ -10,7 +10,7 @@ We start by describing the simulation model and set-up before detailing the simu
 \subsection{Simulation Framework, Parameters and Metrics}
 Our simulation framework relies on OSSim \cite{nguyen2013ossim}. 
 OSSim is a packet level simulator for DONet \cite{zhang2005coolstreaming}, a pull-based online streaming overlay.
-All our overlays use the network topology generator GT-ITM \cite{GT} with 1000 peers connected to 400 edge router. Furthermore, our simulation time is 500s and the presented results are averages over 10 runs. 
+All our overlays use the network topology generator GT-ITM \cite{GT} with 1000 peers connected to 400 edge router. Furthermore, our simulation time is 500s and the presented results are averaged over 10 runs. 
 
 We differentiate between malicious and benign peers when considering their online times. 
 We assume that malicious peers join the overlay early and do not leave before the video dissemination ends in order to maximize their impact. 
@@ -40,14 +40,14 @@ Benign peers can rejoin the overlay in a uniform distribution around 10s. For bo
 
 The following metrics characterize the performance.
 \subsubsection*{Satisfaction $\sat$} The satisfaction is the fraction of chunks peers receive in time, averaged over all peers. 
-\subsubsection*{Avg. Loss $lo$} The average loss indicates the fraction of chunks that peers do not receive or not receive in time. 
-\subsubsection*{Detection Overhead $DO$} The detection overhead describes the communication overhead created by the detection mechanism. More formally, it is the ratio of messages exchanged during due to the detection mechanism and all signaling messages in the system.
+\subsubsection*{Avg. Loss $lo$} The average loss indicates the fraction of chunks that peers do not receive in time. 
+\subsubsection*{Detection Overhead $DO$} The detection overhead describes the communication overhead created by the detection mechanism. More formally, it is the ratio of messages exchanged due to the detection mechanism and all signaling messages in the system.
 \subsubsection*{Benign Ratio per Neighbor List $BRNL$} The benign ratio per neighbor list measures the fraction of benign peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
 
 In this case study, we evaluate the impact of \drop on two different network scenarios:  (1) DONet, and (2) DONet+SWAP \cite{nguyen2016swap}. We consider SWAP to check how regular replacement of headnodes affects the attack. 
-We use the same total number of peers but vary the size of the neighbor list.
+We use the same total number of peers but vary the attacker's budget.
 As malicious peers aim to occupy the closest peers to the source, the remaining size of the overlay is not a factor on the impact of the \drop attack.
 
 Given the source's neighbor list size $LS=10$, we choose the following combinations for the attackers budget $(eta x, MN)$: $(10,0), (5,15), (7,70), (8,24)$.
@@ -149,7 +149,7 @@ Benign peers execute the detection mechanism as described in Section~\ref{sec:de
 More precisely, malicious peers reply with a satisfaction level of 0 if the complaint might remove a benign peer and 1 if it might remove a malicious peer. 
 
 In order to do so, we selected the following combinations for $(\eta x, MN)$: $(5, 80)$, $(8, 50)$ and $(10, 50)$ to assess the performance of the mechanism in severe attack conditions.
-The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers are able to fully restore their satisfaction level when the detection mechanism in operating.
+The satisfaction threshold $\satThres$ is set to 0.95 to measure if peers are able to fully restore their satisfaction level when the detection mechanism is operating.
 The detection mechanism is effective starting $t=250s$ to allow for a reasonable amount of peers to join the overlay to adequately assess the efficiency of the mechanism.
 In this scenario, every peer is allowed to initiate $\minDR=10$ detection requests for $t_{det}=500s$, and the minimum number of responses to generate a complaint is $\minP=3$. 
 We discuss the effect of varying those parameters later on.
@@ -173,7 +173,7 @@ Moreover, the maximum number of detection requests that can be initiated is depe
 Thus, smaller values of $\minDR$ result in lower overhead, which is a useful application parameter that can be set according to the application's criticality or the user's CPU resources.
 In fact, varying $\minP$ between 3, 4 and 5 has little impact on the detection performance, indicating that nodes receive sufficient replies.
 
-To that end, through the results, we highlight the efficiency of the detection mechanism against \drop attacks, even if the attacker possesses high malicious budget as headnodes.
+To that end, throughout the results, we highlight the efficiency of the detection mechanism against \drop attacks, even if the attacker possesses high malicious budget as headnodes.
 % Moreover, we show that malicious peers are incapable of abusing the detection mechanism and place themselves as headnodes. Finally, the detection mechanism induces a very small overhead on the overlay.
 
 
@@ -222,7 +222,6 @@ To that end, through the results, we highlight the efficiency of the detection m
 %   \vspace{-3.5mm}   
 %   \label{fig:detection-results}
 %   \end{figure}
-
 
 
 % \subsubsection{Summary of the results}
