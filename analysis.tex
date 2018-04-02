@@ -23,8 +23,8 @@ There are restrictions guiding the construction of $D$ that $m$ has to take into
 \item $m$ can include malicious peers that are not in its actual neighbor list, as these peers are willing to generate false proofs of neighborhood. Only the inclusion of malicious nodes that can participate in a \drop request, i.e., those that have not yet reached their limit of \drop request participation, is beneficial for the success of the request. Malicious peers contained in $D$ claim that their satisfaction level is 0 to maximize the chance of removal. 
 \end{itemize}
 
-When deciding on a set $D$, $m$ tries to minimize the number of malicious nodes in $D$ in order to use as little of the attack budget as possible. 
-Preposition \ref{prop:dropping-removal} gives a lower bound on the number of required malicious nodes. 
+When deciding on a set $D$, $m$ tries to minimize the number of malicious nodes in $D$ in order to use as few of the $\kappa$ requests per node as possible. 
+Preposition~\ref{prop:dropping-removal} gives a lower bound on the number of required malicious nodes. 
 
 
   
