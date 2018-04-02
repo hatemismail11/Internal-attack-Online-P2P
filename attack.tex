@@ -12,35 +12,37 @@ Subsequently, our main discussion outlines the \drop adversarial behavior.
 The target of the internal attack is to severely degrade the user's satisfaction by interrupting the stream close to the source, thus preventing dissemination between benign peers.
 The budget $x$ of the attacker corresponds to the number of nodes controlled by the malicious party. 
 In accordance with the attack goal of maximizing impact, the attacker aims to use its budget to occupy the source's neighbor list. 
-Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting the internal attack using a very small budget.
-% \mn[Stef]{Why do we use less than 10, then?} 
+Note that in a real streaming system, the typical size of the source's neighbor list is 20-30 entries \cite{neighborlist1,neighborlist2}, which highlights the feasibility of conducting an internal attack using a very small budget.
 
-We assume an attacker to (a) have a budget $x$, and (b) is capable of assigning malicious peers as headnodes for example through (1) joining the overlay as early as possible in case of a pre-announced time for a streamline, (2) taking down the source's benign headnodes, or (3) abusing peers' replacement mechanisms \cite{nguyen2016swap}.
-Hence, the attacker initially assigns $\eta x$, where $\eta\in [0,1]$ , of its resources as headnodes.
+
+We assume an attacker to (a) have a budget $x$, and (b) be capable of assigning malicious peers as headnodes.
+Potential ways of assigning headnodes include (1) joining the overlay as early as possible in case of a pre-announced time for a streamline, (2) taking down the source's benign headnodes, or (3) abusing peers' replacement mechanisms \cite{nguyen2016swap}.
+Hence, the attacker initially assigns $\eta x$ with $\eta\in [0,1]$ of its resources as headnodes.
 As the attacker's main objective is to fully occupy the source's neighbor list, the optimum value of $\eta$ for the attacker, is $\eta x = |NeighborList|$.
-In case such full exploitation of the source's neighbor list is not feasible when the attack is being initiated, the attacker continuously tries to increase the value of $\eta$.  
+If full exploitation of the source's neighbor list is not feasible when the attack is being initiated, the attacker continuously tries to increase the value of $\eta$.  
 
 The rest of malicious peers $MN=(1-\eta) x$ are connected as neighbors to the $\eta x$ headnodes. 
-Such a placement is considered the best strategy for the attacker since $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ malicious peers are eventually promoted to headnodes. 
-Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, accordingly, the attacker is capable of inferring the existing headnodes.
+Such a placement is the best strategy for the attacker since $MN$ is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $\eta x$ keep on advertising $MN$ to the source for swapping, and thus, $MN$ malicious peers are eventually promoted to headnodes. 
+Given the fact that inferring the overlay's topology is indeed feasible \cite{nguyen2016swap,rbcs}, the attacker is capable of inferring the existing headnodes.
 Thus, such a distribution of the attacker's budget assures that even if the attacker is not able to directly place malicious peers as headnodes, having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
 
 
 
 \subsection{\drop adversarial behavior}
 We now discuss the main adversarial behavior that gets executed based on the attacker's target and budget. 
-A malicious peer $m \in M$, where $M$ is the set of malicious peers, executing the \drop behavior performs a stealthy denial-of-service attack: 
-When $m$ receives a chunk from a neighbor, irrespective of the neighbor's identity (if it is the source or not), $m$ drops the packet.
-In particular, $m$ never advertises for those chunks in its $BM$.
+Let $M$ be the set of malicious peers that collaboratively execute \drop. 
+When $m \in M$ receives a chunk from a neighbor, $m$ drops the chunk.
+In particular, $m$ never advertises chunks in its $BM$.
 Indeed, it keeps on requesting the dropped chunks from other benign peers $b \in B$, where $B$ is the set of benign peers.
 This scenario guarantees that: (a) malicious peers are less susceptible to being suspected as the requesting benign peers are not aware that $m$ indeed received those chunks,
 and (b) detecting $m$'s direct or close connection to the source, inferring the overlay's topology, is not possible, which lowers the probability of $m$ being suspected.
 
 
 Note that this behavior minimizes the detection susceptibility of malicious peers.
-The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, e.g, if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, eventually $m$ will be suspected.
+The reason is that other $BM$ cheating strategies result in eventually declaring a certain suspect, e.g, if $m$ keeps on sending correct $BM$ updates but never sends the actual chunk, honest nodes will eventually suspect $m$.
 
-Moreover, sending correct $BM$ updates results in correctly inferring $m$'s position, which positively impacts the decision of the detection mechanism, which we discuss in the next section. 
+
+ 
 
 
 
