@@ -15,6 +15,41 @@ These \emph{proofs of neighborhood} are signed and contain a time stamp.
 In this manner, $u$ can proof if $v$ is (or has recently been) its neighbor. 
 
 
+
+
+
+\subsection{Mechanism Overview}
+We illustrate the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
+When a malicious peer $m$ performs a \drop attack, benign peers $b$ are unable to immediately identify the malicious behavior.
+Specifically, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has. 
+Thus, detecting a violation in this case is not straight-forward. In particular, nodes are generally unable to identify a suspected attacker based only on local information.
+In the remainder of the section, we present a mechanism that allows nodes to collaboratively identify suspects that are subsequently removed as headnodes.  
+
+
+
+
+\begin{figure}
+ \centering
+ \includegraphics[width=5.5cm,height=6.5cm]{./Figures/detection.pdf}
+ 
+  \caption{Detection process for \drop. $S$ denotes the source.}
+   \vspace{-3.5mm}
+\label{detection-blocks} 
+\end{figure}
+
+
+
+The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in replacing one or several headnodes. 
+First, when a peer $b$ suspects a \drop attack based on its local observations, $b$ sends a \emph{detection request} to all peers in its neighbor list.
+Second, each peer receiving a detection request prepares a response. 
+Third, the initiator $b$ decides based on the received responses if they should file a complaint to the source. 
+If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the request. 
+Afterwards, the source verifies the complaint, reacts accordingly, and responds to $b$, detailing the steps taken. 
+The reaction of the source is either the replacement of one or several headnodes or the rejection of the removal request.
+Finally, $b$ reacts based on the received response from the source and then forwards the source's reply to the other participants in the complaint, who in turn execute the same procedure.
+
+The node $b$ bases its decision on whether to initiate a request or forward a complaint on a number of threshold parameters, which we summarize in Table~\ref{tab:acronyms} together with various system parameters governing the attack. 
+
 \begin{table}[ht]
 \center
 \caption{Acronyms}
@@ -29,42 +64,8 @@ $\sat$ & peer satisfaction level & $\satThres$ & satisfaction threshold \\\hline
 $\minP$ & min. drop responses & $\minDR$ & no. allowed det. \\\hline
 \end{tabular}
 \label{tab:acronyms}
-\vspace{-3mm}
+% \vspace{-3mm}
 \end{table}
-
-
-
-\subsection{Mechanism Overview}
-We illustrate the underlying ideas of the detection mechanism in Figure~\ref{detection-blocks}.
-When a malicious peer $m$ performs a \drop attack, benign peers $b$ are unable to immediately identify the malicious behavior.
-Specifically, $m$ never sends the actual $BM$ that represents the chunks it currently possesses, i.e., $m$ is only requesting chunks it already has. 
-Thus, detecting a violation in this case is not straight-forward. In particular, nodes are generally unable to identify a suspected attacker based only on local information.
-In the remainder of the section, we present a mechanism that allows nodes to collaboratively identify suspects that are subsequently removed as headnodes.  
-
-
-The detection consists of four steps, starting with an initial trigger of dissatisfaction at one peer and potentially terminating in replacing one or several headnodes. 
-First, when a peer $b$ suspects a \drop attack based on its local observations, $b$ sends a \emph{detection request} to all peers in its neighbor list.
-Second, each peer receiving a detection request prepares a response. 
-Third, the initiator $b$ decides based on the received responses if they should file a complaint to the source. 
-If $b$ decides to file the complaint, $b$ sends it on behalf of the participating peers in the request. 
-Afterwards, the source verifies the complaint, reacts accordingly, and responds to $b$, detailing the steps taken. 
-The reaction of the source is either the replacement of one or several headnodes or the rejection of the removal request.
-Finally, $b$ reacts based on the received response from the source and then forwards the source's reply to the other participants in the complaint, who in turn execute the same procedure.
-
-The node $b$ bases its decision on whether to initiate a request or forward a complaint on a number of threshold parameters, which we summarize in Table~\ref{tab:acronyms} together with various system parameters governing the attack. 
-
-
-
-
-\begin{figure}
- \centering
- \includegraphics[width=5.5cm,height=5cm]{./Figures/detection.pdf}
- 
-  \caption{Detection process for \drop. $S$ denotes the source.}
-  \vspace{-4.5mm}
-\label{detection-blocks} 
-\end{figure}
-
 
 \subsection{Detection Trigger}
 \label{Detection-Trigger}
@@ -119,10 +120,6 @@ Once $b$ decides on filing a complaint according to the aforementioned condition
 
 The reason for requesting at least $\minP$ replies is to prevent a few malicious nodes from accusing benign headnodes. By imposing a lower bound on the requested number of replies, a considerable number of malicious nodes has to use one of their $\kappa$ requests. We present an in-depth analysis on how these constraints prevent misuse in Section~\ref{sec:analysis}. 
 
-
-
-
-
 \subsubsection*{Processing a Complaint at the Source}
 
 The source $s$ first verifies the content of the complaint. First, the source rejects any complaint from a node $b$ that has already participated in $\kappa$ requests. 
@@ -131,14 +128,15 @@ Furthermore, $s$ removes any responses from nodes that have exceeded their parti
 
 If the remaining valid responses still indicate an average satisfaction level of less than $\satThres$, the source:  
 \begin{enumerate}
- \item divides the set of peers in $D$ into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes. 
+ \item divides the set of peers in $D$ into two sets $H_n$ and $P_n$, where $H_n$ is the set of headnodes peers that exist in the complaint. 
 %  \mn[Stef]{Itemize lists are strange as they are not full sentences but start with a capital letter and end in .}
  \item removes all peers in $H_n$ from its neighbor set.
  \item randomly connects to another $|H_n|$ peers. 
  \item adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list). 
  \item sends a \textit{Complaint Reply} to $b$ containing $H_n$ and $P_n$.
 \end{enumerate}
- The reason for choosing random new headnodes rather than nodes participating in the complaint is to lower the incentive for complaints by malicious peers. Even if such a complaint is successful, the new headnodes are likely benign, meaning that the malicious nodes did not gain anything from initiating the request apart from slightly increasing the load. 
+ The reason for choosing random new headnodes rather than nodes participating in the complaint is to lower the incentive for complaints by malicious peers.
+ Even if such a complaint is successful, the new headnodes are likely benign, meaning that the malicious nodes did not gain anything from initiating the request apart from slightly increasing the load. 
 
 
 \subsubsection*{Processing a Complaint Reply \& Forwarding}
@@ -148,10 +146,10 @@ Finally, when $b$ receives the \textit{complaint Reply} from the source, $b$
  \item Disconnects from all peers in $H_n$. Note that $b$ does not blacklist peers in $H_n$ from its neighbor list due to the fact that those peers are not proven malicious.
  \item Connects to $|H_n|$ peers from $P_n$, in case $|H_n|>|P_n|$, peers connect to $|P_n|+(|H_n|-|P_n|)$ random peers.
 \end{enumerate}
-Subsequently, $b$ forwards the complaint to the other participants, who in turn execute steps 1 and 2.
+Subsequently, $b$ forwards the complaint to the other participants, i.e., $D \setminus H_n$, who in turn execute steps 1 and 2.
 
 \subsection{General Notes}
-The detection mechanism does not aim at expelling peers from the system. Simply  removing peers from their role as headnodes is effective.
+The detection mechanism does not aim at expelling peers from the system. Simply removing headnodes remarkably benefit the system.
 Indeed, the only peers that get blacklisted are those who violate the detection mechanism constraints, i.e., participating in more than a single request at a time or initiating more than $\kappa$ requests.
 The reason for this leniency lies in the potentially high chance of removing headnodes that are benign but exhibit a low performance. 
 In general, the main target of the detection mechanism is to enhance peers' satisfaction level while keeping peer replacements and signaling overhead low. 
