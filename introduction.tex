@@ -29,10 +29,10 @@ Hence, the existing work evaluates neither the impact of nor protection mechanis
 In this paper, we first illustrate the effectiveness of internal attacks based on malicious headnodes. 
 Consequently, we propose a mechanism for detecting \drop by keeping track of peer satisfaction. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
 Hence, our detection and mitigation mechanism efficiently reacts to a detected low quality of service  rather than explicitly identifying the misbehavior of one or more specific nodes.
-Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategically important positions such as headnodes.    
+Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategic positions such as headnodes.    
 
-Using a simulation study, we show that the proposed detection mechanism can fully restore peers satisfaction, even in a scenario where the attacker controls all headnodes. 
-Our mechanism introduces only a small signaling overhead of approximately $8\%$ supporting the claim of being both effective and efficient.
+Using a simulation study, we show that the proposed detection mechanism effectively restores peers satisfaction, even in a scenario where the attacker controls all headnodes. 
+Our mechanism introduces only a small signaling overhead of approximately $8\%$ supporting the claim of being efficient.
 
 A theoretical analysis complements our practical results, focusing on the opportunities to abuse the detection mechanism. 
 Indeed, the detection algorithm prevents malicious nodes from replacing benign headnodes with malicious nodes unless they control a large fraction of the total number of nodes. 
