@@ -22,7 +22,7 @@ The following metrics characterize the performance.
 \subsubsection*{Satisfaction $\sat$} The satisfaction is the fraction $Hit/Hit+miss$ of chunks peers receive in time, averaged over all peers. 
 \subsubsection*{Avg. Loss $lo$} Indicates the average number of chunks that peers do not receive in time, averaged over all peers. 
 \subsubsection*{Detection Overhead $DO$} The detection overhead describes the communication overhead created by the detection mechanism. 
-More formally, it is the ratio of messages exchanged due to the detection mechanism and all signaling messages, such as $BM$ exchanges and neighboring requests, in the system.
+More formally, it is the ratio of messages exchanged in the system due to the detection mechanism and all signaling messages: (1) $BM$ requests, (2) $BM$ updates, and (3) neighboring requests, accepts and rejects).
 \subsubsection*{Benign Ratio per Neighbor List $BRNL$} The benign ratio per neighbor list measures the fraction of benign peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
@@ -64,13 +64,13 @@ For the same reason, the satisfaction level of benign peers eventually decreases
   \centering
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.1cm]{./Figures/avg-loss-donet.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/avg-loss-donet.eps}
     \caption{Average loss}%
     \label{subfig:avg-loss-donet}
   \end{subfigure}
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.1cm]{./Figures/satisfaction-donet.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/satisfaction-donet.eps}
     \caption{Average peer satisfaction}%
     \label{subfig:satisfaction-donet}
   \end{subfigure}
@@ -103,19 +103,19 @@ For the same reason, the satisfaction level of benign peers eventually decreases
   \centering
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.1cm]{./Figures/det-BRNL1.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/det-BRNL1.eps}
     \caption{Average BRNL}%
    \label{subfig:BRNL}
   \end{subfigure}
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.1cm]{./Figures/det-sat.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/det-sat.eps}
     \caption{Average peer satisfaction}%
      \label{subfig:det-sat}
   \end{subfigure}
   \begin{subfigure}[c]{0.95\columnwidth}
     \centering
-    \includegraphics[width=8.4cm,height=3.1cm]{./Figures/overhead.eps}
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/overhead.eps}
     \caption{Detection overhead}%
     \label{subfig:overhead}
   \end{subfigure}
