@@ -23,9 +23,8 @@ If full exploitation of the source's neighbor list is not feasible when the atta
 
 The rest of malicious peers $x-x_h$ are connected as neighbors to the $x_h$ headnodes. 
 Such a placement is the best strategy for the attacker since the impact caused by the $x-x_h$ peers is maximized due to their relative closeness to the source, i.e., a larger fraction of benign peers experience a longer service degradation till a sufficient amount of benign peers receive and start disseminating the stream.
-% is used to counter headnodes replacement mechanisms such as SWAP \cite{nguyen2016swap}, i.e., malicious headnodes $x$ keep on advertising the $x-x_h$ malicious peers to the source for swapping, and thus, $x-x_h$ malicious peers are eventually promoted to headnodes. 
-Given the fact that inferring the overlay's topology is indeed feasible~\cite{nguyen2016swap,rbcs}, the attacker is capable of inferring the existing headnodes to optimally place malicious peers as headnodes.
-Nonetheless, even if the attacker is not able to directly place malicious peers as headnodes, having a higher budget to occupy the headnodes' neighbor lists also results on a complete shut down of the stream from the rest of the overlay.
+Given the fact that inferring the overlay's topology is indeed feasible~\cite{nguyen2016swap,rbcs}, the attacker is capable of inferring the existing headnodes to optimally place malicious peers as headnodes. Knowing the headnodes allows the attacker to place malicious nodes in their neighborhood, which also results in an effective disruption of the stream dissemination if the budget is sufficiently high. 
+
 
 
 
