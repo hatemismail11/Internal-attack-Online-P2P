@@ -18,7 +18,7 @@
 
 \newtheorem{mydef}{Definition}
 
-% *** GRAPHICS RELATED PACKAGES ***
+% *** GRAPHICS RELATED PACKAGES ***ht
 %
 \ifCLASSINFOpdf
   \usepackage[pdftex]{graphicx}
@@ -54,7 +54,15 @@
 \newtheorem{proposition}[theorem]{Preposition}
 
 % \usepackage[caption=false,font=footnotesize]{subfig}
-\usepackage{subcaption}
+
+%  \DeclareCaptionLabelFormat{lc}{\MakeLowercase{#1}~#2}
+% \newfontfamily{\myfont}{Times New Roman}
+ \usepackage{subcaption}
+ \DeclareCaptionFont{ninept}{\fontsize{8pt}{10pt}\rmfamily #1}
+ \captionsetup{font=ninept}
+
+% \captionsetup{font={small}, textfont={sf}, labelfont={bf,sf}}
+
 \setlength{\intextsep}{.1\intextsep}
 
 \usepackage{url}
@@ -87,6 +95,7 @@
 
 \input{macros}
 
+\IEEEoverridecommandlockouts\IEEEpubid{\makebox[\columnwidth]{978-1-5386-4725-7/18/\$31.00 ©2018 IEEE \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
 
 \begin{document}
 \title{A Detection Mechanism for Internal Attacks on Pull-based P2P Streaming Systems}
@@ -151,6 +160,7 @@ suri@cs.tu-darmstadt.de}
 
  \bibliographystyle{unsrt}
  \bibliography{ref}
+ \nocite{hiller2001approach}
 
 \IEEEpeerreviewmaketitle
 
