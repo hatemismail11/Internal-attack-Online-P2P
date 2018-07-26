@@ -1,5 +1,5 @@
 \section{Evaluation}
-\label{online-eval}
+\label{sec:eval}
 
 The goal of this section is to address two research questions: 
 First, we quantify the severity of \drop. 
@@ -22,7 +22,7 @@ The following metrics characterize the performance.
 \subsubsection*{Satisfaction $\sat$} The satisfaction is the fraction $Hit/Hit+miss$ of chunks peers receive in time, averaged over all peers. 
 \subsubsection*{Avg. Loss $lo$} Indicates the average number of chunks that peers do not receive in time, averaged over all peers. 
 \subsubsection*{Detection Overhead $DO$} The detection overhead describes the communication overhead created by the detection mechanism. 
-More formally, it is the ratio of messages exchanged in the system due to the detection mechanism and all signaling messages: (1) $BM$ requests, (2) $BM$ updates, and (3) neighboring requests, accepts and rejects.
+More formally, it is the ratio of messages exchanged due to the detection mechanism and all signaling messages, such as $BM$ exchanges and neighboring requests, in the system.
 \subsubsection*{Benign Ratio per Neighbor List $BRNL$} The benign ratio per neighbor list measures the fraction of benign peers in the source's neighbor list.
 
 \subsection{Case 1: \drop Severity}
@@ -33,7 +33,7 @@ As malicious peers aim to occupy the closest peers to the source, the remaining 
 
 Given the source's neighbor list size $LS=10$, we choose the following combinations for the attackers budget $(x_h, x-x_h)$: $(10,0), (5,15), (7,49), (8,24)$.
 Here, $x-x_h=49$ denotes that 7 malicious peers are connected to each of the 7 malicious headnodes.
-First, we analyze the attack's impact on DONet and then we evaluate the resilience of SWAP to the attack.
+We start with analyzing the attack's impact on DONet and then we evaluate the resilience of SWAP to the attack.
 
 Figure~\ref{subfig:avg-loss-donet} displays the average chunk loss ratio.
 Unsurprisingly, the average loss is 100\% when $x_h= LS =10$, which means that the source's $LS$ is utterly saturated with malicious headnodes, i.e., no chunks are transmitted to the rest of the overlay.
@@ -59,87 +59,70 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 
 
 
-% \begin{figure}[tb]
-% %   \setlength{\belowcaptionskip}{-10pt}
-%   \centering
-%   \begin{subfigure}[c]{0.95\columnwidth}
-%     \centering
-%     \includegraphics[width=12cm,height=6cm]{streaming/Figures/avg-loss-donet.eps}
-%     \captionsetup{font=ninept}
-%     \subcaption{Average loss}%
-%     \label{subfig:avg-loss-donet}
-%   \end{subfigure}
-%   \begin{subfigure}[c]{0.95\columnwidth}
-%     \centering
-%     \includegraphics[width=12cm,height=6cm]{streaming/Figures/satisfaction-donet.eps}
-%     \captionsetup{font=ninept}
-%     \subcaption{Average peer satisfaction}
-%     \label{subfig:satisfaction-donet}
-%   \end{subfigure}
-%   \caption{Attack's impact on DONet}%
-%   \label{fig:attack-results}
-%   \vspace{-4mm}
-% \end{figure}
-
-% 
-% 
-\begin{figure}
-
-\centering
-
-  \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[keepaspectratio,width=.7\textwidth]{streaming/Figures/avg-loss-donet.eps}}}
-  \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[keepaspectratio,width=.7\textwidth]{streaming/Figures/satisfaction-donet.eps}}}
-%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
-
-  \caption{Attack's impact on DONet}
-  
+\begin{figure}[tb]
+%   \setlength{\belowcaptionskip}{-10pt}
+  \centering
+  \begin{subfigure}[c]{0.95\columnwidth}
+    \centering
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/avg-loss-donet.eps}
+    \caption{Average loss}%
+    \label{subfig:avg-loss-donet}
+  \end{subfigure}
+  \begin{subfigure}[c]{0.95\columnwidth}
+    \centering
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/satisfaction-donet.eps}
+    \caption{Average peer satisfaction}%
+    \label{subfig:satisfaction-donet}
+  \end{subfigure}
+  \caption{Attack's impact on DONet}%
   \label{fig:attack-results}
-  \end{figure}
+  \vspace{-4mm}
+\end{figure}
+
+% 
+% 
+% \begin{figure}[t!]
+% \centering
+% 
+%   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/avg-loss-donet.eps}}}
+% %    \vspace{-3mm}
+%   \mbox{\subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=8.4cm,height=3.5cm]{./Figures/satisfaction-donet.eps}}}
+% %   \mbox{\subfloat[Avg. loss]{\label{subfig:avg-loss-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/avg-loss-donet.eps}} \subfloat[Avg. peer satisfaction]{\label{subfig:satisfaction-donet}\includegraphics[width=3.7cm,height=2.5cm]{./Figures/satisfaction-donet.eps}}} 
+% 
+%   \caption{}
+%   \vspace{-3.5mm}
+%   \label{fig:attack-results}
+%   \end{figure}
 % 
 
 \subsection{Case 2: Detection Mechanism Performance}
 
-% %%% Vertical
-% \begin{figure}[tb]
-% %   \setlength{\belowcaptionskip}{-10pt}
-%   \centering
-%   \begin{subfigure}[c]{0.95\columnwidth}
-%     \centering
-%     \includegraphics[width=8.4cm,height=6cm]{streaming/Figures/det-BRNL1.eps}
-%     \captionsetup{font=ninept}
-%     \subcaption{Average BRNL}%
-%    \label{subfig:BRNL}
-%   \end{subfigure}
-%   \begin{subfigure}[c]{0.95\columnwidth}
-%     \centering
-%     \includegraphics[width=8.4cm,height=6cm]{streaming/Figures/det-sat.eps}
-%     \captionsetup{font=ninept}
-%     \subcaption{Average peer satisfaction}%
-%      \label{subfig:det-sat}
-%   \end{subfigure}
-%   \begin{subfigure}[c]{0.95\columnwidth}
-%     \centering
-%     \includegraphics[width=12cm,height=6cm]{streaming/Figures/overhead.eps}
-%     \captionsetup{font=ninept}
-%     \subcaption{Detection overhead}%
-%     \label{subfig:overhead}
-%   \end{subfigure}
-%   \caption{Detection mechanism performance}%
-%  \label{fig:detection-results}
-%   \vspace{-4mm}
-% \end{figure}
-
-\begin{figure}
-\centering
-
-  \mbox{\subfloat[Average BRNL]{\label{subfig:BRNL}\includegraphics[keepaspectratio,width=.7\textwidth]{streaming/Figures/det-BRNL1.eps}}}
-  \mbox{\subfloat[Average peer satisfaction]{\label{subfig:det-sat}\includegraphics[keepaspectratio,width=.7\textwidth]{streaming/Figures/det-sat.eps}}}
-  \mbox{\subfloat[Detection overhead]{\label{subfig:overhead}\includegraphics[keepaspectratio,width=.7\textwidth]{streaming/Figures/overhead.eps}}}
-
-  \caption{Detection mechanism performance}
-  
-  \label{fig:detection-results}
-  \end{figure}
+%%% Vertical
+\begin{figure}[tb]
+%   \setlength{\belowcaptionskip}{-10pt}
+  \centering
+  \begin{subfigure}[c]{0.95\columnwidth}
+    \centering
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/det-BRNL1.eps}
+    \caption{Average BRNL}%
+   \label{subfig:BRNL}
+  \end{subfigure}
+  \begin{subfigure}[c]{0.95\columnwidth}
+    \centering
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/det-sat.eps}
+    \caption{Average peer satisfaction}%
+     \label{subfig:det-sat}
+  \end{subfigure}
+  \begin{subfigure}[c]{0.95\columnwidth}
+    \centering
+    \includegraphics[width=8.4cm,height=3cm]{./Figures/overhead.eps}
+    \caption{Detection overhead}%
+    \label{subfig:overhead}
+  \end{subfigure}
+  \caption{Detection mechanism performance}%
+ \label{fig:detection-results}
+  \vspace{-4mm}
+\end{figure}
 
 %% Horizontal
 % \begin{figure*}[tb]
@@ -147,19 +130,19 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 %   \centering
 %   \begin{subfigure}[t]{0.32\textwidth}
 %     \centering
-%     \includegraphics[width=6cm,height=4cm]{./Figures/det-BRNL1.eps}
+%     \includegraphics[width=6cm,height=3cm]{./Figures/det-BRNL1.eps}
 %     \caption{Average BRNL}%
 %     \label{subfig:BRNL}
 %   \end{subfigure}
 %   \begin{subfigure}[t]{0.32\textwidth}
 %     \centering
-%     \includegraphics[width=6cm,height=4cm]{./Figures/det-sat.eps}
+%     \includegraphics[width=6cm,height=3cm]{./Figures/det-sat.eps}
 %     \caption{Avg. peer satisfaction}%
 %     \label{subfig:det-sat}
 %   \end{subfigure}
 %   \begin{subfigure}[t]{0.32\textwidth}
 %     \centering
-%     \includegraphics[width=6cm,height=4cm]{./Figures/overhead.eps}
+%     \includegraphics[width=6cm,height=3cm]{./Figures/overhead.eps}
 %     \caption{Detection overhead}%
 %     \label{subfig:overhead}
 %   \end{subfigure}
@@ -170,7 +153,7 @@ For the same reason, the satisfaction level of benign peers eventually decreases
 
 
 We now evaluate the performance of the detection mechanism.
-Benign peers execute the detection mechanism as described in Section~\ref{online-detection} whereas malicious peers aim to misuse the mechanism.
+Benign peers execute the detection mechanism as described in Section~\ref{sec:detection} whereas malicious peers aim to misuse the mechanism.
 More precisely, malicious peers reply with a satisfaction level of 0 if the complaint might remove a benign peer and 1 if it might remove a malicious peer. 
 
 In order to do so, we chose $(x_h, x-x_h) \in \{(5, 40), (8, 40), (10, 30)\}$ to assess the performance of the mechanism in severe attack conditions.
@@ -182,7 +165,7 @@ We discuss the effect of varying those parameters later on.
 As depicted in Figure~\ref{subfig:BRNL}, we observe an increase in the benign headnodes ratio in the source's neighbor list after the detection mechanism starts operating at $t=250s$.  
 For instance, if $(x_h, x-x_h)=(5, 40)$, the source successfully attains 80\% benign headnodes due to the detection mechanism.
 For $(x_h, x-x_h)=(8, 40)$, the $BRNL$ ratio increases up to 90-100\%, which reflects the efficiency of the detection mechanism in replacing malicious headnodes to restore peers' satisfaction levels. 
-Even if the source is initially only connected to malicious headnodes, i.e., $x_h=10$, the detection mechanism is capable of restoring a $BRNL$ to approximately 80\%. 
+Even if the source is initially only connected to malicious headnodes, i.e., $x_h=10$, the detection mechanism is capable of restoring a $BRNL$ of close to 80\%. 
 
 Figure~\ref{subfig:det-sat} illustrates the average restored peer satisfaction level when the detection mechanism is active. 
 For all considered attack budgets, the average satisfaction level quickly increases to 95-100\% for $(x_h, x-x_h)= (5,40), (8,40)$.

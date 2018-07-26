@@ -1,5 +1,5 @@
 \section{Detection Mechanism}
-\label{online-detection}
+\label{sec:detection}
 
 
 In this section, we explain our detection mechanism, starting with an overview of the different steps followed by a detailed description of each step.  
@@ -30,10 +30,10 @@ In the remainder of the section, we present a mechanism that allows nodes to col
 
 \begin{figure}
  \centering
- \includegraphics[keepaspectratio,width=.5\textwidth]{streaming/Figures/detection.pdf}
+ \includegraphics[width=5.5cm,height=6cm]{./Figures/detection.pdf}
  
   \caption{Detection process for \drop. $S$ denotes the source.}
- 
+   \vspace{-3.5mm}
 \label{detection-blocks} 
 \end{figure}
 
@@ -50,23 +50,21 @@ Finally, $b$ reacts based on the received response from the source and then forw
 
 The node $b$ bases its decision on whether to initiate a request or forward a complaint on a number of threshold parameters, which we summarize in Table~\ref{tab:acronyms} together with various system parameters governing the attack. 
 
-
-\begin{table}
+\begin{table}[ht]
 \center
-
-\caption{ACRONYMS}
+\caption{Acronyms}
 \begin{tabular}{|c|l||c|l|}
 \hline
 
 \bf{Var.} & \bf{Description}  & \bf{Var.} & \bf{Description} \\\hline\hline
-$H_n$ & headnodes in a complaint & $P_n$ & potential candidates \\\hline
-$x$ & no. of malicious peers & $x_h$ & mal. headnodes \\\hline
-$BM$ & buffer-map & $x-x_h$ & mal. non-headnodes \\\hline
+$H_n$ & headnodes in a complaint & $P_n$ & potential candidates list \\\hline
+$x$ & no. of malicious peers & $\eta$ & mal. headnodes fraction\\\hline
+$BM$ & buffer-map & $MN$ & mal. non-headnodes \\\hline
 $\sat$ & peer satisfaction level & $\satThres$ & satisfaction threshold \\\hline
 $\minP$ & min. drop responses & $\minDR$ & no. allowed det. \\\hline
 \end{tabular}
 \label{tab:acronyms}
-\vspace{-2.5mm}
+% \vspace{-3mm}
 \end{table}
 
 \subsection{Detection Trigger}
@@ -120,7 +118,7 @@ Otherwise, $b$ either starts another detection request depending on $\kappa$ or 
 Once $b$ decides on filing a complaint according to the aforementioned conditions, $b$ generates a complaint message to the source containing the IDs of all nodes in $D$, recent proofs of neighborhood,  and the received satisfaction levels including signatures and time stamps.  
 
 
-The reason for requesting at least $\minP$ replies is to prevent a few malicious nodes from accusing benign headnodes. By imposing a lower bound on the requested number of replies, a considerable number of malicious nodes has to use one of their $\kappa$ requests. We present an in-depth analysis on how these constraints prevent misuse in Section~\ref{online-analysis}. 
+The reason for requesting at least $\minP$ replies is to prevent a few malicious nodes from accusing benign headnodes. By imposing a lower bound on the requested number of replies, a considerable number of malicious nodes has to use one of their $\kappa$ requests. We present an in-depth analysis on how these constraints prevent misuse in Section~\ref{sec:analysis}. 
 
 \subsubsection*{Processing a Complaint at the Source}
 
@@ -130,15 +128,14 @@ Furthermore, $s$ removes any responses from nodes that have exceeded their parti
 
 If the remaining valid responses still indicate an average satisfaction level of less than $\satThres$, the source:  
 \begin{enumerate}
- \item divides the set of peers in $D$ into two sets $H_n$ and $P_n$, where $H_n$ is the set of headnodes peers that exist in the complaint. 
+ \item divides the set of peers in $D$ into two sets $H_n$ and $P_n$, where $H_n$ is assigned as the set of peers participating in the complaint that are already headnodes. 
 %  \mn[Stef]{Itemize lists are strange as they are not full sentences but start with a capital letter and end in .}
  \item removes all peers in $H_n$ from its neighbor set.
  \item randomly connects to another $|H_n|$ peers. 
  \item adds peers (excluding peers in $H_n$) from its neighbor list to $P_n$, where $P_n = NeighborList\setminus H_n$ ($NeighborList$ is the set of peers in a neighbor list). 
  \item sends a \textit{Complaint Reply} to $b$ containing $H_n$ and $P_n$.
 \end{enumerate}
- The reason for choosing random new headnodes rather than nodes participating in the complaint is to lower the incentive for complaints by malicious peers.
- Even if such a complaint is successful, the new headnodes are likely benign, meaning that the malicious nodes did not gain anything from initiating the request apart from slightly increasing the load. 
+ The reason for choosing random new headnodes rather than nodes participating in the complaint is to lower the incentive for complaints by malicious peers. Even if such a complaint is successful, the new headnodes are likely benign, meaning that the malicious nodes did not gain anything from initiating the request apart from slightly increasing the load. 
 
 
 \subsubsection*{Processing a Complaint Reply \& Forwarding}
@@ -148,10 +145,10 @@ Finally, when $b$ receives the \textit{complaint Reply} from the source, $b$
  \item Disconnects from all peers in $H_n$. Note that $b$ does not blacklist peers in $H_n$ from its neighbor list due to the fact that those peers are not proven malicious.
  \item Connects to $|H_n|$ peers from $P_n$, in case $|H_n|>|P_n|$, peers connect to $|P_n|+(|H_n|-|P_n|)$ random peers.
 \end{enumerate}
-Subsequently, $b$ forwards the complaint to the other participants, i.e., $D \setminus H_n$, who in turn execute steps 1 and 2.
+Subsequently, $b$ forwards the complaint to the other participants, who in turn execute steps 1 and 2.
 
 \subsection{General Notes}
-The detection mechanism does not aim at expelling peers from the system. Simply removing headnodes remarkably benefit the system.
+The detection mechanism does not aim at expelling peers from the system. Simply  removing peers from their role as headnodes is effective.
 Indeed, the only peers that get blacklisted are those who violate the detection mechanism constraints, i.e., participating in more than a single request at a time or initiating more than $\kappa$ requests.
 The reason for this leniency lies in the potentially high chance of removing headnodes that are benign but exhibit a low performance. 
 In general, the main target of the detection mechanism is to enhance peers' satisfaction level while keeping peer replacements and signaling overhead low. 

@@ -1,23 +1,24 @@
 \section{Related Work}
-\label{online-related}
+\label{sec:related}
 
 We overview the prominent existing work on attacks and their detection in the context of P2P streaming systems. Most prior work has considered three attack types: (i) pollution attacks, i.e., flooding the overlay with arbitrary content and claiming it to be relevant chunks, (ii) free riding, i.e., participating in the overlay without contributing, and iii) cheating attacks, i.e., maliciously dropping packets or manipulating buffer-maps. 
 
-Pollution attacks are one of the most common attacks~\cite{pollution1}. Strategies such as network coding~\cite{nc} and ~\cite{pollution2} can effectively mitigate these attacks. 
+Pollution attacks are one of the most common attacks \cite{pollution1}. Strategies such as network coding \cite{nc} and others \cite{pollution2} 
+can effectively mitigate these attacks. 
 
-In contrast, the main approach to counter free riding are incentives~\cite{defending,defending2}, i.e., rewarding peers that distribute the stream to others. 
+In contrast, the main approach to counter free riding are incentives \cite{defending,defending2}, i.e., rewarding peers that distribute the stream to others. 
 However, these strategies are only effective for peers that aim to minimize their level of participating. 
 
   
 Cheating attacks are severe DoS attacks, performed to maximize the damage to the overlay and preventing peers from downloading the stream.   
-\textit{Antiliar} is a general defense mechanism against a diverse set of attacks, including dropping and buffer map manipulation~\cite{antiliar}.
+\textit{Antiliar} is a general defense mechanism against a diverse set of attacks, including dropping and buffer map manipulation\cite{antiliar}.
 Mainly, \textit{Antiliar} tracks peers behaviors in a secure progress log and thus, detecting misbehaving peers by identifying irregularities in the log. 
 While highly effective, \textit{Antiliar} relies on expensive cryptographic operations that are unsuitable for devices with low CPU resources.
 Moreover, \textit{Antiliar} uses a central entity to review the logs, creating additional security and privacy problems. 
 
 
-An alternative  decentralized approach~\cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting chunks. 
+An alternative  decentralized approach \cite{nguyen2014resilience} relies on redundancy by enforcing diversity when requesting chunks. 
 In this manner, the attacker has to control a higher fraction of nodes to achieve any severe damage by cheating.
-The work focuses on attacks on headnodes yet assumes an external attacker that can take over arbitrary nodes at will.
-In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control significantly decrease the attack severity~\cite{nguyen2016swap}.
-As shown in Section~\ref{online-eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  
+The work focuses in particular on attacks on headnodes yet assumes an external attacker that can take over arbitrary nodes at will.
+In this context, the idea of swapping headnodes frequently to mitigate the impact of the attacker's control can significantly decrease the attack severity \cite{nguyen2016swap}.
+As shown in Section~\ref{sec:eval}, internal attackers can undermine the swapping protocol and gain the position of headnodes.  

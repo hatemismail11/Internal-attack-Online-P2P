@@ -43,7 +43,7 @@
 
 \usepackage[cmex10]{amsmath}
 \usepackage{amssymb}
-% \usepackage{xfrac}
+\usepackage{xfrac}
 \usepackage{xfrac}
 \usepackage{color}
 \usepackage[normalem]{ulem} 
@@ -54,13 +54,13 @@
 \newtheorem{proposition}[theorem]{Preposition}
 
 % \usepackage[caption=false,font=footnotesize]{subfig}
-
+\usepackage{subcaption}
 %  \DeclareCaptionLabelFormat{lc}{\MakeLowercase{#1}~#2}
-% \newfontfamily{\myfont}{Times New Roman}
- \usepackage{subcaption}
- \DeclareCaptionFont{ninept}{\fontsize{8pt}{10pt}\rmfamily #1}
- \captionsetup{font=ninept}
-
+\newfontfamily\myfont{Times New Roman}
+ \DeclareCaptionFont{ninept}{\fontsize{8pt}{11pt}\selectfont #1\myfont}
+ 
+\captionsetup{font=ninept}
+ 
 % \captionsetup{font={small}, textfont={sf}, labelfont={bf,sf}}
 
 \setlength{\intextsep}{.1\intextsep}

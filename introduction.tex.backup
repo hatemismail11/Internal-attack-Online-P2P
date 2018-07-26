@@ -1,4 +1,4 @@
-\section{Motivation: Streaming \& Cheating Attacks}
+\section{Motivation: Online Overlays and Internal DoS Attacks}
 \label{online-intro}
 
 Streaming content is an essential component of data-driven infrastructures~\cite{emule}.
@@ -26,8 +26,8 @@ However, previous work indicates that it is relatively easy to infer the identit
 While countermeasures to these inference attacks exist, they assume an external adversary that can shut-down or replace certain nodes~\cite{nguyen2016swap, rbcs, nguyen2014resilience}. 
 Hence, the existing work evaluates neither the impact of nor protection mechanism against internal colluding attackers, i.e., attackers that insert nodes under their control into the system pretending to be regular participants. 
 
-\subsection{Contributions:}
-In this work, we first illustrate the effectiveness of internal attacks based on malicious headnodes. 
+
+In this paper, we first illustrate the effectiveness of internal attacks based on malicious headnodes. 
 Consequently, we propose a mechanism for detecting \drop by keeping track of peer satisfaction. If the cumulative satisfaction level of a group of peers drops below a certain threshold, the source replaces all headnodes associated with the group with randomly chosen peers. 
 Hence, our detection and mitigation mechanism efficiently reacts to a detected low quality of service  rather than explicitly identifying the misbehavior of one or more specific nodes.
 Note that we focus on attackers that control a low fraction of nodes, as attackers controlling the majority of nodes can trivially control most of the communication, even without gaining strategic positions such as headnodes.    
